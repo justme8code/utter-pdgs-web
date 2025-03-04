@@ -1,4 +1,6 @@
+'use client';
 import { useState } from "react";
+import { Modal } from "@/app/components/Modal";
 
 export type RowType = { id: number, [key: string]: string | number };
 export type ColumnType = { key: string, label: string, type?: string, options?: string[] };
@@ -24,6 +26,12 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
         setIsModalOpen(true);
     };
 
+    // Close modal
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedRow(null);
+    };
+
     // Handle input changes in modal
     const handleModalChange = (field: string, value: string) => {
         setSelectedRow((prev) => (prev ? { ...prev, [field]: value } : null));
@@ -37,7 +45,7 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
             );
             setTableData(updatedData);
             onUpdate && onUpdate(selectedRow);
-            setIsModalOpen(false);
+            closeModal();
         }
     };
 
@@ -102,26 +110,26 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
             </table>
 
             {/* Modal */}
-            {isModalOpen && selectedRow && (
-                <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
-                    <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                {selectedRow && (
+                    <div className="flex flex-col  max-w-3xl">
                         <h2 className="text-lg font-bold mb-4">Edit Row</h2>
 
-                        <div className={"flex flex-wrap gap-4"}>
+                        <div className="flex w-full flex-wrap  gap-2">
                             {columns.map((col) => {
                                 const isDisabled = disableFields ? disableFields(selectedRow).includes(col.key) : false;
 
                                 return (
-                                    <label key={col.key} className="block mb-2">
+                                    <label key={col.key} className="block mb-2 w-[48%] md:w-[32%]">
                                         {col.label}:
                                         {col.type === "dropdown" ? (
                                             <select
                                                 className="border w-full p-2 rounded"
-                                                value={selectedRow ? selectedRow[col.key] : ""}
+                                                value={selectedRow[col.key]}
                                                 onChange={(e) => handleModalChange(col.key, e.target.value)}
                                                 disabled={isDisabled}
                                             >
-                                                {col.options && col.options.map((option) => (
+                                                {col.options?.map((option) => (
                                                     <option key={option} value={option}>
                                                         {option}
                                                     </option>
@@ -131,7 +139,7 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
                                             <input
                                                 type={col.type || "text"}
                                                 className="border w-full p-2 rounded"
-                                                value={selectedRow && selectedRow[col.key] !== undefined ? selectedRow[col.key] : ""}
+                                                value={selectedRow[col.key] ?? ""}
                                                 onChange={(e) => handleModalChange(col.key, e.target.value)}
                                                 disabled={isDisabled}
                                             />
@@ -140,10 +148,11 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
                                 );
                             })}
                         </div>
+
                         <div className="flex justify-end gap-2 mt-4">
                             <button
                                 className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                                onClick={() => setIsModalOpen(false)}
+                                onClick={closeModal}
                             >
                                 Cancel
                             </button>
@@ -155,8 +164,8 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
                             </button>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </Modal>
         </div>
     );
 };
