@@ -59,9 +59,9 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
     };
 
     return (
-        <div className="overflow-x-auto p-4">
+        <div className="overflow-x-auto px-4">
             <button
-                className="mb-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 shadow"
+                className="mb-4 bg-blue-500 text-white px-4 py-1 rounded-sm hover:bg-blue-600 shadow"
                 onClick={addNewRow}
             >
                 + Add New Entry
