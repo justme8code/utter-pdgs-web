@@ -1,6 +1,7 @@
 'use client';
 import { useState } from "react";
 import { Modal } from "@/app/components/Modal";
+import { Trash } from "lucide-react";
 
 export type RowType = { id: number, [key: string]: string | number };
 export type ColumnType = { key: string, label: string, type?: string, options?: string[] };
@@ -12,7 +13,7 @@ export interface EditableTableProps {
     onUpdate?: (row: RowType) => void;
     onDelete?: (id: number) => void;
     onAdd?: (newRow: RowType) => void;
-    disableFields?: (row: RowType) => string[]; // Function to determine which fields should be disabled
+    disableFields?: (row: RowType) => string[];
 }
 
 const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields }: EditableTableProps) => {
@@ -20,24 +21,20 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
     const [selectedRow, setSelectedRow] = useState<RowType | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Open modal for editing
     const openModal = (row: RowType) => {
         setSelectedRow({ ...row });
         setIsModalOpen(true);
     };
 
-    // Close modal
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedRow(null);
     };
 
-    // Handle input changes in modal
     const handleModalChange = (field: string, value: string) => {
         setSelectedRow((prev) => (prev ? { ...prev, [field]: value } : null));
     };
 
-    // Save changes and update state
     const saveChanges = () => {
         if (selectedRow) {
             const updatedData = tableData.map((row) =>
@@ -49,7 +46,6 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
         }
     };
 
-    // Add new row
     const addNewRow = () => {
         const newRow = {
             id: tableData.length + 1,
@@ -63,45 +59,52 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
     };
 
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto p-4">
             <button
-                className="mb-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                className="mb-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 shadow"
                 onClick={addNewRow}
             >
                 + Add New Entry
             </button>
 
             <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg">
-                <thead className="bg-gray-100">
+                <thead className="bg-gray-200 text-gray-700">
                 <tr>
                     {columns.map((col) => (
-                        <th key={col.key} className="border px-4 py-2">{col.label}</th>
+                        <th key={col.key} className="border px-4 py-3 text-left font-semibold">
+                            {col.label}
+                        </th>
                     ))}
-                    <th className="border px-4 py-2">Actions</th>
+                    <th className="border px-4 py-3 text-center font-semibold">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {tableData.map((row) => (
                     <tr
                         key={row.id}
-                        className="hover:bg-gray-50 cursor-pointer"
+                        className="hover:bg-gray-50 transition"
                         onClick={() => openModal(row)}
                     >
                         {columns.map((col) => (
-                            <td key={col.key} className="border px-4 py-2">
+                            <td key={col.key} className="border px-4 py-3">
                                 {row[col.key]}
                             </td>
                         ))}
-                        <td className="border px-4 py-2">
+                        <td className="border px-4 py-3 text-center">
                             <button
-                                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                                className="text-gray-500 hover:text-red-600 transition"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setTableData((prev) => prev.filter((item) => item.id !== row.id));
+                                    setTableData((prev) =>
+                                        prev
+                                            .filter((item) => item.id !== row.id) // Remove the selected row
+                                            .map((item, index) => ({ ...item, id: index + 1 })) // Reset IDs sequentially
+                                    );
+
                                     onDelete && onDelete(row.id);
                                 }}
                             >
-                                Delete
+                                <Trash />
                             </button>
                         </td>
                     </tr>
@@ -109,22 +112,21 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
                 </tbody>
             </table>
 
-            {/* Modal */}
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 {selectedRow && (
-                    <div className="flex flex-col  max-w-3xl">
+                    <div className="flex flex-col max-w-3xl p-4">
                         <h2 className="text-lg font-bold mb-4">Edit Row</h2>
 
-                        <div className="flex w-full flex-wrap  gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             {columns.map((col) => {
                                 const isDisabled = disableFields ? disableFields(selectedRow).includes(col.key) : false;
 
                                 return (
-                                    <label key={col.key} className="block mb-2 w-[48%] md:w-[32%]">
+                                    <label key={col.key} className="block text-sm font-medium">
                                         {col.label}:
                                         {col.type === "dropdown" ? (
                                             <select
-                                                className="border w-full p-2 rounded"
+                                                className="border w-full p-2 rounded mt-1"
                                                 value={selectedRow[col.key]}
                                                 onChange={(e) => handleModalChange(col.key, e.target.value)}
                                                 disabled={isDisabled}
@@ -138,7 +140,7 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
                                         ) : (
                                             <input
                                                 type={col.type || "text"}
-                                                className="border w-full p-2 rounded"
+                                                className="border w-full p-2 rounded mt-1"
                                                 value={selectedRow[col.key] ?? ""}
                                                 onChange={(e) => handleModalChange(col.key, e.target.value)}
                                                 disabled={isDisabled}
@@ -151,13 +153,13 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
 
                         <div className="flex justify-end gap-2 mt-4">
                             <button
-                                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                                 onClick={closeModal}
                             >
                                 Cancel
                             </button>
                             <button
-                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
                                 onClick={saveChanges}
                             >
                                 Save

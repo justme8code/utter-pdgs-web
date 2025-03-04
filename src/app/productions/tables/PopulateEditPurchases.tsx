@@ -6,7 +6,7 @@ export const PopulateEditPurchases = () => {
 
     const columns:ColumnType[] = [
         { key: "id", label: "S/N" },
-        { key: "raw materials", label: "Raw Materials", type: "dropdown", options: ["Pineapple", "Banana", "Orange"] },
+        { key: "raw materials", label: "Selected Materials", type: "dropdown", options: ["Pineapple", "Banana", "Orange"] },
         { key: "supplier", label: "Supplier", type: "dropdown", options: ["Pineapple", "Banana", "Orange"] },
         { key: "uom", label: "UoM" },
         { key: "qty", label: "Qty", type: "number" },
