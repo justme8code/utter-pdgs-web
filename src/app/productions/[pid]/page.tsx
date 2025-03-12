@@ -10,11 +10,7 @@ import Sidebar from "@/app/components/SideBar";
 
 export default function ProductionPage() {
 
-    const [selectedProductionId, setSelectedProductionId] = useState<number | null>(null);
 
-    const handleSelectProduction = (id: number) => {
-        setSelectedProductionId(id);
-    };
 
     return (
          <div className={"flex"}>
@@ -24,15 +20,12 @@ export default function ProductionPage() {
                  <div className="flex-1 flex flex-col h-screen p-2 gap-5">
                      <Navbar/>
 
-                     {selectedProductionId && <ProductionInfo />}
+                     {<ProductionInfo />}
 
                      <div className="space-y-10">
-                         {/*<PopulateEditPurchases />
-                    <RawMaterialsToIngredients />*/}
+                         <PopulateEditPurchases />
+                    <RawMaterialsToIngredients />
 
-                         <FunctionalErrorBoundary message="Oops! Something went wrong.">
-                             <ProductionPagination/>
-                         </FunctionalErrorBoundary>
 
                      </div>
                  </div>
