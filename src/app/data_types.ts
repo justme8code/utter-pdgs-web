@@ -25,6 +25,31 @@ export type StaffResponse = {
 export type Production = {
     startDate: string,
     endDate: string,
-    name: string,
-    status: "RUNNING" | "COMPLETED" | "STOPPED"
+    name: string
 }
+
+
+export type User = {
+    fullName?: string;
+    email?: string;
+    pwd?: string;
+    phone?: string;
+    roles?: Role[];
+    staff?: Staff;
+}
+
+export type Role = {
+    id: number;
+    userRole: string;
+};
+
+export type Staff = {
+    id?: number,
+    companyRole?:string;
+    professionRole?:string
+};
+
+
+// Response Data Types
+export type UserResponse = Omit<User, "pwd"> & { id: number };
+

@@ -9,7 +9,7 @@ export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void 
     const handleCreateProduction = async () => {
         // Logic for creating production...
 
-        onCreated?.(); // ✅ Call the callback after creation
+        onCreated?.();
         setIsModalOpen(false)
     };
 

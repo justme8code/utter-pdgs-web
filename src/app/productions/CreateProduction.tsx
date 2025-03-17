@@ -6,12 +6,12 @@ import { SelectStaffInput } from "@/app/productions/SelectStaffInput";
 import FunctionalErrorBoundary from "@/app/components/FunctionalErrorBoundary";
 import { createProduction } from "@/app/productions/actions";
 
-interface CreateProductionProps {
+export interface ModalOnAction {
     onClose?: () => void;
     isOpen?: boolean;
 }
 
-export const CreateProduction = ({ onClose, isOpen }: CreateProductionProps) => {
+export const CreateProduction = ({ onClose, isOpen }: ModalOnAction) => {
     const [newProduction, setNewProduction] = useState({
         name: "",
         startDate: "",
@@ -29,7 +29,7 @@ export const CreateProduction = ({ onClose, isOpen }: CreateProductionProps) => 
         setNewProduction((prev) => {
             const updatedProduction = { ...prev, [field]: value };
 
-            if (updatedProduction.startDate && updatedProduction.endDate) {
+            if (updatedProduction.startDate && updatedProduction.endDate) { 
                 const start = new Date(updatedProduction.startDate);
                 const end = new Date(updatedProduction.endDate);
 
@@ -81,9 +81,7 @@ export const CreateProduction = ({ onClose, isOpen }: CreateProductionProps) => 
                     props={{ placeholder: "Enter production name" }}
                 />
 
-                <FunctionalErrorBoundary message="Oops! Something went wrong while loading staff data.">
-                    <SelectStaffInput />
-                </FunctionalErrorBoundary>
+
 
                 <TextField
                     label="Start Date"

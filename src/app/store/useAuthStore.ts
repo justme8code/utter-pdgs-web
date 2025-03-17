@@ -6,7 +6,7 @@ export type UserRole = {
     userRole: string;
 };
 
-export type User = {
+export type UserStore = {
     id: number;
     fullName: string;
     staffId: number;
@@ -16,7 +16,7 @@ export type User = {
 };
 
 export type AuthResponse = {
-    user: User;
+    user: UserStore;
     jwtToken: string;
 };
 

@@ -1,84 +1,110 @@
-import {Modal} from "@/app/components/Modal";
-import {TextField} from "@/app/components/TextField";
-import {ManageRoles} from "@/app/inventory/ManageRoles";
-import {Button} from "@/app/components/Button";
-import React, {useActionState, useState} from "react";
+import { Modal } from "@/app/components/Modal";
+import { TextField } from "@/app/components/TextField";
+import { Button } from "@/app/components/Button";
+import React, { useActionState, useEffect, useState } from "react";
+import useAuthStore from "@/app/store/useAuthStore";
+import { createUser, fetchRoles } from "@/app/inventory/actions";
+import { Role, UserResponse } from "@/app/data_types";
 
-export type UserDto = {
-    id: number;
-    fullName: string;
-    email: string;
-    roles: Role[];
-};
-
-export type Role = {
-    id: number;
-    userRole: string;
-};
-
-
-type FormInfo = {
-    fullName?: string;
-    email?: string;
-    pwd?: string;
-    phone?: string;
-    roles?: {id: number; userRole: string}[];
-    staff?: {companyRole:string,professionRole:string};
+interface CreateUserModalProps {
+    user?: UserResponse;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
+export const CreateUserModal: React.FC<CreateUserModalProps> = ({ user, isOpen, onClose }) => {
+    const [roles, setRoles] = useState<Role[]>([]);
+    const [selectedRoles, setSelectedRoles] = useState<Role[]>([]);
+    const [successMessage, setSuccessMessage] = useState<string>("");
+    const { auth } = useAuthStore();
+    const isEdit = !!user;
 
-
-export const CreateUserModal = ({user}:{user?:UserDto}) => {
-    const [info,setInfo] = useState<FormInfo>({});
-    const [open,setOpen] = useState<boolean>(false);
-    const [error, action, isPending] = useActionState(async (previousState, formData) => {
+    const [error, action, isPending] = useActionState(async (previousState: unknown, formData: FormData) => {
+        const status = await createUser(previousState, formData, selectedRoles);
+        if (status) {
+            setSuccessMessage(isEdit ? "User updated successfully!" : "User created successfully!");
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        }
     }, null);
 
+    const toggleRoleSelection = (role: Role) => {
+        setSelectedRoles((prevSelectedRoles) => {
+            const isSelected = prevSelectedRoles.some((r) => r.id === role.id);
+            return isSelected ? prevSelectedRoles.filter((r) => r.id !== role.id) : [...prevSelectedRoles, role];
+        });
+    };
+
+    const handleFetchRoles = async () => {
+        const data = await fetchRoles();
+        if (data && data.data) {
+            setRoles(data.data);
+        }
+    };
+
+    useEffect(() => {
+        if (user) {
+            setSelectedRoles(user.roles ?? []);
+        }
+        handleFetchRoles();
+    }, [user]);
+
     return (
-        <>
-
-
-            <button
-                className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-                onClick={() => setOpen(true)}
-            >Add New User</button>
-
-                <Modal isOpen={open} onClose={() => setOpen(false)} >
-                    <h2 className="text-xl font-bold mb-4">{user ? "Edit User" : "Add User"}</h2>
-                    <form action={action} className={"space-y-5"}>
-                        <TextField
-                            value={info.fullName??""}
-                            label={"Full name"}
-                            onChange={(value) =>  setInfo({...info, fullName: value})}
-                            props={{ name: "full name", required: true, type: "text", placeholder: "Enter Full name" }}
-                        />
-                        <TextField
-                            value={info.email??""}
-                            label={"Email"}
-                            onChange={(value) => setInfo({...info, email: value})}
-                            props={{ name: "email", required: true, type: "email", placeholder: "Enter email" }}
-                        />
-                        <TextField
-                            value={info.staff?.companyRole??""}
-                            label={"Company Role"}
-                            onChange={(value) => setInfo({...info, staff:{...info.staff, companyRole: value, professionRole:value}})}
-                            props={{ name: "companyRole", required: true, type: "text", placeholder: "Enter company role" }}
-                        />
-
-                        <TextField
-                            value={info.pwd??""}
-                            label={"Password"}
-                            onChange={(value) => setInfo({...info, pwd: value})}
-                            props={{ name: "password", required: true, type: "password", placeholder: "Enter  password" }}
-                        />
-                        <ManageRoles onChange={roles => setInfo({...info, roles:roles})} />
-                        <Button label={user ? "Update User" : "Add User"} type={"submit"}
-                                className={"bg-green-500 text-white px-4 py-2 rounded"}/>
-                    </form>
-                      <div>
-                          {info.roles?.map((item:Role) => item.userRole)}
-                      </div>
-                </Modal>
-            </>
+        <Modal isOpen={isOpen} onClose={onClose} className={"w-full max-w-md"}>
+            <h2 className="text-xl font-bold mb-4">{user ? "Edit User" : "Add User"}</h2>
+            {successMessage && <p className="text-green-500 font-semibold">{successMessage}</p>}
+            <form action={action} className="space-y-5 w-full">
+                <TextField
+                    name="fullName"
+                    label="Full Name"
+                    required
+                    type="text"
+                    placeholder="Enter Full Name"
+                    defaultValue={user?.fullName ?? ""}
+                />
+                <TextField
+                    name="email"
+                    label="Email"
+                    required
+                    type="email"
+                    placeholder="Enter Email"
+                    defaultValue={user?.email ?? ""}
+                />
+                <TextField
+                    name="companyRole"
+                    label="Company Role"
+                    required
+                    type="text"
+                    placeholder="Enter Company Role"
+                    defaultValue={user?.staff?.companyRole ?? ""}
+                />
+                <TextField
+                    name="password"
+                    label="Password"
+                    required
+                    type="password"
+                    placeholder="Enter Password"
+                    defaultValue=""
+                />
+                {auth && auth.user.roles.length > 0 && (
+                    <div>
+                        <h3 className="font-bold mb-2">Select Roles:</h3>
+                        {roles.map((role) => (
+                            <label key={role.id} className="flex items-center gap-2">
+                                <input type="checkbox" onChange={() => toggleRoleSelection(role)} name="roles" />
+                                {role.userRole}
+                            </label>
+                        ))}
+                    </div>
+                )}
+                <Button
+                    label={isPending ? "Processing..." : user ? "Update User" : "Add User"}
+                    type="submit"
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    disabled={isPending}
+                />
+            </form>
+        </Modal>
     );
 };

@@ -4,7 +4,7 @@ import { Button } from "@/app/components/Button";
 import LoadingWrapper from "@/app/components/LoadingWrapper";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/login/actions";
-import useAuthStore from "@/app/store/useAuthStore";
+import useAuthStore, {AuthResponse, UserRole} from "@/app/store/useAuthStore";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -15,10 +15,30 @@ const Login: React.FC = () => {
 
     async function loginUser(previousState: unknown, formData: FormData) {
         const { data, status } = await login(previousState, formData);
+
         if (status === 200) {
-            console.log(data);
-            setAuth(data); // Save auth state
+            console.log("Raw Data:", data);
+
+            // Ensure roles match the expected structure
+            const formattedRoles: UserRole[] = data.user.roles.map((role: UserRole) => ({
+                id: role.id,
+                userRole: role.userRole
+            }));
+
+            // Update the auth object with correctly typed roles
+            const updatedAuth: AuthResponse = {
+                ...data,
+                user: {
+                    ...data.user,
+                    roles: formattedRoles
+                }
+            };
+
+            console.log("Processed Data:", updatedAuth);
+            setAuth(updatedAuth); // Save auth state
             router.push("/productions"); // Redirect after login
+        } else {
+            console.error("Login failed:", data);
         }
     }
 

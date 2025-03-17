@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig} from "axios";
 import { BASE_URL } from "@/app/api/urls";
+import {verifySession} from "@/app/actions";
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: { "Content-Type": "application/json" },
     withCredentials: true,
@@ -42,3 +43,5 @@ export async function myRequest<T, R>(options: AxiosRequestConfig & { data?: T }
         };
     }
 }
+
+
