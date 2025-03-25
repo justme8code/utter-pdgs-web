@@ -7,6 +7,8 @@ import { createProductionDynamicData } from "@/app/productions/actions";
 import useRawMaterialsToIngredientsTable from "@/app/store/useRawMaterialsToIngredientsTable";
 
 const tableKey = 'rawMaterialsToIngredients';
+const foreign = 'populateEditPurchases';
+
 type TableType = {
     id: number,
     "rawMaterials": string,
@@ -28,26 +30,54 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
 
     useEffect(() => {
         // Map to only include id and rawMaterials
-        if(table.length > 0){
+
+        const s:DataType[] = production.dynamicData[tableKey];
+        if(s===undefined && table.length > 0){
             const newKindOfData: DataType[] = table.map((value) => {
                 return {
                     id: value.id,
                     "rawMaterials": value["rawMaterials"],
                 };
             });
+
+
             updateRTable(newKindOfData);
         }
-    }, [table, updateRTable]); // Add table as dependency to trigger the effect when it changes
-    // Handle form submission
+
+
+        else if (table.length > 0){
+            // Map to only include id and rawMaterials
+
+            const l:DataType[] = s.map((value, index) => {
+                const d = table[index];
+                return {
+                    "id" : d.id,
+                    "rawMaterials" : d["rawMaterials"],
+                    "totalUsable": value["totalUsable"],
+                    "ingredient": value["ingredient"],
+                    "outPutLitres": value["outPutLitres"],
+                    "productionLost": value["productionLost"],
+                    "usableLitres": value["usableLitres"],
+                    "litres/kg": value["litres/kg"],
+                    "cost/litre": value["cost/litre"],
+                    "rawBrix": value["rawBrix"],
+                }
+            })
+            updateRTable(l);
+        }
+    }, [production.dynamicData, table, updateRTable]); // Add table as dependency to trigger the effect when it changes
     const handleSubmitData = async () => {
         const result = await createProductionDynamicData<typeof editableData>(production.id, {
-            [tableKey]: editableData, // Send the entire updated dynamicData
+            [foreign]: table, // Send the entire updated dynamicData
+            [tableKey]: rTable,
         });
 
         if (result) {
             setSavedSuccessfully(true);
         }
         console.log("Console log in submit", editableData);
+        console.log("console loging table " ,table);
+        console.log("Console loging handles submitData ", rTable);
     };
 
     // Handle row update
@@ -57,42 +87,21 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
         );
     };
 
-    // Handle row deletion
-    const handleDelete = (id: number) => {
-        setEditableData((prevData) =>
-            prevData.filter((row) => row.id !== id)
-        );
-    };
-
-    /*// Handle adding new row
-    const handleAddRow = () => {
-        const newRow = { id: Date.now(), rawMaterials: '' }; // Add empty row with default values
-        setEditableData([...editableData, newRow]); // Add new row to the table
-    };*/
 
     return (
         <div className="p-4">
             <h1 className="font-bold text-xl mb-4">Raw Materials To Ingredients</h1>
 
-            {
-                table.map((row) => (
-                    <p key={row.id}></p>
-                ))
-            }
-            {
-                 rTable &&  <EditableTable
-                    onChange={(data) => {
-                        updateRTable(data);
-                    }}
-                    columns={columns}
-                    data={rTable}
-                    onUpdate={handleUpdate}
-                    onDelete={handleDelete}
-                    onAdd={newRow => {}} // Implement the add row functionality
-                />
-            }
 
-            {savedSuccessfully && <p className="text-green-500 mt-2">Update saved successfully!</p>}
+            <EditableTable
+                onChange={(data) => {
+                    updateRTable(data);
+                }}
+                columns={columns}
+                data={rTable}
+                onUpdate={handleUpdate}
+                disableFields={() => ["rawMaterials","id"]}
+            />
 
             <div className="mt-4 p-4 space-x-2">
                 <button
@@ -102,6 +111,7 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
                     Save
                 </button>
             </div>
+
         </div>
     );
 };

@@ -7,7 +7,6 @@ export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleCreateProduction = async () => {
-        // Logic for creating production...
         onCreated?.();
         setIsModalOpen(false)
     };

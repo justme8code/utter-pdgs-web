@@ -1,4 +1,4 @@
-// app/productions/ProductionPagination.tsx
+
 import { fetchProductions } from "@/app/productions/actions";
 import { Suspense } from "react";
 import { ClientProductionPagination } from "./ClientProductionPagination";

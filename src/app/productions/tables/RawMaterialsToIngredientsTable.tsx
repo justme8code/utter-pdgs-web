@@ -4,7 +4,7 @@ import {ExtendedProductionResponse} from "@/app/data_types";
 
 const columns:ColumnType[] = [
     { key: "id", label: "S/N" },
-    { key: "rawMaterials", label: "Raw Materials", type: "dropdown", options: ["Pineapple", "Banana", "Orange"] },
+    { key: "rawMaterials", label: "Raw Materials", type: "text"},
     { key: "totalUsable", label: "Total Usable (Kg)" },
     { key: "ingredient", label: "Ingredient" },
     { key: "outputLitres", label: "Output Litres" },

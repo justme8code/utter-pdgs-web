@@ -1,7 +1,8 @@
 import { TextField } from "@/app/components/TextField";
 import { useState } from "react";
-import { Production } from "@/app/productions/Navbar";
+
 import { Search } from "lucide-react";
+import {Production} from "@/app/data_types";
 
 interface SearchProductionProps {
     productions: Production[];

@@ -32,7 +32,8 @@ export type StaffResponse = {
 export type Production = {
     startDate: string,
     endDate: string,
-    name: string
+    name: string,
+    id: number
 }
 
 

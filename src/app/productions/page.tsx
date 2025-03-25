@@ -15,7 +15,6 @@ export default async function ProductionPage({searchParams}: {
                 <div className="flex-1 flex flex-col h-screen p-2 gap-5">
                     <Navbar/>
                     <div className="space-y-10">
-                        {/* Pass page & size to the client component */}
                         <ProductionPagination page={page} size={size}/>
                     </div>
                 </div>

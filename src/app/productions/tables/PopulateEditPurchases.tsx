@@ -9,7 +9,6 @@ import usePopulatePurchasesStore from "@/app/store/usePopulatePurchasesTable";
 const tableKey = 'populateEditPurchases';
 
 export const PopulateEditPurchases = ({ production, columns }: { production: ExtendedProductionResponse, columns: ColumnType[] }) => {
-    const [editable, setEditable] = useState<boolean>(false);
     const [editableData, setEditableData] = useState<DataType[]>(production.dynamicData[tableKey]);
     const [savedSuccessfully, setSavedSuccessfully] = useState<boolean>(false);
     const {updateTable} = usePopulatePurchasesStore();

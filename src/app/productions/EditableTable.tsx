@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Modal } from "@/app/components/Modal";
 import { Trash } from "lucide-react";
 
@@ -26,10 +26,12 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
 
-
+    useEffect(() => {
+        setTableData(data);
+    }, [data]);
 
     const openModal = (row: RowType) => {
-        setIsAdding(false); // Ensure we're not in add mode
+        setIsAdding(false);
         setSelectedRow({ ...row });
         setIsModalOpen(true);
     };
@@ -43,7 +45,7 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
             setTableData(s);
         }
         setSelectedRow(null);
-        setIsAdding(false); // Reset the adding state
+        setIsAdding(false);
     };
 
 
@@ -96,12 +98,12 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
 
     return (
         <div className="overflow-x-auto px-4">
-            <button
+            {onAdd &&  <button
                 className="mb-4 bg-gray-100 ring-1 ring-gray-300  px-4 py-1 rounded-sm hover:bg-gray-300"
                 onClick={() => addNewRow()}
             >
                 + Add New Entry
-            </button>
+            </button>}
 
             <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg">
                 <thead className="bg-gray-200 text-gray-700">
@@ -111,7 +113,7 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
                             {col.label}
                         </th>
                     ))}
-                    <th className="border px-4 py-3 text-center font-semibold">Actions</th>
+                    {onDelete && <th className="border px-4 py-3 text-center font-semibold">Actions</th>}
                 </tr>
                 </thead>
                 <tbody>
@@ -126,7 +128,7 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
                                 {row[col.key]}
                             </td>
                         ))}
-                        <td className="border px-4 py-3 text-center">
+                        {onDelete && <td className="border px-4 py-3 text-center">
                             <button
                                 className="text-gray-500 hover:text-red-600 transition"
                                 onClick={(e) => {
@@ -144,7 +146,7 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
                             >
                                 <Trash />
                             </button>
-                        </td>
+                        </td>}
                     </tr>
                 ))}
                 </tbody>
@@ -161,28 +163,27 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
 
                                 return (
                                     <label key={col.key} className="block text-sm font-medium">
-                                        {col.label}:
+                                         <p>{col.label}:</p>
                                         {col.type === "dropdown" ? (
                                             <select
-                                                className="border w-full p-2 rounded mt-1"
+                                                title={isDisabled ? "Auto" : ""}
+                                                className="bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none  w-full p-2 rounded mt-1"
                                                 value={selectedRow[col.key]}
                                                 onChange={(e) => handleModalChange(col.key, e.target.value)}
                                                 disabled={isDisabled}
                                             >
-                                                <option value={"select"}>
-
-                                                </option>
-
                                                 {col.options?.map((option) => (
                                                     <option key={option} value={option}>
                                                         {option}
                                                     </option>
                                                 ))}
                                             </select>
+
                                         ) : (
                                             <input
                                                 type={col.type || "text"}
-                                                className="border w-full p-2 rounded mt-1"
+                                                title={isDisabled ? "Auto" : ""}
+                                                className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none  w-full p-2 rounded mt-1"
                                                 value={selectedRow[col.key] ?? ""}
                                                 onChange={(e) => handleModalChange(col.key, e.target.value)}
                                                 disabled={isDisabled}
