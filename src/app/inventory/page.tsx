@@ -6,6 +6,7 @@ import {AddNewUser} from "@/app/inventory/AddNewUser";
 import {ManageRoles} from "@/app/inventory/ManageRoles";
 import { ManageUsers } from "./ManageUsers";
 import {UsersList} from "@/app/inventory/UsersList";
+import {RawMaterials} from "@/app/inventory/RawMaterials";
 
 export default function InventoryPage() {
 
@@ -13,8 +14,9 @@ export default function InventoryPage() {
     return (
         <div className="flex">
             <Sidebar />
-            <main className="flex flex-col w-full h-screen p-6">
+            <main className="flex w-full h-screen p-6 space-x-10">
                 <UsersList/>
+                <RawMaterials/>
             </main>
         </div>
     );

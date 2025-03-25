@@ -12,27 +12,44 @@ export interface EditableTableProps {
     data: Array<DataType>;
     onUpdate?: (row: RowType) => void;
     onDelete?: (id: number) => void;
+    onChange: (data:DataType[]) => void;
     onAdd?: (newRow: RowType) => void;
     disableFields?: (row: RowType) => string[];
+    editable?: boolean;
 }
 
-const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields }: EditableTableProps) => {
+const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disableFields }: EditableTableProps) => {
+    console.log("Login data");
+    console.log(data);
     const [tableData, setTableData] = useState(data);
     const [selectedRow, setSelectedRow] = useState<RowType | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
+
+
 
     const openModal = (row: RowType) => {
+        setIsAdding(false); // Ensure we're not in add mode
         setSelectedRow({ ...row });
         setIsModalOpen(true);
     };
 
+
     const closeModal = () => {
         setIsModalOpen(false);
+        if (isAdding) {
+            // If we are adding a new row, remove the last row
+            const s = tableData.slice(0, tableData.length - 1);
+            setTableData(s);
+        }
         setSelectedRow(null);
+        setIsAdding(false); // Reset the adding state
     };
+
 
     const handleModalChange = (field: string, value: string) => {
         setSelectedRow((prev) => (prev ? { ...prev, [field]: value } : null));
+        onChange(tableData);
     };
 
     const saveChanges = () => {
@@ -40,29 +57,48 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
             const updatedData = tableData.map((row) =>
                 row.id === selectedRow.id ? { ...selectedRow } : row
             );
+
             setTableData(updatedData);
-            onUpdate && onUpdate(selectedRow);
-            closeModal();
+            onChange(updatedData);
+            if (onUpdate) {
+                onUpdate(selectedRow);
+            }
+            setIsModalOpen(false);
+            setIsModalOpen(false);
+
         }
+
+
     };
 
     const addNewRow = () => {
+        setIsAdding(true); // Set to true for adding a new row
+        const tableId = tableData ===undefined ? 0 : tableData.length;
         const newRow = {
-            id: tableData.length + 1,
+            id: tableId + 1,
             product: "New Product",
             quantity: 0,
             material: "Unknown",
             status: "Pending",
         };
-        setTableData((prev) => [...prev, newRow]);
-        onAdd && onAdd(newRow);
+        setSelectedRow(newRow);
+
+        setTableData((prev) => {
+            if(prev){
+                return [...prev, newRow]
+            }
+            return [newRow]
+        });
+        setIsModalOpen(true);
+        onChange(tableData);
     };
+
 
     return (
         <div className="overflow-x-auto px-4">
             <button
-                className="mb-4 bg-blue-500 text-white px-4 py-1 rounded-sm hover:bg-blue-600 shadow"
-                onClick={addNewRow}
+                className="mb-4 bg-gray-100 ring-1 ring-gray-300  px-4 py-1 rounded-sm hover:bg-gray-300"
+                onClick={() => addNewRow()}
             >
                 + Add New Entry
             </button>
@@ -79,11 +115,11 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
                 </tr>
                 </thead>
                 <tbody>
-                {tableData.map((row) => (
+                {tableData && tableData.map((row) => (
                     <tr
                         key={row.id}
                         className="hover:bg-gray-50 transition"
-                        onClick={() => openModal(row)}
+                        onClick={ ()=>openModal(row)}
                     >
                         {columns.map((col) => (
                             <td key={col.key} className="border px-4 py-3">
@@ -101,7 +137,9 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
                                             .map((item, index) => ({ ...item, id: index + 1 })) // Reset IDs sequentially
                                     );
 
-                                    onDelete && onDelete(row.id);
+                                    if (onDelete) {
+                                        onDelete(row.id);
+                                    }
                                 }}
                             >
                                 <Trash />
@@ -131,6 +169,10 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
                                                 onChange={(e) => handleModalChange(col.key, e.target.value)}
                                                 disabled={isDisabled}
                                             >
+                                                <option value={"select"}>
+
+                                                </option>
+
                                                 {col.options?.map((option) => (
                                                     <option key={option} value={option}>
                                                         {option}
@@ -151,20 +193,22 @@ const EditableTable = ({ columns, data, onUpdate, onDelete, onAdd, disableFields
                             })}
                         </div>
 
-                        <div className="flex justify-end gap-2 mt-4">
-                            <button
-                                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                                onClick={closeModal}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-                                onClick={saveChanges}
-                            >
-                                Save
-                            </button>
-                        </div>
+
+                                <div className="flex justify-end gap-2 mt-4">
+                                    <button
+                                        className="bg-gray-500 text-white px-4  p-1 rounded-sm hover:bg-gray-600"
+                                        onClick={closeModal}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
+                                        onClick={saveChanges}
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+
                     </div>
                 )}
             </Modal>

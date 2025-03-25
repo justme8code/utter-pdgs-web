@@ -2,8 +2,6 @@ import { Modal } from "@/app/components/Modal";
 import { useState } from "react";
 import { TextField } from "@/app/components/TextField";
 import { Button } from "@/app/components/Button";
-import { SelectStaffInput } from "@/app/productions/SelectStaffInput";
-import FunctionalErrorBoundary from "@/app/components/FunctionalErrorBoundary";
 import { createProduction } from "@/app/productions/actions";
 
 export interface ModalOnAction {
@@ -18,6 +16,8 @@ export const CreateProduction = ({ onClose, isOpen }: ModalOnAction) => {
         endDate: "",
         status: "RUNNING" as const, // Default status
     });
+    const [isError, setIsError] = useState<string|null>(null);
+
 
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -52,12 +52,12 @@ export const CreateProduction = ({ onClose, isOpen }: ModalOnAction) => {
         try {
             const response = await createProduction(newProduction);
 
-            if (response.error?.state) {
-                console.error("Error creating production:", response.error.message);
+            if (response.error.state) {
+                setIsError(response.error.message);
             } else {
-                console.log("Production created successfully:", response);
                 setSuccessMessage("Production added successfully!");
                 setNewProduction({ name: "", startDate: "", endDate: "", status: "RUNNING" });
+                window.location.reload();
             }
         } catch (error) {
             console.error("Unexpected error:", error);
@@ -111,6 +111,10 @@ export const CreateProduction = ({ onClose, isOpen }: ModalOnAction) => {
                 </div>
 
             </div>
+
+            {isError&&<div className={"bg-gray-200 w-full rounded-sm p-3"}>
+                <p className={"text-red-500"}>{isError}</p>
+            </div>}
         </Modal>
     );
 };

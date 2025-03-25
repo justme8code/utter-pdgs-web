@@ -1,8 +1,8 @@
 "use client";
 
 import { ProductionResponse } from "@/app/data_types";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 interface ProductionListProps {
     productions: ProductionResponse[];
@@ -10,9 +10,9 @@ interface ProductionListProps {
 }
 
 const statusColors = {
-    RUNNING: "bg-blue-400",
-    COMPLETED: "bg-green-400",
-    STOPPED: "bg-red-400",
+    RUNNING: "text-blue-400",
+    COMPLETED: "text-green-400",
+    STOPPED: "text-red-400",
 };
 
 export default function ProductionList({ productions, error }: ProductionListProps) {
@@ -56,9 +56,8 @@ export default function ProductionList({ productions, error }: ProductionListPro
                             <td className="py-3 px-5 border-r border-gray-300 text-gray-700">
                                 {production.staff.userFullName} ({production.staff.companyRole})
                             </td>
-                            <td className="py-3 px-5 flex items-center gap-2">
-                                <span className={`w-3 h-3 rounded-full ${statusColors[production.status]}`}></span>
-                                <span className="text-gray-700 font-medium">{production.status}</span>
+                            <td className="py-3 px-5 border-r border-gray-300">
+                                <span className={`font-bold ${statusColors[production.status]}`}>{production.status}</span>
                             </td>
                         </tr>
                     ))}

@@ -1,15 +1,16 @@
-'use client';
-import { useState } from "react";
+
 import { ProductionInfo } from "@/app/productions/ProductionInfo";
-import { PopulateEditPurchases } from "@/app/productions/tables/PopulateEditPurchases";
+
 import { RawMaterialsToIngredients } from "@/app/productions/tables/RawMaterialsToIngredients";
 import {Navbar} from "@/app/productions/Navbar";
-import {ProductionPagination} from "@/app/productions/ProductionPagination";
-import FunctionalErrorBoundary from "@/app/components/FunctionalErrorBoundary";
 import Sidebar from "@/app/components/SideBar";
+import {fetchProductionWithDynamicData} from "@/app/productions/actions";
+import {PopulateEditPurchaseTable} from "@/app/productions/tables/PopulateEditPurchaseTable";
+import {RawMaterialsToIngredientsTable} from "@/app/productions/tables/RawMaterialsToIngredientsTable";
 
-export default function ProductionPage() {
-
+export default async function ProductionPage({params}:{params:Promise<{pid:number}>}) {
+    const {pid}  = await params;
+    const {data,status} = await fetchProductionWithDynamicData(pid);
 
 
     return (
@@ -19,15 +20,17 @@ export default function ProductionPage() {
 
                  <div className="flex-1 flex flex-col h-screen p-2 gap-5">
                      <Navbar/>
+                     {!status ? (
+                         <p>Could not find production...</p>
+                     ):<div className={"space-y-10"}>
+                         {<ProductionInfo  prod={data}/>}
 
-                     {<ProductionInfo />}
-
-                     <div className="space-y-10">
-                         <PopulateEditPurchases />
-                    <RawMaterialsToIngredients />
-
-
+                         <div className="space-y-10">
+                              <PopulateEditPurchaseTable production={data} />
+                              <RawMaterialsToIngredientsTable production={data}/>
+                         </div>
                      </div>
+                     }
                  </div>
              </main>
          </div>

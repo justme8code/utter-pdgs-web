@@ -64,5 +64,31 @@ export async function fetchRoles() {
 }
 
 
+export async function addNewMaterial(rawMaterials:{name:string}[]){
+    const {data,status} = await makeAuthRequest<{name:string}[],string>({
+        method: "POST",
+        url: `/raw-materials/list`,
+        data:rawMaterials
+    })
+    return {data: data,status: status === 201}
+}
+
+export async function getAllMaterials(){
+    const {data, status} = await makeAuthRequest<null,{id:number,name:string,createdAt:string}[]>({
+        method: "GET",
+        url: `/raw-materials`,
+    })
+    return {data: data, status: status === 200}
+}
+
+export async function deleteMaterial(id:number){
+    const {status} = await makeAuthRequest<number,null>({
+        method: "DELETE",
+        url: `/raw-materials/${id}`,
+    })
+    return {status: status === 204}
+}
+
+
 
 

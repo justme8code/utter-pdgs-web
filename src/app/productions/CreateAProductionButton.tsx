@@ -8,7 +8,6 @@ export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleCreateProduction = async () => {
         // Logic for creating production...
-
         onCreated?.();
         setIsModalOpen(false)
     };
@@ -22,7 +21,10 @@ export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void 
                 <Plus/> <h1>New Production</h1>
             </button>
             {
-                isModalOpen && <CreateProduction isOpen={isModalOpen} onClose={handleCreateProduction}   />
+                isModalOpen && <CreateProduction isOpen={isModalOpen} onClose={async () => {
+                    await handleCreateProduction();
+                    window.location.reload();
+                }}   />
             }
 
         </>

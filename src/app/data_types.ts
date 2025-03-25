@@ -11,8 +11,15 @@ export type ProductionResponse = {
         userFullName: string,
         companyRole:string
     },
-    status: "RUNNING" | "COMPLETED" | "STOPPED"
+    status: "RUNNING" | "COMPLETED" | "PAUSED",
 }
+
+export interface ExtendedProductionResponse extends ProductionResponse {
+    dynamicDataId: number,
+    dynamicDataName: string,
+    dynamicData:Record<string, never>
+}
+
 
 export type StaffResponse = {
     id:number,

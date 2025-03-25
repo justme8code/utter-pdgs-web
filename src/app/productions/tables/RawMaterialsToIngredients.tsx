@@ -1,92 +1,107 @@
 'use client';
-import { useState } from "react";
-import EditableTable, {ColumnType, RowType} from "../EditableTable";
+import { useEffect, useState } from "react";
+import EditableTable, { ColumnType, DataType, RowType } from "../EditableTable";
+import { ExtendedProductionResponse } from "@/app/data_types";
+import usePopulatePurchasesStore from "@/app/store/usePopulatePurchasesTable";
+import { createProductionDynamicData } from "@/app/productions/actions";
+import useRawMaterialsToIngredientsTable from "@/app/store/useRawMaterialsToIngredientsTable";
 
-export const RawMaterialsToIngredients = () => {
+const tableKey = 'rawMaterialsToIngredients';
+type TableType = {
+    id: number,
+    "rawMaterials": string,
+    "totalUsable": number,
+    ingredient: string,
+    "outPutLitres": number,
+    "productionLost": number,
+    "usableLitres": number,
+    "litres/kg": number,
+    "cost/litre": number,
+    "rawBrix": number,
+};
 
-    const columns:ColumnType[] = [
-        { key: "id", label: "S/N" },
-        { key: "raw materials", label: "Raw Materials", type: "dropdown", options: ["Pineapple", "Banana", "Orange"] },
-        { key: "total usable", label: "Total Usable (Kg)" },
-        { key: "ingredient", label: "Ingredient" },
-        { key: "output litres", label: "Output Litres" },
-        { key: "production lost", label: "Production Litres Lost(kg)"},
-        { key: "usable litres", label: "Usable Litres", type: "number" },
-        { key: "litres/kg", label: "Litres/Kg", type: "number" },
-        { key: "cost/litre", label: "Cost/Litre", type: "number" },
-        { key: "raw brix", label: "Raw Brix"},
-    ];
+export const RawMaterialsToIngredients = ({ production, columns }: { production: ExtendedProductionResponse, columns: ColumnType[] }) => {
+    const [editableData, setEditableData] = useState<DataType[]>([]);
+    const [savedSuccessfully, setSavedSuccessfully] = useState<boolean>(false);
+    const { table } = usePopulatePurchasesStore();
+    const { rTable,updateRTable } = useRawMaterialsToIngredientsTable();
 
+    useEffect(() => {
+        // Map to only include id and rawMaterials
+        if(table.length > 0){
+            const newKindOfData: DataType[] = table.map((value) => {
+                return {
+                    id: value.id,
+                    "rawMaterials": value["rawMaterials"],
+                };
+            });
+            updateRTable(newKindOfData);
+        }
+    }, [table, updateRTable]); // Add table as dependency to trigger the effect when it changes
+    // Handle form submission
+    const handleSubmitData = async () => {
+        const result = await createProductionDynamicData<typeof editableData>(production.id, {
+            [tableKey]: editableData, // Send the entire updated dynamicData
+        });
 
-    const [tableData, setTableData] = useState([
-        {
-            id: 1,
-            "raw materials": "Pineapple",
-            "total usable": 450,
-            ingredient: "Pineapple Pulp",
-            "output litres": 400,
-            "production lost": 50,
-            "usable litres": 380,
-            "litres/kg": 0.85,
-            "cost/litre": 2.5,
-            "raw brix": 12,
-        },
-        {
-            id: 2,
-            "raw materials": "Banana",
-            "total usable": 280,
-            ingredient: "Banana Puree",
-            "output litres": 250,
-            "production lost": 30,
-            "usable litres": 240,
-            "litres/kg": 0.86,
-            "cost/litre": 2.8,
-            "raw brix": 10,
-        },
-        {
-            id: 3,
-            "raw materials": "Orange",
-            "total usable": 190,
-            ingredient: "Orange Juice",
-            "output litres": 170,
-            "production lost": 20,
-            "usable litres": 160,
-            "litres/kg": 0.84,
-            "cost/litre": 3,
-            "raw brix": 11,
-        },
-    ]);
+        if (result) {
+            setSavedSuccessfully(true);
+        }
+        console.log("Console log in submit", editableData);
+    };
 
-
-
-
+    // Handle row update
     const handleUpdate = (updatedRow: RowType) => {
-        setTableData(prevData => prevData
-            .map(row => row.id === updatedRow.id ? {...row, ...updatedRow} : row));
-    }
+        setEditableData((prevData) =>
+            prevData.map((row) => (row.id === updatedRow.id ? { ...row, ...updatedRow } : row))
+        );
+    };
 
+    // Handle row deletion
     const handleDelete = (id: number) => {
-        setTableData(prevData => prevData.filter(row => row.id !== id));
-        console.log("Deleted ID:", id);
+        setEditableData((prevData) =>
+            prevData.filter((row) => row.id !== id)
+        );
     };
 
-    const handleAdd = () => {
-        const newRow = { id: Date.now(), "raw materials": "New Raw Material", "total usable": 0, ingredient: "New Ingredient", "output litres": 0, "production lost": 0, "usable litres": 0, "litres/kg": 0, "cost/litre": 0, "raw brix": 0 };
-        setTableData(prevData => [...prevData, newRow]);
-        console.log("Add New Entry Triggered");
-    };
+    /*// Handle adding new row
+    const handleAddRow = () => {
+        const newRow = { id: Date.now(), rawMaterials: '' }; // Add empty row with default values
+        setEditableData([...editableData, newRow]); // Add new row to the table
+    };*/
 
     return (
-        <>
-            <h1 className={"font-bold text-lg"}>Raw Materials To Ingredients</h1>
-            <EditableTable
-                columns={columns}
-                data={tableData}
-                onUpdate={handleUpdate}
-                onDelete={handleDelete}
-                onAdd={handleAdd}
-                disableFields={(row) => ["raw materials","ingredient","litres/kg","cost/litre","total usable"]}
-            />
-        </>
+        <div className="p-4">
+            <h1 className="font-bold text-xl mb-4">Raw Materials To Ingredients</h1>
+
+            {
+                table.map((row) => (
+                    <p key={row.id}></p>
+                ))
+            }
+            {
+                 rTable &&  <EditableTable
+                    onChange={(data) => {
+                        updateRTable(data);
+                    }}
+                    columns={columns}
+                    data={rTable}
+                    onUpdate={handleUpdate}
+                    onDelete={handleDelete}
+                    onAdd={newRow => {}} // Implement the add row functionality
+                />
+            }
+
+            {savedSuccessfully && <p className="text-green-500 mt-2">Update saved successfully!</p>}
+
+            <div className="mt-4 p-4 space-x-2">
+                <button
+                    onClick={handleSubmitData}
+                    className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
+                >
+                    Save
+                </button>
+            </div>
+        </div>
     );
 };

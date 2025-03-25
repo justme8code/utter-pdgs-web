@@ -19,7 +19,7 @@ export const TextField: React.FC<TextFieldProps> = ({ value, name,label, placeho
             <input
                 name={name}
                 placeholder={placeholder}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-gray-300 rounded-xs px-2 py-1 outline-none focus:ring-2 focus:ring-slate-500 focus:border-none focus:outline-none"
                 type={type}
                 required={required}
                 id={label}
