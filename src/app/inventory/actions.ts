@@ -81,12 +81,21 @@ export async function getAllMaterials(){
     return {data: data, status: status === 200}
 }
 
+
 export async function deleteMaterial(id:number){
     const {status} = await makeAuthRequest<number,null>({
         method: "DELETE",
         url: `/raw-materials/${id}`,
     })
     return {status: status === 204}
+}
+
+export async function getAllMaterialsWithIngredients(){
+    const {data, status} = await makeAuthRequest<null,{ id:number,name:string,ingredients:{id:number,name:string}[] }[]>({
+        method: "GET",
+        url: `/raw-materials/withIngredients`,
+    })
+    return {data: data, status: status === 200}
 }
 
 

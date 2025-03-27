@@ -7,6 +7,8 @@ import {ManageRoles} from "@/app/inventory/ManageRoles";
 import { ManageUsers } from "./ManageUsers";
 import {UsersList} from "@/app/inventory/UsersList";
 import {RawMaterials} from "@/app/inventory/RawMaterials";
+import {IngredientAdder} from "@/app/inventory/IngredientAdder";
+import {Ingredients} from "@/app/inventory/Ingredients";
 
 export default function InventoryPage() {
 
@@ -17,6 +19,7 @@ export default function InventoryPage() {
             <main className="flex w-full h-screen p-6 space-x-10">
                 <UsersList/>
                 <RawMaterials/>
+                <Ingredients/>
             </main>
         </div>
     );

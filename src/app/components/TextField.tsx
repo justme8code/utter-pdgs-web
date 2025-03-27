@@ -10,16 +10,17 @@ interface TextFieldProps {
     onChange?: (value: string) => void;
     props?: React.InputHTMLAttributes<HTMLInputElement>;
     defaultValue?: string;
+    className?: string;
 }
 
-export const TextField: React.FC<TextFieldProps> = ({ value, name,label, placeholder, required,type = "text", onChange, props,defaultValue }) => {
+export const TextField: React.FC<TextFieldProps> = ({ value, name,label, placeholder, required,type = "text", onChange, props,defaultValue,className }) => {
     return (
-        <div className="flex flex-col gap-2">
+        <div className={`${ label ? "flex w-full flex-col gap-2" :"w-full"}  ${className}`}>
             {label && <label className={"font-bold"} htmlFor={label}>{label}:</label>}
             <input
                 name={name}
                 placeholder={placeholder}
-                className="w-full border border-gray-300 rounded-xs px-2 py-1 outline-none focus:ring-2 focus:ring-slate-500 focus:border-none focus:outline-none"
+                className={`w-full border border-gray-300 rounded-xs px-2 py-1 outline-none focus:ring-2 focus:ring-slate-500 focus:border-none focus:outline-none`}
                 type={type}
                 required={required}
                 id={label}

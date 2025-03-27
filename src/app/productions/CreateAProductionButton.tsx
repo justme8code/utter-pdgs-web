@@ -14,10 +14,11 @@ export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void 
     return (
         <>
             <button
-                className="flex items-center bg-blue-600 p-2  rounded-sm text-white"
+                className="flex items-center text-xs bg-blue-400 font-bold w-full p-1  rounded-sm hover:bg-blue-500"
                 onClick={() => setIsModalOpen(true)}
             >
-                <Plus/> <h1>New Production</h1>
+                <Plus/>
+                <p>New Production</p>
             </button>
             {
                 isModalOpen && <CreateProduction isOpen={isModalOpen} onClose={async () => {

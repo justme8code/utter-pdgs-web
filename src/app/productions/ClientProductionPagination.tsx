@@ -48,7 +48,7 @@ export const ClientProductionPagination = ({ productions }: { productions: Produ
                     <TextField
                         value={searchValue}
                         onChange={(e) => handleSearch(e)}
-                        props={{ className: "bg-gray-300 p-2 px-4 outline-none border-none rounded-sm", placeholder: "Search Productions" }}
+                        props={{ className: "bg-gray-300 p-1 px-4 outline-none border-none rounded-sm", placeholder: "Search Productions" }}
                         label=""
                     />
                     <CreateAProductionButton />

@@ -33,7 +33,7 @@ export type Production = {
     startDate: string,
     endDate: string,
     name: string,
-    id: number
+    id?: number
 }
 
 
