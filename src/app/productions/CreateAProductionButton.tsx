@@ -14,7 +14,7 @@ export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void 
     return (
         <>
             <button
-                className="flex items-center text-xs bg-blue-400 font-bold w-full p-1  rounded-sm hover:bg-blue-500"
+                className="flex items-center text-xs text-white bg-blue-500 font-bold  p-1 px-3  rounded-sm hover:bg-blue-600"
                 onClick={() => setIsModalOpen(true)}
             >
                 <Plus/>

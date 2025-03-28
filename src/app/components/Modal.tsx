@@ -1,5 +1,6 @@
 'use client';
 import { useEffect } from "react";
+import {XIcon} from "lucide-react";
 
 interface ModalProps {
     isOpen: boolean;
@@ -29,9 +30,9 @@ export const Modal = ({ isOpen, onClose, children,className }: ModalProps) => {
             <div className={`bg-white p-6 rounded-lg shadow-lg relative ${className}`}>
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 cursor-pointer"
                 >
-                    ✖
+                    <XIcon/>
                 </button>
                 {children}
             </div>

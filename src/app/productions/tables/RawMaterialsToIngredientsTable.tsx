@@ -13,6 +13,7 @@ const columns:ColumnType[] = [
     { key: "litres/kg", label: "Litres/Kg", type: "number" },
     { key: "cost/litre", label: "Cost/Litre", type: "number" },
     { key: "rawBrix", label: "Raw Brix"},
+    { key: "batch", label: "Batch",type: "number" },
 ];
 
 export const RawMaterialsToIngredientsTable = ({production}:{production:ExtendedProductionResponse}) => {

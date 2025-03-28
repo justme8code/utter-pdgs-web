@@ -1,20 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { ListIcon, Trash } from "lucide-react";
+import {  Trash } from "lucide-react";
 import { TextField } from "@/app/components/TextField";
 import { IngredientAdder } from "./IngredientAdder"; // Import the new component
-import {addNewMaterial, deleteMaterial, getAllMaterials, getAllMaterialsWithIngredients} from "@/app/inventory/actions";
+import {
+    addIngredientsToRawMaterial,
+    addNewMaterial,
+    deleteMaterial,
+    getAllMaterialsWithIngredients
+} from "@/app/inventory/actions";
+import {SelectableIngredients} from "@/app/inventory/SelectableIngredients";
+import Loading from "@/app/loading";
 
-interface Material {
+export interface RawMaterial {
     id?: number;
     name: string;
-    ingredients:{id:number,name:string}[]
+    ingredients:Ingredient[];
+}
+
+export interface Ingredient {
+    id?: number;
+    name: string;
+    createdAt:string;
 }
 
 
-
 export const RawMaterials: React.FC = () => {
-    const [materials, setMaterials] = useState<Material[]>([]);
+    const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string|null>(null);
+    const [updateMessage, setUpdateMessage] = useState<string|null>(null);
 
     useEffect(() => {
         const fetchMaterials = async () => {
@@ -22,7 +36,7 @@ export const RawMaterials: React.FC = () => {
             try {
                 const { data, status } = await getAllMaterialsWithIngredients();
                 if (status) {
-                    setMaterials(data);
+                    setRawMaterials(data);
                 }
             } catch (error) {
                 console.error("Failed to load materials:", error);
@@ -34,54 +48,66 @@ export const RawMaterials: React.FC = () => {
     }, []);
 
     const addMaterial = () => {
-        setMaterials([...materials, { name: "", ingredients: [] }]);
+        setRawMaterials([...rawMaterials, { name: "", ingredients: [] }]);
     };
 
     const updateMaterialName = (index: number, name: string) => {
-        setMaterials(materials.map((m, i) => (i === index ? { ...m, name } : m)));
+        setRawMaterials(rawMaterials.map((m, i) => (i === index ? { ...m, name } : m)));
     };
 
-   /* const updateMaterialIngredients = (index: number, newIngredients: string[]) => {
-        setMaterials(materials.map((m, i) => (i === index ? { ...m, ingredients: newIngredients } : m)));
-    };*/
+    const updateMaterialIngredients = (index: number, newIngredients: Ingredient[]) => {
+        setRawMaterials(rawMaterials.map((rawMaterial, idx) =>
+            (idx=== index ? {...rawMaterial,ingredients:newIngredients}:rawMaterial)))
+    };
+
+    const addIngredientToRM = async (index:number)=>{
+        setLoading(true);
+        const rm = rawMaterials[index];
+        if(rm.id){
+            console.log(rm.ingredients);
+            const {status} = await addIngredientsToRawMaterial(rm.id,rm.ingredients);
+            if(status){
+                setUpdateMessage("Ingredients added successfully.");
+            }else{
+                setUpdateMessage("Could not add ingredients.");
+            }
+        }
+
+        setLoading(false);
+    }
 
     const removeMaterial = async (index: number) => {
-        const material = materials[index];
+        const material = rawMaterials[index];
 
         if (material.id) {
             const { status } = await deleteMaterial(material.id);
             if (status) {
-                setMaterials(materials.filter((_, i) => i !== index));
+                setRawMaterials(rawMaterials.filter((_, i) => i !== index));
             }
         } else {
-            setMaterials(materials.filter((_, i) => i !== index));
+            setRawMaterials(rawMaterials.filter((_, i) => i !== index));
         }
     };
 
     const saveMaterials = async () => {
-        const newMaterials = materials.filter(m => !m.id);
+        const newMaterials = rawMaterials.filter(m => !m.id);
         if (newMaterials.length === 0) return;
 
-        setLoading(true);
-        try {
-            const formattedNewMaterials = newMaterials.map(m => ({ ...m, ingredients: m.ingredients.join(',') }));
-            const { status } = await addNewMaterial(formattedNewMaterials);
-            if (status) {
-                const { data, status } = await getAllMaterials();
-                if (status) {
-                    const formattedData = data ? data.map(m => ({ ...m, ingredients: m.ingredients || [] })) : [];
-                    setMaterials(formattedData);
-                }
-            }
-        } catch (error) {
-            console.error("Failed to save materials:", error);
-        } finally {
-            setLoading(false);
+        console.log(newMaterials);
+        const {data, status} = await addNewMaterial(newMaterials);
+        console.log(status);
+        if (status && data){
+            setRawMaterials(data);
+        }else{
+            setTimeout(()=>{
+                setError("Oops the new raw material wasn't added, I not sure why, but please try again.");
+            },1000)
+            setError(null);
         }
     };
 
     return (
-        <div className="w-full">
+        <div className="w-full max-h-screen overflow-scroll">
             <div className="flex w-full gap-10 mb-5">
                 <h2 className="text-xl font-bold">Raw Materials</h2>
                 <button
@@ -106,22 +132,27 @@ export const RawMaterials: React.FC = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {materials.map((material, index) => (
-                    <tr key={index} className="border-b border-gray-300">
-                        <td className="p-2 border border-gray-300 ">
-                             <div className={"space-y-5"}>
-                                 <TextField
-                                     value={material.name}
-                                     onChange={value => updateMaterialName(index, value)}
-                                     props={{
-                                         placeholder: "Enter material name",
-                                     }}
-                                 />
 
-                                {/* <IngredientAdder
-                                     ingredients={material.ingredients}
-                                     onIngredientsChange={(newIngredients) => updateMaterialIngredients(index, newIngredients)}
-                                 />*/}
+                {error && <p className={"text-red-500 font-bold"}>{error}</p>}
+                {rawMaterials.map((rawMaterial, index) => (
+                    <tr key={index} className="border-b border-gray-300">
+                        <td className="p-2 border  w-full max-w-3/4 border-gray-300 ">
+                             <div className={"space-y-2"}>
+                                 {rawMaterial.id? <h1 className={"font-medium"}>{rawMaterial.name}</h1>
+                                    : <TextField
+                                         value={rawMaterial.name}
+                                         onChange={value => updateMaterialName(index, value)}
+                                         props={{
+                                             placeholder: "Enter material name",
+                                         }}
+                                     />
+                                 }
+                                 <SelectableIngredients alreadySelectedIngredients={rawMaterial.ingredients} onSelectedIngredients={ingredients => updateMaterialIngredients(index, ingredients)}/>
+                                 {
+                                     rawMaterial.ingredients.length > 0 &&  <div className={"flex"}>
+                                         {loading ? <Loading className={"w-6 h-6"}/> : <button onClick={() => addIngredientToRM(index)} className={"rounded-sm p-1 border-none ring-1 ring-gray-200 hover:bg-blue-500 cursor-pointer hover:text-white"}>update</button>}
+                                     </div>
+                                 }
                              </div>
                         </td>
 

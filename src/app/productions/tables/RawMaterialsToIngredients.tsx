@@ -9,18 +9,6 @@ import useRawMaterialsToIngredientsTable from "@/app/store/useRawMaterialsToIngr
 const tableKey = 'rawMaterialsToIngredients';
 const foreign = 'populateEditPurchases';
 
-type TableType = {
-    id: number,
-    "rawMaterials": string,
-    "totalUsable": number,
-    ingredient: string,
-    "outPutLitres": number,
-    "productionLost": number,
-    "usableLitres": number,
-    "litres/kg": number,
-    "cost/litre": number,
-    "rawBrix": number,
-};
 
 export const RawMaterialsToIngredients = ({ production, columns }: { production: ExtendedProductionResponse, columns: ColumnType[] }) => {
     const [editableData, setEditableData] = useState<DataType[]>([]);
@@ -29,43 +17,43 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
     const { rTable,updateRTable } = useRawMaterialsToIngredientsTable();
 
     useEffect(() => {
-        // Map to only include id and rawMaterials
+        const s: DataType[]= production.dynamicData[tableKey];
 
-        const s:DataType[] = production.dynamicData[tableKey];
-        if(s===undefined && table.length > 0){
-            const newKindOfData: DataType[] = table.map((value) => {
-                return {
-                    id: value.id,
-                    "rawMaterials": value["rawMaterials"],
-                };
-            });
-
+        if (!s && Array.isArray(table) && table.length > 0) {
+            const newKindOfData: DataType[] = table.map((value) => ({
+                id: value.id,
+                rawMaterials: value.rawMaterials,
+            }));
 
             updateRTable(newKindOfData);
         }
 
-
-        else if (table.length > 0){
-            // Map to only include id and rawMaterials
-
-            const l:DataType[] = s.map((value, index) => {
+        else if (Array.isArray(table) && table.length > 0 && Array.isArray(s) && s.length > 0) {
+            // Ensure 's' is defined and is an array before mapping
+            const l: DataType[] = s.map((value, index) => {
                 const d = table[index];
-                return {
-                    "id" : d.id,
-                    "rawMaterials" : d["rawMaterials"],
-                    "totalUsable": value["totalUsable"],
-                    "ingredient": value["ingredient"],
-                    "outPutLitres": value["outPutLitres"],
-                    "productionLost": value["productionLost"],
-                    "usableLitres": value["usableLitres"],
-                    "litres/kg": value["litres/kg"],
-                    "cost/litre": value["cost/litre"],
-                    "rawBrix": value["rawBrix"],
-                }
-            })
+                return d
+                    ? {
+                        id: d.id,
+                        rawMaterials: d.rawMaterials,
+                        totalUsable: value.totalUsable,
+                        ingredient: value.ingredient,
+                        outPutLitres: value.outPutLitres,
+                        productionLost: value.productionLost,
+                        usableLitres: value.usableLitres,
+                        "litres/kg": value["litres/kg"],
+                        "cost/litre": value["cost/litre"],
+                        rawBrix: value.rawBrix,
+                    }
+                    : value; // If no corresponding table entry exists, keep original value
+            });
+
             updateRTable(l);
         }
-    }, [production.dynamicData, table, updateRTable]); // Add table as dependency to trigger the effect when it changes
+    }, [production.dynamicData, table, updateRTable]);
+
+
+
     const handleSubmitData = async () => {
         const result = await createProductionDynamicData<typeof editableData>(production.id, {
             [foreign]: table, // Send the entire updated dynamicData

@@ -2,21 +2,25 @@
 import React from "react";
 import { Trash } from "lucide-react";
 import { TextField } from "@/app/components/TextField";
+import {Ingredient} from "@/app/inventory/RawMaterials";
 
 interface IngredientAdderProps {
-    ingredients: string[];
-    onIngredientsChange: (newIngredients: string[]) => void;
+    ingredients: Ingredient[];
+    onIngredientsChange: (newIngredients: Ingredient[]) => void;
 }
 
 export const IngredientAdder: React.FC<IngredientAdderProps> = ({ ingredients, onIngredientsChange }) => {
-    const handleIngredientChange = (index: number, value: string) => {
+
+    const handleIngredientChange = (index: number, value:Ingredient) => {
         const newIngredients = [...ingredients];
         newIngredients[index] = value;
         onIngredientsChange(newIngredients);
     };
 
     const addIngredient = () => {
-        onIngredientsChange([...ingredients, ""]);
+        onIngredientsChange([...ingredients, {
+            name:""
+        }]);
     };
 
     const removeIngredient = (index: number) => {
@@ -31,8 +35,8 @@ export const IngredientAdder: React.FC<IngredientAdderProps> = ({ ingredients, o
                 {ingredients && ingredients.map((ingredient, index) => (
                     <div key={index} className="flex items-center gap-2 mb-1">
                         <TextField
-                            value={ingredient}
-                            onChange={value => handleIngredientChange(index, value)}
+                            value={ingredient.name}
+                            onChange={value => handleIngredientChange(index, {name:value})}
                             props={{
                                 placeholder: `Ingredient ${index + 1}`,
                              

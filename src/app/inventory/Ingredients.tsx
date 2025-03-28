@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { ListIcon, Trash } from "lucide-react";
 import { TextField } from "@/app/components/TextField";
-import {addNewMaterial, deleteMaterial, getAllMaterials} from "@/app/inventory/actions";
+import {
+    addNewIngredient,
+    getAllIngredients,
+} from "@/app/inventory/actions";
+import {Ingredient} from "@/app/inventory/RawMaterials";
+import { Trash } from "lucide-react";
 
-interface Material {
-    id?: number; // Optional, because new materials don't have an ID
-    name: string;
-}
 
 
 export const Ingredients: React.FC = () => {
-    const [materials, setMaterials] = useState<Material[]>([]);
+    const [ingredient, setIngredient] = useState<Ingredient[]>([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string|null>(null);
 
     // Fetch raw materials from the API on mount
     useEffect(() => {
-        const fetchMaterials = async () => {
+        const fetchIngredients = async () => {
             setLoading(true);
             try {
-                const { data, status } = await getAllMaterials();
+                const { data, status } = await getAllIngredients();
                 if (status) {
-                    setMaterials(data || []);
+                    setIngredient(data || []);
                 }
             } catch (error) {
                 console.error("Failed to load materials:", error);
@@ -28,49 +29,45 @@ export const Ingredients: React.FC = () => {
                 setLoading(false);
             }
         };
-        fetchMaterials();
+        fetchIngredients();
     }, []);
 
-    const addMaterial = () => {
-        setMaterials([...materials, { name: "" }]); // New materials have no ID
+    const addIngredient = () => {
+        setIngredient([...ingredient, { name: "" }]); // New materials have no ID
     };
 
-    const updateMaterial = (index: number, value: string) => {
-        setMaterials(materials.map((m, i) => (i === index ? { ...m, name: value } : m)));
+    const updateIngredient = (index: number, value: string) => {
+        setIngredient(ingredient.map((m, i) => (i === index ? { ...m, name: value } : m)));
     };
 
-    const removeMaterial = async (index: number) => {
-        const material = materials[index];
+   /* const removeIngredients = async (index: number) => {
+        const material = ingredient[index];
 
         if (material.id) {
             // If it has an ID, delete it from the API
             const { status } = await deleteMaterial(material.id);
             if (status) {
-                setMaterials(materials.filter((_, i) => i !== index));
+                setIngredient(ingredient.filter((_, i) => i !== index));
             }
         } else {
             // If no ID, it's a new material, just remove from UI
-            setMaterials(materials.filter((_, i) => i !== index));
+            setIngredient(ingredient.filter((_, i) => i !== index));
         }
-    };
+    };*/
 
     const saveMaterials = async () => {
-        const newMaterials = materials.filter(m => !m.id); // Only send new materials
-        if (newMaterials.length === 0) return;
+        const ingredients = ingredient.filter(m => !m.id); // Only send new materials
+        if (ingredients.length === 0) return;
 
         setLoading(true);
-        try {
-            const { status } = await addNewMaterial(newMaterials);
-            if (status) {
-                const { data, status } = await getAllMaterials(); // Refresh materials list
-                if (status) {
-                    setMaterials(data || []);
-                }
-            }
-        } catch (error) {
-            console.error("Failed to save materials:", error);
-        } finally {
-            setLoading(false);
+        const { data,status } = await addNewIngredient(ingredients);
+        if (status && data){
+            setIngredient(data);
+        }else{
+            setTimeout(()=>{
+                setError("Oops the new raw material wasn't added, I not sure why, but please try again.");
+            },1000)
+            setError(null);
         }
     };
 
@@ -79,7 +76,7 @@ export const Ingredients: React.FC = () => {
             <div className="flex w-full gap-10 mb-5">
                 <h2 className="text-xl font-bold">Ingredients</h2>
                 <button
-                    onClick={addMaterial}
+                    onClick={addIngredient}
                     className="bg-gray-200 ring-1 ring-gray-300 flex items-center text-sm gap-2 p-1 rounded-sm"
                 >
                     <p>Add New Ingredient</p>
@@ -100,24 +97,25 @@ export const Ingredients: React.FC = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {materials.map((material, index) => (
+                {error && <p className={"text-red-500 font-bold"}>{error}</p>}
+                {ingredient.map((material, index) => (
                     <tr key={index} className="border-b border-gray-300">
                         <td className="p-2 border border-gray-300">
                             <TextField
                                 value={material.name}
-                                onChange={value => updateMaterial(index, value)}
+                                onChange={value => updateIngredient(index, value)}
                                 props={{
                                     placeholder: "Enter material name",
                                 }}
                             />
                         </td>
                         <td className="p-2">
-                            <button
+                           {/* <button
                                 className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
-                                onClick={() => removeMaterial(index)}
+                                onClick={() => removeIngredients(index)}
                             >
                                 <Trash />
-                            </button>
+                            </button>*/}
                         </td>
                     </tr>
                 ))}

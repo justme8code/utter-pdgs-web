@@ -22,10 +22,6 @@ export default function ProductionList({ productions, error }: ProductionListPro
         return <p className="text-red-500 font-semibold">{error.message}</p>;
     }
 
-    if (productions.length < 1) {
-        return null;
-    }
-
     return (
         <div className="bg-white shadow-xs rounded-xl">
             <div className="overflow-x-auto">
@@ -42,25 +38,33 @@ export default function ProductionList({ productions, error }: ProductionListPro
                     </tr>
                     </thead>
                     <tbody>
-                    {productions.map((production) => (
-                        <tr
-                            key={production.id}
-                            className="border-b border-gray-300 last:border-b-0 hover:bg-gray-100 transition cursor-pointer"
-                            onClick={() => router.push(`/productions/${production.id}`)} // ✅ Redirects on row click
-                        >
-                            <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.id}</td>
-                            <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.productionNumber}</td>
-                            <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.name}</td>
-                            <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.startDate}</td>
-                            <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.endDate}</td>
-                            <td className="py-3 px-5 border-r border-gray-300 text-gray-700">
-                                {production.staff.userFullName} ({production.staff.companyRole})
-                            </td>
-                            <td className="py-3 px-5 border-r border-gray-300">
-                                <span className={`font-bold ${statusColors[production.status]}`}>{production.status}</span>
+                    {productions.length > 0 ? (
+                        productions.map((production) => (
+                            <tr
+                                key={production.id}
+                                className="border-b border-gray-300 last:border-b-0 hover:bg-gray-100 transition cursor-pointer"
+                                onClick={() => router.push(`/productions/${production.id}`)}
+                            >
+                                <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.id}</td>
+                                <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.productionNumber}</td>
+                                <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.name}</td>
+                                <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.startDate}</td>
+                                <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.endDate}</td>
+                                <td className="py-3 px-5 border-r border-gray-300 text-gray-700">
+                                    {production.staff.userFullName} ({production.staff.companyRole})
+                                </td>
+                                <td className="py-3 px-5 border-r border-gray-300">
+                                    <span className={`font-bold ${statusColors[production.status]}`}>{production.status}</span>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={7} className="py-4 px-5 text-center text-gray-500">
+                                No productions available.
                             </td>
                         </tr>
-                    ))}
+                    )}
                     </tbody>
                 </table>
             </div>

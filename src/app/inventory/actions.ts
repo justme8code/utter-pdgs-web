@@ -1,6 +1,7 @@
 'use server';
 import {makeAuthRequest} from "@/app/actions";
 import {Role, User, UserResponse} from "@/app/data_types";
+import {Ingredient, RawMaterial} from "@/app/inventory/RawMaterials";
 
 
 
@@ -64,10 +65,10 @@ export async function fetchRoles() {
 }
 
 
-export async function addNewMaterial(rawMaterials:{name:string}[]){
-    const {data,status} = await makeAuthRequest<{name:string}[],string>({
+export async function addNewMaterial(rawMaterials:RawMaterial[]){
+    const {data,status} = await makeAuthRequest<RawMaterial[],RawMaterial[]>({
         method: "POST",
-        url: `/raw-materials/list`,
+        url: `/raw-materials`,
         data:rawMaterials
     })
     return {data: data,status: status === 201}
@@ -91,13 +92,39 @@ export async function deleteMaterial(id:number){
 }
 
 export async function getAllMaterialsWithIngredients(){
-    const {data, status} = await makeAuthRequest<null,{ id:number,name:string,ingredients:{id:number,name:string}[] }[]>({
+    const {data, status} = await makeAuthRequest<null,RawMaterial[]>({
         method: "GET",
-        url: `/raw-materials/withIngredients`,
+        url: `/raw-materials`,
     })
     return {data: data, status: status === 200}
 }
 
+export async function  addIngredientsToRawMaterial(rawMaterialId:number,ingredients:Ingredient[]){
+    const {data, status} = await makeAuthRequest<Ingredient[],null>({
+        method: "POST",
+        url: `/raw-materials/${rawMaterialId}/ingredients`,
+        data:ingredients
+    })
+    return {data: data, status: status === 204}
+}
+
+export async function getAllIngredients(){
+    const {data, status} = await makeAuthRequest<null,Ingredient[]>({
+        method: "GET",
+        url: `/ingredients`,
+    })
+    return {data: data, status: status === 200}
+}
+
+
+export async function addNewIngredient(ingredient:Ingredient[]){
+    const {data,status} = await makeAuthRequest<Ingredient[],Ingredient[]>({
+        method: "POST",
+        url: `/ingredients`,
+        data:ingredient
+    })
+    return {data: data,status: status === 201}
+}
 
 
 
