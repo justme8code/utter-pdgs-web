@@ -2,9 +2,11 @@
 import {useEffect, useState} from "react";
 import { Modal } from "@/app/components/Modal";
 import { Trash } from "lucide-react";
+import * as Tooltip from '@radix-ui/react-tooltip';
+
 
 export type RowType = { id: number, [key: string]: string | number };
-export type ColumnType = { key: string, label: string, type?: string, options?: string[] };
+export type ColumnType = { key: string, label: string, type?: string, options?: string[], info?:boolean};
 export type DataType = { id: number, [key: string]: string | number };
 
 export interface EditableTableProps {
@@ -19,8 +21,7 @@ export interface EditableTableProps {
 }
 
 const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disableFields }: EditableTableProps) => {
-    console.log("Login data");
-    console.log(data);
+
     const [tableData, setTableData] = useState(data);
     const [selectedRow, setSelectedRow] = useState<RowType | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,13 +40,13 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
 
     const closeModal = () => {
         setIsModalOpen(false);
-        if (isAdding) {
+        /*if (isAdding) {
             // If we are adding a new row, remove the last row
             const s = tableData.slice(0, tableData.length - 1);
             setTableData(s);
         }
         setSelectedRow(null);
-        setIsAdding(false);
+        setIsAdding(false);*/
     };
 
 
@@ -74,14 +75,20 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
     };
 
     const addNewRow = () => {
-        setIsAdding(true); // Set to true for adding a new row
+        setIsAdding(true);
         const tableId = tableData ===undefined ? 0 : tableData.length;
         const newRow = {
-            id: tableId + 1,
-            product: "New Product",
-            quantity: 0,
-            material: "Unknown",
-            status: "Pending",
+            id: tableId+1, // Ensuring unique ID
+            rawMaterials: '',
+            supplier: '',
+            uom: 'kg',
+            qty: 0,
+            weight: 0,
+            productionLost: 0,
+            usable: 0,
+            cost: 0,
+            avgCost: 0,
+            avgWeightPerUOM: 0,
         };
         setSelectedRow(newRow);
 
@@ -109,7 +116,7 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
                 <thead className="bg-gray-200 text-gray-700">
                 <tr>
                     {columns.map((col) => (
-                        <th key={col.key} className="border px-4 py-3 text-left font-semibold">
+                        <th key={col.key} className="border p-2 text-center font-semibold">
                             {col.label}
                         </th>
                     ))}
@@ -124,8 +131,30 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
                         onClick={ ()=>openModal(row)}
                     >
                         {columns.map((col) => (
-                            <td key={col.key} className="border px-4 py-3">
-                                {row[col.key]}
+                            <td key={col.key} className="border p-2 text-center">
+                                {col.info ? (
+                                    <Tooltip.Provider>
+                                        <Tooltip.Root>
+                                            <Tooltip.Trigger asChild>
+                                                <div>
+                                                    Auto
+                                                    {typeof row[col.key] === "string"
+                                                        && (row[col.key] as string).split(",").map((value, index) => (
+                                                            <div key={index}></div>
+                                                        ))}
+                                                </div>
+                                            </Tooltip.Trigger>
+                                            <Tooltip.Portal>
+                                                <Tooltip.Content className="bg-gray-800 text-white text-sm px-2 py-1 rounded-md shadow-lg">
+                                                    {row[col.key]}
+                                                    <Tooltip.Arrow className="fill-gray-800" />
+                                                </Tooltip.Content>
+                                            </Tooltip.Portal>
+                                        </Tooltip.Root>
+                                    </Tooltip.Provider>
+                                ) : (
+                                    row[col.key]
+                                )}
                             </td>
                         ))}
                         {onDelete && <td className="border px-4 py-3 text-center">
@@ -163,15 +192,23 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
 
                                 return (
                                     <label key={col.key} className="block text-sm font-medium">
-                                         <p>{col.label}:</p>
+                                        {
+                                            <div className={"flex"}>
+                                                <p>{col.label}:</p>
+                                                {isDisabled && <p>(Auto)</p>}
+                                            </div>
+                                        }
                                         {col.type === "dropdown" ? (
                                             <select
+
                                                 title={isDisabled ? "Auto" : ""}
                                                 className="bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none  w-full p-2 rounded mt-1"
-                                                value={selectedRow[col.key]}
+                                                value={selectedRow[col.key] || ""}
                                                 onChange={(e) => handleModalChange(col.key, e.target.value)}
                                                 disabled={isDisabled}
                                             >
+
+                                                <option value="" disabled>Select your option</option>
                                                 {col.options?.map((option) => (
                                                     <option key={option} value={option}>
                                                         {option}
@@ -179,7 +216,7 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
                                                 ))}
                                             </select>
 
-                                        ) : (
+                                        ) :(
                                             <input
                                                 type={col.type || "text"}
                                                 title={isDisabled ? "Auto" : ""}
@@ -195,20 +232,20 @@ const EditableTable = ({columns, data, onUpdate, onDelete, onAdd, onChange,disab
                         </div>
 
 
-                                <div className="flex justify-end gap-2 mt-4">
-                                    <button
-                                        className="bg-gray-500 text-white px-4  p-1 rounded-sm hover:bg-gray-600"
-                                        onClick={closeModal}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
-                                        onClick={saveChanges}
-                                    >
-                                        Save
-                                    </button>
-                                </div>
+                        <div className="flex justify-end gap-2 mt-4">
+                            <button
+                                className="bg-gray-500 text-white px-4  p-1 rounded-sm hover:bg-gray-600"
+                                onClick={closeModal}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
+                                onClick={saveChanges}
+                            >
+                                Save
+                            </button>
+                        </div>
 
                     </div>
                 )}

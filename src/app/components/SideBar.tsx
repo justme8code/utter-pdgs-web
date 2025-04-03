@@ -20,7 +20,7 @@ export default function Sidebar() {
     }
 
     return (
-        <div className="flex z-50 h-screen">
+        <div className="flex z-50 h-screen max-w-48">
             <button
                 className="p-3 md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white rounded-full"
                 onClick={() => setIsOpen(!isOpen)}
@@ -30,7 +30,7 @@ export default function Sidebar() {
 
             {/* Sidebar */}
             <div className={`h-full`}>
-                <div className={`fixed top-0 left-0 w-64 h-full justify-between bg-gray-900 text-white p-5 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform md:translate-x-0 md:relative md:w-64`}>
+                <div className={`fixed top-0 left-0 max-w-48  h-full justify-between bg-gray-900 text-white p-5 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform md:translate-x-0 md:relative md:w-64`}>
                     <div className={"h-96"}>
                         {auth && (
                             <div className={"p-2"}>

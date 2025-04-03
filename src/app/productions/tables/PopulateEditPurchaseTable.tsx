@@ -1,21 +1,23 @@
-import {getAllMaterials} from "@/app/inventory/actions";
+import {getAllRawMaterials, getAllSuppliers} from "@/app/inventory/actions";
 import {ColumnType} from "@/app/productions/EditableTable";
 import {PopulateEditPurchases} from "@/app/productions/tables/PopulateEditPurchases";
 import {ExtendedProductionResponse, ProductionResponse} from "@/app/data_types";
+import {PopulateEditPurchasesTest} from "@/app/productions/tables/testing_tables/PopulateEditPurchasesTest";
 
 
 export async function PopulateEditPurchaseTable({production}:{production:ExtendedProductionResponse}) {
 
     // fetch materials
-    const {data} = await getAllMaterials();
-
+    const rawMaterials = await getAllRawMaterials();
+    const suppliers = await getAllSuppliers();
+    console.log(suppliers)
     const columns:ColumnType[] = [
         { key: "id", label: "S/N" },
-        { key: "rawMaterials", label: "Selected Materials", type: "dropdown", options: data?data.map(value => value.name)?? []:[] },
-        { key: "supplier", label: "Supplier", type: "dropdown", options: ["Pineapple", "Banana", "Orange"] },
+        { key: "rawMaterials", label: "Selected Materials", type: "dropdown", options: rawMaterials?rawMaterials.data.map(value => value.name)?? []:[] },
+        { key: "supplier", label: "Supplier", type: "dropdown", options: suppliers.data?suppliers.data.map(value => value.fullName)?? []:[]},
         { key: "uom", label: "UoM" },
         { key: "qty", label: "Qty", type: "number" },
-        { key: "weight", label: "Weight(Kg)" },
+        { key: "weight", label: "Weight(Kg)",type:"number" },
         { key: "productionLost", label: "Production Lost Weight(kg)", type: "number"},
         { key: "usable", label: "Usable Weight(Kg)", type: "number" },
         { key: "cost", label: "Cost", type: "number" },

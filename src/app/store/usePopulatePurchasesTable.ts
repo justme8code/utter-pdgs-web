@@ -8,7 +8,7 @@ type PopulatePurchasesStore = {
 
 const usePopulatePurchasesStore = create<PopulatePurchasesStore>((set) => ({
     table: [],
-    updateTable: (table: DataType[]) => set({ table }),
+    updateTable: (table: DataType[]) => set({table}),
 }));
 
 export default usePopulatePurchasesStore;

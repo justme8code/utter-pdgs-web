@@ -1,30 +1,32 @@
+'use client';
 import React, { useEffect, useState } from "react";
 import { TextField } from "@/app/components/TextField";
 import {
     addNewIngredient,
     getAllIngredients,
+    updateIngredient,
 } from "@/app/inventory/actions";
-import {Ingredient} from "@/app/inventory/RawMaterials";
-import { Trash } from "lucide-react";
-
-
+import { Ingredient, RawMaterial } from "@/app/inventory/RawMaterials";
+import {RefreshCcw, Trash} from "lucide-react";
+import { SelectableRawMaterials } from "@/app/inventory/SelectableRawMaterials";
 
 export const Ingredients: React.FC = () => {
-    const [ingredient, setIngredient] = useState<Ingredient[]>([]);
+    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string|null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
 
-    // Fetch raw materials from the API on mount
     useEffect(() => {
         const fetchIngredients = async () => {
             setLoading(true);
             try {
                 const { data, status } = await getAllIngredients();
                 if (status) {
-                    setIngredient(data || []);
+                    setIngredients(data || []);
                 }
             } catch (error) {
-                console.error("Failed to load materials:", error);
+                console.error("Failed to load ingredients:", error);
+                setError("Failed to load ingredients. Please try again.");
             } finally {
                 setLoading(false);
             }
@@ -33,89 +35,134 @@ export const Ingredients: React.FC = () => {
     }, []);
 
     const addIngredient = () => {
-        setIngredient([...ingredient, { name: "" }]); // New materials have no ID
+        setIngredients([...ingredients, { name: "" }]);
     };
 
-    const updateIngredient = (index: number, value: string) => {
-        setIngredient(ingredient.map((m, i) => (i === index ? { ...m, name: value } : m)));
+    const updateTextField = (index: number, value: string) => {
+        setIngredients(ingredients.map((i, idx) => (idx === index ? { ...i, name: value } : i)));
     };
 
-   /* const removeIngredients = async (index: number) => {
-        const material = ingredient[index];
+    const addSelectedRawMaterials = (index: number, rawMaterials: RawMaterial[]) => {
+        setIngredients(ingredients.map((i, idx) => (idx === index ? { ...i, rawMaterials } : i)));
+    };
 
-        if (material.id) {
-            // If it has an ID, delete it from the API
-            const { status } = await deleteMaterial(material.id);
-            if (status) {
-                setIngredient(ingredient.filter((_, i) => i !== index));
+    const updateIng = async (index: number, rawMaterials: RawMaterial[]) => {
+        const ing = { ...ingredients[index], rawMaterials };
+        if (ing.id) {
+            try {
+                const { data, status } = await updateIngredient(ing);
+                if (status) {
+                    const updatedIngredients = [...ingredients];
+                    updatedIngredients[index] = data;
+                    setIngredients(updatedIngredients);
+                    setSuccess("Ingredient updated successfully!");
+                } else {
+                    setError("Unable to update ingredient. Please try again.");
+                }
+            } catch (error:unknown) {
+                console.log(error);
+                setError("Unable to update ingredient. Please try again.");
             }
-        } else {
-            // If no ID, it's a new material, just remove from UI
-            setIngredient(ingredient.filter((_, i) => i !== index));
         }
-    };*/
+    };
 
     const saveMaterials = async () => {
-        const ingredients = ingredient.filter(m => !m.id); // Only send new materials
-        if (ingredients.length === 0) return;
+        const newIngredients = ingredients.filter(m => !m.id);
+        if (newIngredients.length === 0) return;
 
         setLoading(true);
-        const { data,status } = await addNewIngredient(ingredients);
-        if (status && data){
-            setIngredient(data);
-        }else{
-            setTimeout(()=>{
-                setError("Oops the new raw material wasn't added, I not sure why, but please try again.");
-            },1000)
-            setError(null);
+        try {
+            const { data, status } = await addNewIngredient(newIngredients);
+            if (status) {
+                setIngredients(data);
+                setSuccess("New ingredient saved successfully!");
+            } else {
+                setError("Oops! The new ingredient wasn't added. Please try again.");
+            }
+        } catch (error:unknown) {
+            console.log(error);
+            setError("Oops! The new ingredient wasn't added. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="w-full">
-            <div className="flex w-full gap-10 mb-5">
+        <div className="w-full shadow-xs p-5 hover:shadow-xl">
+            <div className="flex w-full gap-10 mb-5 justify-between">
                 <h2 className="text-xl font-bold">Ingredients</h2>
-                <button
-                    onClick={addIngredient}
-                    className="bg-gray-200 ring-1 ring-gray-300 flex items-center text-sm gap-2 p-1 rounded-sm"
-                >
-                    <p>Add New Ingredient</p>
-                </button>
-                <button
-                    onClick={saveMaterials}
-                    className="bg-green-500 text-white px-4 py-1 rounded-md disabled:bg-gray-400"
-                    disabled={loading}
-                >
-                    {loading ? "Saving..." : "Save Ingredient"}
-                </button>
+                <div className="flex gap-5">
+                    <button
+                        onClick={addIngredient}
+                        className="bg-gray-200 ring-1 ring-gray-300 flex items-center text-sm gap-2 p-1 rounded-xs"
+                    >
+                        <p>Add New Ingredient</p>
+                    </button>
+                    <button
+                        onClick={saveMaterials}
+                        className="bg-green-500 text-white px-4 py-1 rounded-xs disabled:bg-gray-400"
+                        disabled={loading}
+                    >
+                        {loading ? "Saving..." : "Save Ingredient"}
+                    </button>
+                </div>
             </div>
-            <table className="w-full border-collapse border border-gray-300">
+            {error && <p className="text-red-500 font-bold">{error}</p>}
+            {success && <p className="text-green-500 font-bold">{success}</p>}
+            <table className="w-full border-collapse border border-gray-300 relative">
                 <thead>
-                <tr className="bg-gray-100 text-left">
-                    <th className="p-2 border-b border-gray-300">Name</th>
-                    <th className="p-2 border-b border-gray-300">Actions</th>
+                <tr className="bg-gray-200 text-left">
+                    <th className="p-2 border-b border-l w-1/4 border-gray-300">Name</th>
+                    <th className="p-2 border-b border-l w-full border-gray-300">Raw Materials Used</th>
+                    <th className="p-2 border-b border-l text-center border-gray-300">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                {error && <p className={"text-red-500 font-bold"}>{error}</p>}
-                {ingredient.map((material, index) => (
+                {ingredients.map((ingredient, index) => (
                     <tr key={index} className="border-b border-gray-300">
                         <td className="p-2 border border-gray-300">
                             <TextField
-                                value={material.name}
-                                onChange={value => updateIngredient(index, value)}
-                                props={{
-                                    placeholder: "Enter material name",
-                                }}
+                                value={ingredient.name}
+                                onChange={value => updateTextField(index, value)}
+                                props={{ placeholder: "Enter ingredient name" }}
                             />
                         </td>
+                        <td className="p-2 border border-gray-300 overflow-x-auto max-w-lg whitespace-nowrap">
+                            <div className="flex w-full">
+                                {ingredient.rawMaterials && ingredient.rawMaterials.length > 0 ? (
+                                    <div className="flex gap-2 w-full scrollbar-thin scrollbar-thumb-gray-300">
+                                        {ingredient.rawMaterials.map(rawMaterial => (
+                                            <span key={rawMaterial.id} className="bg-gray-200 px-2 py-1 rounded text-sm">
+                                                    {rawMaterial.name}
+                                                </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <span className="text-gray-500">No Raw Material Used</span>
+                                )}
+                                <SelectableRawMaterials
+                                    onSelectedRawMaterials={rawMaterials => addSelectedRawMaterials(index, rawMaterials)}
+                                    alreadySelectedRawMaterials={ingredient.rawMaterials ?? []}
+                                />
+                            </div>
+                        </td>
                         <td className="p-2">
-                           {/* <button
-                                className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
-                                onClick={() => removeIngredients(index)}
-                            >
-                                <Trash />
-                            </button>*/}
+                            <div className="flex gap-2">
+                                <button
+                                    title="Update"
+                                    className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
+                                    onClick={() => updateIng(index, ingredient.rawMaterials || [])}
+                                >
+                                    <RefreshCcw/>
+                                </button>
+                                <button
+                                    title="Delete"
+                                    className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
+                                    onClick={() => {}}
+                                >
+                                    <Trash />
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 ))}

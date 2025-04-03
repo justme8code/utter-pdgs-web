@@ -58,6 +58,11 @@ export type Staff = {
 };
 
 
+export type Supplier = {
+    id: number,
+    fullName: string
+}
+
 // Response Data Types
 export type UserResponse = Omit<User, "pwd"> & { id: number };
 

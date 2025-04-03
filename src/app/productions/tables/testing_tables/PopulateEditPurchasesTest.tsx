@@ -1,7 +1,7 @@
 'use client';
 
-import {useEffect, useState} from 'react';
-import EditableTable, { ColumnType, DataType, RowType } from '../EditableTable';
+import { useEffect, useState } from 'react';
+
 import { ExtendedProductionResponse } from '@/app/data_types';
 import { createProductionDynamicData } from '@/app/productions/actions';
 import usePopulatePurchasesStore from "@/app/store/usePopulatePurchasesTable";
@@ -10,52 +10,61 @@ import {
     calAverageWeightPerUOMBasedOnTotalWeight,
     calculateUsableWeight
 } from "@/app/production-computing-formulas";
+import EditableTable, {ColumnType, RowType} from "@/app/productions/EditableTable";
 
 const tableKey = 'populateEditPurchases';
 
-export const PopulateEditPurchases = ({ production, columns }: { production: ExtendedProductionResponse, columns: ColumnType[] }) => {
-    const [editableData, setEditableData] = useState<DataType[]>(production.dynamicData[tableKey]);
+export const PopulateEditPurchasesTest = ({ production, columns }: { production: ExtendedProductionResponse, columns: ColumnType[] }) => {
     const [savedSuccessfully, setSavedSuccessfully] = useState<boolean>(false);
-    const {updateTable} = usePopulatePurchasesStore();
+    const {table,updateTable} =usePopulatePurchasesStore();
 
     useEffect(() => {
-        updateTable(editableData??production.dynamicData[tableKey]);
-    },[editableData, production.dynamicData, updateTable])
+        if (production.dynamicData && production.dynamicData[tableKey]) {
+
+            updateTable(production.dynamicData[tableKey]);
+        }
+    }, [production.dynamicData, updateTable]);
+
 
     // Handle form submission
     const handleSubmitData = async () => {
-        const result = await createProductionDynamicData<typeof editableData>(production.id, {
-            [tableKey]: editableData, // Send the entire updated dynamicData
+        const result = await createProductionDynamicData<typeof table>(production.id, {
+            [tableKey]: table, // Send the entire updated dynamicData
         });
 
         if (result) {
             setSavedSuccessfully(true);
         }
-        console.log("Console log in submit", editableData);
+        console.log("Console log in submit", table);
     };
 
     // Handle row update
     const handleUpdate = (updatedRow: RowType) => {
-        setEditableData((prevData) =>
-            prevData.map((row) => (row.id === updatedRow.id ? {...row,
-                ["usable"]:calculateUsableWeight({weight:row["weight"],productionLostWeight:row["productionLost"]}),
-                ["avgCost"]:calAverageCostPerKgBasedOnTotalWeight({cost:row["cost"],weight:row["weight"]}),
-                ["avgWeightPerUOM"]:calAverageWeightPerUOMBasedOnTotalWeight({weight:row["weight"],qty:row["qty"]})
-            }: row))
+        updateTable(
+            table.map((row) =>
+                row.id === updatedRow.id
+                    ? {
+                        ...row,
+                        usable: calculateUsableWeight({ weight: row.weight, productionLostWeight: row.productionLost }),
+                        avgCost: calAverageCostPerKgBasedOnTotalWeight({ cost: row.cost, weight: row.weight }),
+                        avgWeightPerUOM: calAverageWeightPerUOMBasedOnTotalWeight({ weight: row.weight, qty: row.qty }),
+                    }
+                    : row
+            )
         );
+
+        console.log("running the use effect again ");
     };
 
     // Handle row deletion
     const handleDelete = (id: number) => {
-        setEditableData((prevData) =>
-            prevData.filter((row) => row.id !== id)
-        );
+        updateTable(table.filter((row) => row.id !== id));
     };
 
     // Handle adding new row
     const handleAdd = () => {
         const newRow = {
-            id: 0,
+            id: 0, // Ensuring unique ID
             rawMaterials: 'New Raw Material',
             supplier: 'New Supplier',
             uom: 'kg',
@@ -68,25 +77,21 @@ export const PopulateEditPurchases = ({ production, columns }: { production: Ext
             avgWeightPerUOM: 0,
         };
 
-        setEditableData((prevData) => [...prevData, newRow]);
-
+        console.log("Adding new table in add function" ,table);
+        updateTable([...table, newRow]);
     };
 
     return (
         <div className="p-4">
             <h1 className="font-bold text-xl mb-4">Populate And Edit Purchases</h1>
-
             <EditableTable
-                onChange={(data) => {
-                    setEditableData(data);
-                    updateTable(data);
-                }}
+                onChange={data => updateTable(data) }
                 columns={columns}
-                data={editableData}
+                data={table}
                 onUpdate={handleUpdate}
                 onDelete={handleDelete}
                 onAdd={handleAdd}
-                disableFields={() => ["avgCost","avgWeightPerUOM","usable"]}
+                disableFields={() => ["avgCost", "avgWeightPerUOM", "usable"]}
             />
 
             {savedSuccessfully && <p className="text-green-500 mt-2">Update saved successfully!</p>}

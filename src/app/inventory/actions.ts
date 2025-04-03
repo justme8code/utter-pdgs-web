@@ -1,6 +1,6 @@
 'use server';
 import {makeAuthRequest} from "@/app/actions";
-import {Role, User, UserResponse} from "@/app/data_types";
+import {Role, Supplier, User, UserResponse} from "@/app/data_types";
 import {Ingredient, RawMaterial} from "@/app/inventory/RawMaterials";
 
 
@@ -74,10 +74,18 @@ export async function addNewMaterial(rawMaterials:RawMaterial[]){
     return {data: data,status: status === 201}
 }
 
-export async function getAllMaterials(){
-    const {data, status} = await makeAuthRequest<null,{id:number,name:string,createdAt:string}[]>({
+export async function getAllRawMaterials(){
+    const {data, status} = await makeAuthRequest<null,RawMaterial[]>({
         method: "GET",
         url: `/raw-materials`,
+    })
+    return {data: data, status: status === 200}
+}
+
+export async function getAllSuppliers() {
+    const {data, status} = await makeAuthRequest<null,Supplier[]>({
+        method: "GET",
+        url: `/suppliers/lists`,
     })
     return {data: data, status: status === 200}
 }
@@ -123,7 +131,27 @@ export async function addNewIngredient(ingredient:Ingredient[]){
         url: `/ingredients`,
         data:ingredient
     })
-    return {data: data,status: status === 201}
+    return {data: data,status: status === 200}
+}
+
+export async function updateIngredient(ingredient:Ingredient){
+    const {data,status} = await makeAuthRequest<Ingredient,Ingredient>({
+        method: "PUT",
+        url: `/ingredients/${ingredient.id}`,
+        data:ingredient
+    })
+    return {data: data,status: status === 200}
+}
+
+export async function getIngredientsByRawMaterialNames(rawMaterials: string[]) {
+    const queryParams = rawMaterials.map(name => `rawMaterialNames=${encodeURIComponent(name)}`).join("&");
+
+    const { data, status } = await makeAuthRequest<string[], Ingredient[]>({
+        method: "GET",
+        url: `/ingredients/search/by-raw-material-names?${queryParams}`,
+    });
+
+    return { data, status: status === 200 };
 }
 
 

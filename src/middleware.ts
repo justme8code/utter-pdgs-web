@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { cookies } from "next/headers";
 
 export async function middleware(request: NextRequest) {
-    const jwtCookie = (await cookies()).get('jwt_token');
+ /*   const jwtCookie = (await cookies()).get('jwt_token');
     const path = request.nextUrl.pathname;
 
     // Define protected routes that require authentication
@@ -20,11 +20,11 @@ export async function middleware(request: NextRequest) {
     if (isProtectedRoute && !jwtCookie) {
         console.warn(`Unauthorized access attempt to ${path}. Redirecting to login.`);
         return NextResponse.redirect(new URL('/login', request.url));
-    }
+    }*/
     return NextResponse.next();
 }
 
 // Apply middleware to relevant routes
 export const config = {
-    matcher: ['/','/productions/:path*','/inventory'],
+   /* matcher: ['/','/productions/:path*','/inventory'],*/
 };
