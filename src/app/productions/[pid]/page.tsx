@@ -6,14 +6,13 @@ import { RawMaterialsToIngredientsTable } from "@/app/productions/tables/RawMate
 import {ProductMix} from "@/app/productions/ProductMix";
 
 export default async function ProductionPage({ params }: { params: Promise<{ pid: number }> }) {
-   /* const { pid } = await params;
+    const { pid } = await params;
     const { data, status } = await fetchProductionWithDynamicData(pid);
-*/
     return (
         <div className="flex">
             <Sidebar />
             <main className="flex gap-20 flex-col w-full h-screen  space-x-10">
-               {/* <div className="flex-1 flex flex-col h-full p-2 gap-5">
+                <div className="flex-1 flex flex-col h-full p-2 gap-5">
                     {!status ? (
                         <p>Could not find production...</p>
                     ) : (
@@ -22,13 +21,12 @@ export default async function ProductionPage({ params }: { params: Promise<{ pid
                             <div className="space-y-10">
                                 <PopulateEditPurchaseTable production={data} />
                                 <RawMaterialsToIngredientsTable production={data} />
-
+                                <ProductMix/>
                             </div>
                         </div>
                     )}
 
-                </div>*/}
-                <ProductMix/>
+                </div>
             </main>
         </div>
 

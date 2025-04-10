@@ -2,6 +2,8 @@
 import {myRequest} from "@/app/api/axios";
 import {ExtendedProductionResponse, Production, ProductionResponse, StaffResponse} from "../data_types";
 import {makeAuthRequest, verifySession} from "@/app/actions";
+import {ProductPayload} from "@/app/productions/CreateProduct";
+import {ProductMixDataType} from "@/app/product";
 
 
 export async function fetchProductions(page: number, size: number) {
@@ -81,4 +83,59 @@ export async function createProductionDynamicData<T>(
     });
 
     return { status: status === 201 };
+}
+
+
+export async function createProduct(product:ProductPayload){
+    const {data,status} = await makeAuthRequest<ProductPayload,ProductPayload>({
+        url: `/products`,
+        method: "POST",
+        data: product,
+    })
+
+    return {data, status:status === 201 };
+}
+
+
+export async function getProducts(){
+    const {data,status} = await makeAuthRequest<null,ProductPayload>({
+        url: `/products`,
+        method: "GET",
+    });
+    return {data:data,status:status === 200 };
+}
+
+export async function createProductMix(productMix:ProductMixDataType){
+    const {data,status} = await makeAuthRequest<ProductMixDataType,ProductMixDataType>({
+        url: `/product-mixes`,
+        method: "POST",
+        data: productMix
+    });
+    return {data:data,status:status === 201 };
+}
+
+export async function updateProductMix(productMix:ProductMixDataType){
+    const {data,status} = await makeAuthRequest<ProductMixDataType,ProductMixDataType>({
+        url: `/product-mixes/${productMix.id}`,
+        method: "PUT",
+        data: productMix
+    });
+    return {data:data,status:status === 200 };
+}
+
+export async function deleteProductMix(id:number){
+    const {data,status} = await makeAuthRequest<ProductMixDataType,ProductMixDataType>({
+        url: `/product-mixes/${id}`,
+        method: "DELETE"
+    });
+    return {data:data,status:status === 200 };
+}
+
+export async function fetchProductionMixes(productionId:number){
+    const {data,status} = await makeAuthRequest<number,ProductMixDataType[]>({
+        url: `/productions/${productionId}/product-mixes`,
+        method: "GET",
+    });
+    return {data:data,status:status === 200 };
+
 }

@@ -6,6 +6,7 @@ import {createProductionDynamicData} from '@/app/productions/actions';
 import usePopulatePurchasesStore from "@/app/store/usePopulatePurchasesTable";
 import {calculateCostPerLitre, calculateLitresPerKg} from "@/app/production-computing-formulas";
 import {getIngredientsByRawMaterialNames} from "@/app/inventory/actions";
+import {useIngredientStore} from "@/app/store/ingredientStore";
 
 const tableKey = 'rawMaterialsToIngredients';
 const foreign = 'populateEditPurchases';
@@ -13,7 +14,7 @@ const foreign = 'populateEditPurchases';
 export const RawMaterialsToIngredients = ({ production, columns }: { production: ExtendedProductionResponse, columns: ColumnType[] }) => {
     const [editableData, setEditableData] = useState<DataType[]>(production.dynamicData[tableKey] || []);
     const [savedSuccessfully, setSavedSuccessfully] = useState<boolean>(false);
-    const [ingredients, setIngredients] = useState<string>("");
+    const {ingredients,setIngredients} = useIngredientStore();
     const { table } = usePopulatePurchasesStore();
 
     const makeChanges = useCallback(() => {
@@ -35,11 +36,11 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
                         totalCost: value.cost,
                         usableLitres: existingRow?.usableLitres || 0
                     }),
-                    ["ingredient"]:ingredients
+                    ["ingredient"]:ingredients.map(ing => ing.name).join(",")
                 };
             });
         });
-    }, [table]); // Only depend on 'table'
+    }, [ingredients, table]); // Only depend on 'table'
 
 
     useEffect(() => {
@@ -51,7 +52,9 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
             const fetchIngredients = async () => {
                 try {
                     const { data } = await getIngredientsByRawMaterialNames(sa);
-                    setIngredients(data.map(ing => ing.name).join(",") );
+                    if(data){
+                        setIngredients(data);
+                    }
                 } catch (error) {
                     console.error("Error fetching ingredients:", error);
                 }
@@ -101,7 +104,7 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
 
     return (
         <div className="p-4">
-            <h1 className="font-bold text-xl mb-4">Populate And Edit Purchases</h1>
+            <h1 className="font-bold text-xl mb-4">Raw Materials To Ingredients</h1>
 
             {table && table.length>0 &&  <EditableTable
                 onChange={setEditableData}
@@ -110,8 +113,6 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
                 onUpdate={handleUpdate}
                 disableFields={() => ["avgCost", "avgWeightPerUOM", "usable","cost/litre"]}
             />}
-
-
 
 
             {savedSuccessfully && <p className="text-green-500 mt-2">Update saved successfully!</p>}

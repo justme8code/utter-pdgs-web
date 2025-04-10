@@ -1,6 +1,15 @@
+'use client';
 import {ProductionResponse} from "@/app/data_types";
+import {useProductionStore} from "@/app/store/productionStore";
+import {useEffect} from "react";
 
 export const ProductionInfo = ({prod}:{prod:ProductionResponse}) => {
+    const {setSelectedProduction} = useProductionStore();
+
+    useEffect(() => {
+        setSelectedProduction(prod);
+    }, [prod, setSelectedProduction]);
+
     return (
         <>
             <div className={"flex sticky top-0 items-center gap-x-2 ring-1 bg-gray-50 ring-gray-200 p-2 justify-between "}>

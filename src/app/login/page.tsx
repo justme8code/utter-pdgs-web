@@ -5,14 +5,9 @@ import Sidebar from "@/app/components/SideBar";
 
 export default function LoginPage() {
   return (
-
-
           <main className={"flex h-screen justify-center items-center"}>
               <Login/>
           </main>
-
-
-
 
   );
 }
