@@ -47,10 +47,13 @@ export const PopulateEditPurchases = ({ production, columns }: { production: Ext
 
     // Handle row deletion
     const handleDelete = (id: number) => {
-        setEditableData((prevData) =>
-            prevData.filter((row) => row.id !== id)
-        );
+        if (id) {
+            setEditableData((prevData) =>
+                (prevData ?? []).filter((row) => row.id !== id)
+            );
+        }
     };
+
 
     // Handle adding new row
     const handleAdd = () => {
@@ -91,14 +94,14 @@ export const PopulateEditPurchases = ({ production, columns }: { production: Ext
 
             {savedSuccessfully && <p className="text-green-500 mt-2">Update saved successfully!</p>}
 
-            <div className="mt-4 p-4 space-x-2">
+           {/* <div className="mt-4 p-4 space-x-2">
                 <button
                     onClick={handleSubmitData}
                     className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
                 >
                     Save
                 </button>
-            </div>
+            </div>*/}
         </div>
     );
 };

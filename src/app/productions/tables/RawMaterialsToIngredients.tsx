@@ -20,7 +20,7 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
     const makeChanges = useCallback(() => {
         if (!table || table.length === 0) return;
         setEditableData((prevEditableData) => { // Use the functional update form
-            return table.map((value) => {
+            return table.map((value,index) => {
                 const existingRow = prevEditableData.find((row) => row.id === value.id);
                 return {
                     ...existingRow,
@@ -28,6 +28,7 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
                     rawMaterials: value.rawMaterials,
                     totalUsable: value.usable,
                     productionLost: value.productionLost,
+                    ["batch"]:index+1,
                     ["litres/kg"]: calculateLitresPerKg({
                         usableLitres: existingRow?.usableLitres || 0,
                         totalUsable: value.usable
@@ -63,7 +64,7 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
             fetchIngredients();
         }
 
-    }, [table]);
+    }, [setIngredients, table]);
 
     useEffect(() => {
         makeChanges();
@@ -78,11 +79,10 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
         if (result) {
             setSavedSuccessfully(true);
         }
-        console.log("Console log in submit", editableData);
+
     };
 
     const handleUpdate = (updatedRow: RowType) => {
-        console.log("Consoling update", updatedRow);
         setEditableData((prevData) =>
             prevData.map((value) => {
                 const correspondingTableItem = table.find((item) => item.id === value.id);
@@ -111,20 +111,25 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
                 columns={columns}
                 data={editableData}
                 onUpdate={handleUpdate}
-                disableFields={() => ["avgCost", "avgWeightPerUOM", "usable","cost/litre"]}
+                disableFields={() => ["avgCost", "avgWeightPerUOM", "usable","cost/litre","batch","rawMaterials","ingredient","litres/kg"]}
             />}
 
 
             {savedSuccessfully && <p className="text-green-500 mt-2">Update saved successfully!</p>}
 
-            <div className="mt-4 p-4 space-x-2">
-                <button
-                    onClick={handleSubmitData}
-                    className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
-                >
-                    Save
-                </button>
-            </div>
+            {table && table.length>0 ?
+                <div className="mt-4 p-4 space-x-2">
+                    <button
+                        onClick={handleSubmitData}
+                        className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
+                    >
+                        Save
+                    </button>
+                </div>
+                : <div className={"bg-gray-200 w-full text-gray-500 text-xl font-medium flex justify-center p-5 rounded-sm"}>
+                    <h1>Conversion cannot be made without Populating Raw materials Purchases</h1>
+                </div>
+            }
         </div>
     );
 };

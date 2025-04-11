@@ -2,6 +2,8 @@
 import {ProductionResponse} from "@/app/data_types";
 import {useProductionStore} from "@/app/store/productionStore";
 import {useEffect} from "react";
+import StatusToggle from "@/app/productions/StatusToggle";
+import CurrentStatus from "@/app/productions/CurrentStatus";
 
 export const ProductionInfo = ({prod}:{prod:ProductionResponse}) => {
     const {setSelectedProduction} = useProductionStore();
@@ -19,17 +21,22 @@ export const ProductionInfo = ({prod}:{prod:ProductionResponse}) => {
                     <h1>|</h1>
                     <h1 className={" "}>{prod.name}</h1>
                 </div>
-                <div className={"flex gap-5"}>
 
-                    <div className={"flex"}>
-                        <h1 className={"text-sm"}>Start date : </h1>
-                        <h1 className={"text-sm font-bold"}>{prod.startDate}</h1>
-                    </div>
+                <div className={"flex items-center gap-5"}>
 
-                    <div className={"flex"}>
-                        <h1 className={"text-sm"}>End date : </h1>
-                        <h1 className={"text-sm font-bold"}>{prod.endDate}</h1>
-                    </div>
+                    <CurrentStatus initialStatus={prod.status} />
+
+                     <div className={"flex gap-5"}>
+                         <div className={"flex"}>
+                             <h1 className={"text-sm"}>Start date : </h1>
+                             <h1 className={"text-sm font-bold"}>{prod.startDate}</h1>
+                         </div>
+
+                         <div className={"flex"}>
+                             <h1 className={"text-sm"}>End date : </h1>
+                             <h1 className={"text-sm font-bold"}>{prod.endDate}</h1>
+                         </div>
+                     </div>
                 </div>
             </div>
         </>

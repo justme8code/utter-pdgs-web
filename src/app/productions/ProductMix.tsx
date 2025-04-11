@@ -9,11 +9,13 @@ import { ProductMixComponent } from "@/app/productions/ProductMixComponent";
 import {fetchProductionMixes} from "@/app/productions/actions";
 import {useProductionStore} from "@/app/store/productionStore";
 import {ProductMixDataType} from "@/app/product";
+import {useIngredientStore} from "@/app/store/ingredientStore";
 
 
 export const ProductMix = () => {
     const { fetchProducts } = useProductStore();
     const {selectedProduction} = useProductionStore();
+    const {ingredients} = useIngredientStore();
     const [productionMixes,setProductionMixes] = useState<ProductMixDataType[]>([]);
     const [edit,setEdit,] = useState<boolean>(false);
 
@@ -39,9 +41,9 @@ export const ProductMix = () => {
         <div className={"p-6 space-y-5 "}>
             <div className={"flex justify-between"}>
                 <h1 className={"text-xl font-bold"}>Production Mix</h1>
-                <div className={"flex gap-5"}>
+                {ingredients && ingredients.length > 0&& <div className={"flex gap-5"}>
                     <CreateAProductButton className={"bg-gray-300 text-black hover:bg-gray-400"} />
-                {!edit && (
+                    {!edit && (
 
                         <button
                             className={`flex items-center text-xs bg-gray-300 text-black hover:bg-gray-400 font-bold p-1 px-3 rounded-sm`}
@@ -51,8 +53,8 @@ export const ProductMix = () => {
                             <p className="ml-2">Add mix</p>
                         </button>
 
-                )}
-                </div>
+                    )}
+                </div>}
             </div>
             <div className={"max-h-svh overflow-y-auto"}>
                 <React.Fragment>
@@ -83,9 +85,8 @@ export const ProductMix = () => {
                 </React.Fragment>
 
                 <div className={"bg-gray-100 w-full p-5 space-y-10 rounded-xs"}>
-
-                    {productionMixes && productionMixes.length > 0 && [...productionMixes]
-                        .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
+                    {productionMixes && ingredients &&  productionMixes.length > 0 && ingredients.length> 0? [...productionMixes]
+                        .sort((a, b) => a.id - b.id)
                         .map((value, index) => (
                             <div key={index} className={"space-y-5"}>
                                 <ProductMixComponent
@@ -103,7 +104,9 @@ export const ProductMix = () => {
                                     <div className={"h-0.5 w-full bg-gray-200"}></div>
                                 )}
                             </div>
-                        ))}
+                        )): <div className={"flex justify-center "}>
+                        <h1 className={"text-xl font-medium text-gray-500"}>Can't create a production mix without an ingredient</h1>
+                    </div>}
 
 
                 </div>

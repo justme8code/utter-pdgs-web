@@ -2,6 +2,7 @@
 import {makeAuthRequest} from "@/app/actions";
 import {Role, Supplier, User, UserResponse} from "@/app/data_types";
 import {Ingredient, RawMaterial} from "@/app/inventory/RawMaterials";
+import {NewSupplier} from "@/app/store/SupplierStore";
 
 
 
@@ -82,14 +83,6 @@ export async function getAllRawMaterials(){
     return {data: data, status: status === 200}
 }
 
-export async function getAllSuppliers() {
-    const {data, status} = await makeAuthRequest<null,Supplier[]>({
-        method: "GET",
-        url: `/suppliers/lists`,
-    })
-    return {data: data, status: status === 200}
-}
-
 
 export async function deleteMaterial(id:number){
     const {status} = await makeAuthRequest<number,null>({
@@ -154,5 +147,20 @@ export async function getIngredientsByRawMaterialNames(rawMaterials: string[]) {
     return { data, status: status === 200 };
 }
 
+export  async  function createSuppliers(supplier:NewSupplier){
+    const {data,status} = await makeAuthRequest<NewSupplier,Supplier>({
+        method: "POST",
+        url: `/suppliers`,
+        data:supplier
+    })
+    return {data:data,status:status === 201}
+}
 
 
+export async function getAllSuppliers() {
+    const {data, status} = await makeAuthRequest<null,Supplier[]>({
+        method: "GET",
+        url: `/suppliers/lists`,
+    })
+    return {data: data, status: status === 200}
+}

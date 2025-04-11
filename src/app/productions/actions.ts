@@ -2,8 +2,7 @@
 import {myRequest} from "@/app/api/axios";
 import {ExtendedProductionResponse, Production, ProductionResponse, StaffResponse} from "../data_types";
 import {makeAuthRequest, verifySession} from "@/app/actions";
-import {ProductPayload} from "@/app/productions/CreateProduct";
-import {ProductMixDataType} from "@/app/product";
+import {ProductMixDataType, ProductPayload} from "@/app/product";
 
 
 export async function fetchProductions(page: number, size: number) {

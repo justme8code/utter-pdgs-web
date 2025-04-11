@@ -1,8 +1,8 @@
 'use client';
 
 import {TextField} from "@/app/components/TextField";
-import {CheckCircle, TrashIcon} from "lucide-react";
-import React, {useEffect, useState} from "react";
+import {CheckCircle, Circle, CircleArrowDown, RotateCw, TrashIcon} from "lucide-react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useProductStore} from "@/app/store/productStore";
 import {useIngredientStore} from "@/app/store/ingredientStore";
 import {ProductMixDataType} from "@/app/product";
@@ -12,15 +12,16 @@ import {createProductMix, deleteProductMix, updateProductMix} from "@/app/produc
 export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataType,onSave:(mix:ProductMixDataType)=>void,onDelete?:(status:boolean)=>void}) => {
     const [productMix, setProductMix] = useState<ProductMixDataType>(mix);
     const {selectedProduction} = useProductionStore();
-    const { products} = useProductStore();
+    const [selectedProduct, setSelectedProduct] = useState<string>();
+    const { products,fetchProducts} = useProductStore();
     const {ingredients} = useIngredientStore();
-    const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [loading,setLoading] = useState(false);
 
+
     useEffect(() => {
         setProductMix(mix)
-    },[mix]);
+    },[fetchProducts, mix, products]);
 
     const handleCreate = async ()=> {
         setLoading(true);
@@ -88,6 +89,12 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
         }
         setLoading(false);
     }
+    const finds = ()=>{
+        if(productMix && productMix.id && productMix.id>0){
+            const i = products.findIndex(value => value.id === productMix.productId);
+            return products[i].name
+        }
+    }
 
     return (
         <>
@@ -97,25 +104,28 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
                         <div className={"flex w-full gap-10"}>
                             {/* Product Field */}
                             <div className={"space-y-5 font-medium"}>
-                                <h1>Product</h1>
-                                <select
-                                    value={selectedProduct || ""}
-                                    onChange={(e) => {
-                                        const index = e.target.selectedIndex;
-                                        setSelectedIndex(index);
-                                        setSelectedProduct(e.target.value);
-                                    }}
-                                    className={"max-w-40 border border-gray-300 rounded-xs px-2 py-1 outline-none focus:ring-2 focus:ring-slate-500 focus:border-none focus:outline-none"}
-                                >
-                                    <option value={products[0].name}>{products[selectedIndex].name}</option>
-                                    {products.map((product, index) => (
-                                        index !== 0 ? (
+                                <h1>Product Name</h1>
+                                { finds() ? <input  disabled={true} value={finds()}
+                                                   className={"max-w-40 border border-gray-300 rounded-xs px-2 py-1 outline-none focus:ring-2 focus:ring-slate-500 focus:border-none focus:outline-none"}/>
+
+                                    : <select
+                                        value={selectedProduct || ""}
+                                        onChange={(e) => {
+                                            const index = e.target.selectedIndex;
+                                            console.log("selected index ",index)
+                                            setSelectedIndex(index);
+                                            setSelectedProduct(e.target.value);
+                                        }}
+                                        className={"max-w-40 border border-gray-300 rounded-xs px-2 py-1 outline-none focus:ring-2 focus:ring-slate-500 focus:border-none focus:outline-none"}
+                                    >
+
+                                        {products.map((product, index) => (
                                             <option key={product.id ?? index} value={product.id ?? index}>
                                                 {product.name}
                                             </option>
-                                        ) : null
-                                    ))}
-                                </select>
+                                        ))}
+                                    </select>
+                                }
                             </div>
 
 
@@ -268,7 +278,8 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
                                 type="submit" onClick={() => {
                                 handleCall();
                             }}>
-                                <CheckCircle className="h-5 w-5" />
+
+                                <RotateCw className="h-5 w-5" />
                                 {productMix.id && productMix.id > 0? "Update":loading?"processing...":"Submit"}
                             </button>
 

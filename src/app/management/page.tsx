@@ -5,7 +5,6 @@ import {UsersList} from "@/app/inventory/UsersList";
 
 export default function InventoryPage() {
 
-
     return (
         <div className="flex">
             <Sidebar />

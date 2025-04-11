@@ -1,8 +1,7 @@
 import {getAllRawMaterials, getAllSuppliers} from "@/app/inventory/actions";
 import {ColumnType} from "@/app/productions/EditableTable";
 import {PopulateEditPurchases} from "@/app/productions/tables/PopulateEditPurchases";
-import {ExtendedProductionResponse, ProductionResponse} from "@/app/data_types";
-import {PopulateEditPurchasesTest} from "@/app/productions/tables/testing_tables/PopulateEditPurchasesTest";
+import {ExtendedProductionResponse} from "@/app/data_types";
 
 
 export async function PopulateEditPurchaseTable({production}:{production:ExtendedProductionResponse}) {
