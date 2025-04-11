@@ -1,5 +1,5 @@
 import { fetchLevel1DataInsight } from "@/app/actions/insights";
-import Level1DataInsightChart from "@/app/components/Level1DataInsightChart";
+import Level1DataInsightChart from "@/app/insights/Level1DataInsightChart";
 
 export async function Level1DataInsightSection() {
     const { data, status } = await fetchLevel1DataInsight();

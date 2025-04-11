@@ -1,8 +1,8 @@
 'use client';
 import Sidebar from "@/app/components/SideBar";
-import {RawMaterials} from "@/app/inventory/RawMaterials";
-import {Ingredients} from "@/app/inventory/Ingredients";
-import {SuppliersList} from "@/app/inventory/SuppliersList";
+import {RawMaterials} from "@/app/components/inventory/RawMaterials";
+import {Ingredients} from "@/app/components/inventory/Ingredients";
+import {SuppliersList} from "@/app/components/inventory/SuppliersList";
 
 export default function InventoryPage() {
 

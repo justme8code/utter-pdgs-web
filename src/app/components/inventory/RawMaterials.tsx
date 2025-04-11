@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import { TextField } from "@/app/components/TextField";
-import {addNewMaterial, deleteMaterial, getAllRawMaterials} from "@/app/inventory/actions";
+import {addNewMaterial, deleteMaterial, getAllRawMaterials} from "@/app/actions/inventory";
 import { RefreshCcw, Trash } from "lucide-react";
 
 export interface RawMaterial {

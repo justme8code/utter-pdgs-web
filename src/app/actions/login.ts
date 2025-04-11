@@ -1,7 +1,7 @@
 'use server';
 import {redirect} from "next/navigation";
 import {myRequest} from "@/app/api/axios";
-import {createSession, deleteSession} from "../actions";
+import {createSession, deleteSession} from "./main";
 import {AuthResponse} from "@/app/store/useAuthStore";
 
 

@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState, useRef } from "react";
-import { RawMaterial } from "@/app/inventory/RawMaterials";
-import {getAllRawMaterials} from "@/app/inventory/actions";
+import { RawMaterial } from "@/app/components/inventory/RawMaterials";
+import {getAllRawMaterials} from "@/app/actions/inventory";
 import {Plus} from "lucide-react";
 
 export const SelectableRawMaterials = ({

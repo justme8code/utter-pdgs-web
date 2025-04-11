@@ -2,8 +2,8 @@
 import {ProductionResponse} from "@/app/data_types";
 import {useProductionStore} from "@/app/store/productionStore";
 import {useEffect} from "react";
-import StatusToggle from "@/app/productions/StatusToggle";
-import CurrentStatus from "@/app/productions/CurrentStatus";
+import StatusToggle from "@/app/components/production/StatusToggle";
+import CurrentStatus from "@/app/components/production/CurrentStatus";
 
 export const ProductionInfo = ({prod}:{prod:ProductionResponse}) => {
     const {setSelectedProduction} = useProductionStore();

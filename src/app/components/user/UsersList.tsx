@@ -1,8 +1,8 @@
 import {Trash, Trash2, User2, UserPen} from "lucide-react";
 import React, {useEffect, useState} from "react";
 import useAuthStore from "@/app/store/useAuthStore";
-import {CreateUserModal} from "@/app/inventory/CreateUserModal";
-import {fetchUsers} from "@/app/inventory/actions";
+import {CreateUserModal} from "@/app/components/user/CreateUserModal";
+import {fetchUsers} from "@/app/actions/inventory";
 import {UserResponse} from "@/app/data_types";
 
 

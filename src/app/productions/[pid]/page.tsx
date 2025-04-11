@@ -1,9 +1,9 @@
-import { ProductionInfo } from "@/app/productions/ProductionInfo";
+import { ProductionInfo } from "@/app/components/production/ProductionInfo";
 import Sidebar from "@/app/components/SideBar";
-import { fetchProductionWithDynamicData } from "@/app/productions/actions";
+import { fetchProductionWithDynamicData } from "@/app/actions/production";
 import { PopulateEditPurchaseTable } from "@/app/productions/tables/PopulateEditPurchaseTable";
 import { RawMaterialsToIngredientsTable } from "@/app/productions/tables/RawMaterialsToIngredientsTable";
-import {ProductMix} from "@/app/productions/ProductMix";
+import {ProductMix} from "@/app/components/production/ProductMix";
 
 export default async function ProductionPage({ params }: { params: Promise<{ pid: number }> }) {
     const { pid } = await params;

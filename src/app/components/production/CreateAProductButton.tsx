@@ -1,7 +1,7 @@
 'use client';
 import React, {useState} from "react";
 import {Plus} from "lucide-react";
-import {CreateProduct} from "@/app/productions/CreateProduct";
+import {CreateProduct} from "@/app/components/production/CreateProduct";
 
 export const CreateAProductButton = ({ onCreated,className }: { onCreated?: () => void ,className?:string}) => {
 

@@ -1,4 +1,4 @@
-import { DataType } from "@/app/productions/EditableTable";
+import { DataType } from "@/app/components/production/EditableTable";
 import { create } from "zustand";
 
 type PopulatePurchasesStore = {

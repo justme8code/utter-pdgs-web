@@ -1,7 +1,7 @@
 'use server';
-import {makeAuthRequest} from "@/app/actions";
+import {makeAuthRequest} from "@/app/actions/main";
 import {Role, Supplier, User, UserResponse} from "@/app/data_types";
-import {Ingredient, RawMaterial} from "@/app/inventory/RawMaterials";
+import {Ingredient, RawMaterial} from "@/app/components/inventory/RawMaterials";
 import {NewSupplier} from "@/app/store/SupplierStore";
 
 

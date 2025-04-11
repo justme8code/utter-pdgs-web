@@ -1,6 +1,6 @@
 
-import { Level1DataInsightSection } from "@/app/components/Level1DataInsightSection";
-import { DataGrowthInsight } from "@/app/components/DataGrowthInsight";
+import { Level1DataInsightSection } from "@/app/insights/Level1DataInsightSection";
+import { DataGrowthInsight } from "@/app/insights/DataGrowthInsight";
 import Sidebar from "@/app/components/SideBar";
 
 export default function Home() {

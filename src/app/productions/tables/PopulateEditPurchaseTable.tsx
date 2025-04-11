@@ -1,5 +1,5 @@
-import {getAllRawMaterials, getAllSuppliers} from "@/app/inventory/actions";
-import {ColumnType} from "@/app/productions/EditableTable";
+import {getAllRawMaterials, getAllSuppliers} from "@/app/actions/inventory";
+import {ColumnType} from "@/app/components/production/EditableTable";
 import {PopulateEditPurchases} from "@/app/productions/tables/PopulateEditPurchases";
 import {ExtendedProductionResponse} from "@/app/data_types";
 

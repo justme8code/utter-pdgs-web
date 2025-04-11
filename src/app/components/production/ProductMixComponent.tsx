@@ -7,7 +7,7 @@ import {useProductStore} from "@/app/store/productStore";
 import {useIngredientStore} from "@/app/store/ingredientStore";
 import {ProductMixDataType} from "@/app/product";
 import {useProductionStore} from "@/app/store/productionStore";
-import {createProductMix, deleteProductMix, updateProductMix} from "@/app/productions/actions";
+import {createProductMix, deleteProductMix, updateProductMix} from "@/app/actions/production";
 
 export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataType,onSave:(mix:ProductMixDataType)=>void,onDelete?:(status:boolean)=>void}) => {
     const [productMix, setProductMix] = useState<ProductMixDataType>(mix);

@@ -1,11 +1,11 @@
 'use client';
 import {useCallback, useEffect, useState} from 'react';
-import EditableTable, {ColumnType, DataType, RowType} from '../EditableTable';
+import EditableTable, {ColumnType, DataType, RowType} from '../../components/production/EditableTable';
 import {ExtendedProductionResponse} from '@/app/data_types';
-import {createProductionDynamicData} from '@/app/productions/actions';
+import {createProductionDynamicData} from '@/app/actions/production';
 import usePopulatePurchasesStore from "@/app/store/usePopulatePurchasesTable";
 import {calculateCostPerLitre, calculateLitresPerKg} from "@/app/production-computing-formulas";
-import {getIngredientsByRawMaterialNames} from "@/app/inventory/actions";
+import {getIngredientsByRawMaterialNames} from "@/app/actions/inventory";
 import {useIngredientStore} from "@/app/store/ingredientStore";
 
 const tableKey = 'rawMaterialsToIngredients';
@@ -117,7 +117,7 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
 
             {savedSuccessfully && <p className="text-green-500 mt-2">Update saved successfully!</p>}
 
-            {table && table.length>0 ?
+         {/*   {table && table.length>0 ?
                 <div className="mt-4 p-4 space-x-2">
                     <button
                         onClick={handleSubmitData}
@@ -129,7 +129,20 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
                 : <div className={"bg-gray-200 w-full text-gray-500 text-xl font-medium flex justify-center p-5 rounded-sm"}>
                     <h1>Conversion cannot be made without Populating Raw materials Purchases</h1>
                 </div>
-            }
+            }*/}
+
+            <div className="mt-4 p-4 space-x-2">
+                <button
+                    onClick={handleSubmitData}
+                    className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
+                >
+                    Save
+                </button>
+            </div>
+            : <div className={"bg-gray-200 w-full text-gray-500 text-xl font-medium flex justify-center p-5 rounded-sm"}>
+            <h1>Conversion cannot be made without Populating Raw materials Purchases</h1>
+        </div>
+
         </div>
     );
 };

@@ -1,6 +1,6 @@
 // store/ingredientStore.ts
 import { create } from 'zustand'
-import { Ingredient } from "@/app/inventory/RawMaterials"
+import { Ingredient } from "@/app/components/inventory/RawMaterials"
 
 interface IngredientState {
     ingredients: Ingredient[]

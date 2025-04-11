@@ -2,7 +2,7 @@ import { Modal } from "@/app/components/Modal";
 import { TextField } from "@/app/components/TextField";
 import { Button } from "@/app/components/Button";
 import React, { useActionState, useState } from "react";
-import { createSuppliers } from "@/app/inventory/actions";
+import { createSuppliers } from "@/app/actions/inventory";
 import { NewSupplier } from "@/app/store/SupplierStore";
 
 interface CreateSupplierModalProps {

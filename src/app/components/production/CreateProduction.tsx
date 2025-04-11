@@ -2,7 +2,7 @@ import { Modal } from "@/app/components/Modal";
 import { useState } from "react";
 import { TextField } from "@/app/components/TextField";
 import { Button } from "@/app/components/Button";
-import { createProduction } from "@/app/productions/actions";
+import { createProduction } from "@/app/actions/production";
 
 export interface ModalOnAction {
     onClose?: () => void;

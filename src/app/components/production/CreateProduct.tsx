@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { TextField } from "@/app/components/TextField";
 import { Button } from "@/app/components/Button";
 import { useProductForm } from "@/app/hooks/useProductForm";
-import { ModalOnAction } from "@/app/productions/CreateProduction";
+import { ModalOnAction } from "@/app/components/production/CreateProduction";
 import { useProductStore } from "@/app/store/productStore";
 
 export const CreateProduct = ({ onClose, isOpen }: ModalOnAction) => {

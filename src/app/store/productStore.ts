@@ -1,7 +1,7 @@
 // src/store/productStore.ts
 import { create } from "zustand";
 import { ProductPayload } from "../product";
-import { createProduct, getProducts } from "@/app/productions/actions";
+import { createProduct, getProducts } from "@/app/actions/production";
 
 interface ProductState {
     products: ProductPayload[];

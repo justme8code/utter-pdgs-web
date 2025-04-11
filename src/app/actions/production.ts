@@ -1,7 +1,7 @@
 'use server';
 import {myRequest} from "@/app/api/axios";
 import {ExtendedProductionResponse, Production, ProductionResponse, StaffResponse} from "../data_types";
-import {makeAuthRequest, verifySession} from "@/app/actions";
+import {makeAuthRequest, verifySession} from "@/app/actions/main";
 import {ProductMixDataType, ProductPayload} from "@/app/product";
 
 

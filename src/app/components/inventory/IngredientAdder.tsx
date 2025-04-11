@@ -2,7 +2,7 @@
 import React from "react";
 import { Trash } from "lucide-react";
 import { TextField } from "@/app/components/TextField";
-import {Ingredient} from "@/app/inventory/RawMaterials";
+import {Ingredient} from "@/app/components/inventory/RawMaterials";
 
 interface IngredientAdderProps {
     ingredients: Ingredient[];

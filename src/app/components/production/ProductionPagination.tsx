@@ -1,5 +1,5 @@
 
-import { fetchProductions } from "@/app/productions/actions";
+import { fetchProductions } from "@/app/actions/production";
 import { Suspense } from "react";
 import { ClientProductionPagination } from "./ClientProductionPagination";
 

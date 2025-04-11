@@ -1,4 +1,4 @@
-import {ColumnType, DataType} from "@/app/productions/EditableTable";
+import {ColumnType, DataType} from "@/app/components/production/EditableTable";
 import {useState} from "react";
 
 interface UnEditableTableProps {

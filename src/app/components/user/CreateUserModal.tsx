@@ -3,7 +3,7 @@ import { TextField } from "@/app/components/TextField";
 import { Button } from "@/app/components/Button";
 import React, { useActionState, useEffect, useState } from "react";
 import useAuthStore from "@/app/store/useAuthStore";
-import { createUser, fetchRoles } from "@/app/inventory/actions";
+import { createUser, fetchRoles } from "@/app/actions/inventory";
 import { Role, UserResponse } from "@/app/data_types";
 
 interface CreateUserModalProps {

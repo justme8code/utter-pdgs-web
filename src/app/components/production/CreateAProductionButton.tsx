@@ -1,5 +1,5 @@
 'use client';
-import {CreateProduction} from "@/app/productions/CreateProduction";
+import {CreateProduction} from "@/app/components/production/CreateProduction";
 import React, {useState} from "react";
 import {Plus} from "lucide-react";
 

@@ -6,7 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import ProductionList from "./ProductionLIst";
 import { ProductionResponse } from "@/app/data_types";
 import { TextField } from "@/app/components/TextField";
-import { CreateAProductionButton } from "@/app/productions/CreateAProductionButton";
+import { CreateAProductionButton } from "@/app/components/production/CreateAProductionButton";
 
 export const ClientProductionPagination = ({ productions }: { productions: ProductionResponse[] }) => {
     const searchParams = useSearchParams();

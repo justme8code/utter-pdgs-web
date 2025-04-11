@@ -1,5 +1,5 @@
 import useAuthStore from "@/app/store/useAuthStore";
-import {handleLogout} from "@/app/login/actions";
+import {handleLogout} from "@/app/actions/login";
 
 export const LogoutButton = () => {
     const {clearAuth} = useAuthStore();

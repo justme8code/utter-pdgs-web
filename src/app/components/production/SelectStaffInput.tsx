@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StaffResponse } from "@/app/data_types";
-import { fetchStaffs } from "@/app/productions/actions";
+import { fetchStaffs } from "@/app/actions/production";
 
 export const SelectStaffInput = () => {
     const [staffs, setStaffs] = useState<StaffResponse[]>([]);

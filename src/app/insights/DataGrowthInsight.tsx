@@ -1,5 +1,5 @@
 'use client';
-import DataGrowthChart from "@/app/components/DataGrowthChart";
+import DataGrowthChart from "@/app/insights/DataGrowthChart";
 
 import React, {useEffect, useState} from "react";
 import {DataGrowthDto, fetchDataGrowthInsight} from "@/app/actions/insights";

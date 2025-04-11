@@ -1,12 +1,12 @@
 'use client';
 import React, {useEffect, useState} from "react";
 
-import { CreateAProductButton } from "@/app/productions/CreateAProductButton";
+import { CreateAProductButton } from "@/app/components/production/CreateAProductButton";
 import { useProductStore } from "@/app/store/productStore";
 
 import { CheckCircle, Plus, XIcon } from "lucide-react";
-import { ProductMixComponent } from "@/app/productions/ProductMixComponent";
-import {fetchProductionMixes} from "@/app/productions/actions";
+import { ProductMixComponent } from "@/app/components/production/ProductMixComponent";
+import {fetchProductionMixes} from "@/app/actions/production";
 import {useProductionStore} from "@/app/store/productionStore";
 import {ProductMixDataType} from "@/app/product";
 import {useIngredientStore} from "@/app/store/ingredientStore";

@@ -1,5 +1,5 @@
 'use server';
-import { makeAuthRequest } from "../actions";
+import { makeAuthRequest } from "./main";
 export interface InsightDataType {
     totalQtyOfRawMaterials: number;
     totalCostOfPurchases: number;

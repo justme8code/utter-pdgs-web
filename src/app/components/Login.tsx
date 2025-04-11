@@ -3,7 +3,7 @@ import { TextField } from "@/app/components/TextField";
 import { Button } from "@/app/components/Button";
 import LoadingWrapper from "@/app/components/LoadingWrapper";
 import { useRouter } from "next/navigation";
-import { login } from "@/app/login/actions";
+import { login } from "@/app/actions/login";
 import useAuthStore, {AuthResponse, UserRole} from "@/app/store/useAuthStore";
 
 const Login: React.FC = () => {

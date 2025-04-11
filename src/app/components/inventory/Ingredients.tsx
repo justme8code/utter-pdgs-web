@@ -5,10 +5,10 @@ import {
     addNewIngredient,
     getAllIngredients,
     updateIngredient,
-} from "@/app/inventory/actions";
-import { Ingredient, RawMaterial } from "@/app/inventory/RawMaterials";
+} from "@/app/actions/inventory";
+import { Ingredient, RawMaterial } from "@/app/components/inventory/RawMaterials";
 import {RefreshCcw, Trash} from "lucide-react";
-import { SelectableRawMaterials } from "@/app/inventory/SelectableRawMaterials";
+import { SelectableRawMaterials } from "@/app/components/inventory/SelectableRawMaterials";
 
 export const Ingredients: React.FC = () => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);

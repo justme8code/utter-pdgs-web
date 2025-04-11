@@ -1,5 +1,5 @@
-import { Navbar } from "@/app/productions/Navbar";
-import { ProductionPagination } from "@/app/productions/ProductionPagination";
+import { Navbar } from "@/app/components/Navbar";
+import { ProductionPagination } from "@/app/components/production/ProductionPagination";
 import Sidebar from "@/app/components/SideBar";
 
 export default async function ProductionPage({searchParams}: {

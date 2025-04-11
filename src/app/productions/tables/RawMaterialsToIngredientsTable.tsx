@@ -1,4 +1,4 @@
-import {ColumnType} from "@/app/productions/EditableTable";
+import {ColumnType} from "@/app/components/production/EditableTable";
 import {RawMaterialsToIngredients} from "@/app/productions/tables/RawMaterialsToIngredients";
 import {ExtendedProductionResponse} from "@/app/data_types";
 
