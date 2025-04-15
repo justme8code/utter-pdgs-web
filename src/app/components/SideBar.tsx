@@ -6,8 +6,10 @@ import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import useAuthStore from "@/app/store/useAuthStore";
 import { LogoutButton } from "@/app/components/LogoutButton";
-import {ProductionTab} from "@/app/products/ProductionTab";
-import {OverViewTab} from "@/app/products/OverViewTab";
+import {ProductionTab} from "@/app/components/tree-tabs/ProductionTab";
+import {OverViewTab} from "@/app/components/tree-tabs/OverViewTab";
+import {ProductTab} from "@/app/components/tree-tabs/ProductsTab";
+import {InventoryTab} from "@/app/components/tree-tabs/InventoryTab";
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -49,6 +51,9 @@ export default function Sidebar() {
                                     activePath={activePath}
                                     onActiveChange={setActivePath}
                                 />
+                                <ProductTab activePath={activePath} onActiveChange={setActivePath} />
+
+                                <InventoryTab activePath={activePath} onActiveChange={setActivePath}/>
                             </ul>
                         </nav>
                     </div>

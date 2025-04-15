@@ -1,13 +1,14 @@
 'use client';
-import { ProductCard } from "./ProductCard";
+
 import Sidebar from "@/app/components/SideBar";
 import {CreateAProductButton} from "@/app/components/production/CreateAProductButton";
 import {useProductStore} from "@/app/store/productStore";
 import {useEffect, useState} from "react";
 import {TreeNav} from "@/app/components/tree-tabs/TreeNav";
+import {ProductCard} from "@/app/products/ProductCard";
 
 
-export default function ProductsPage() {
+export default function ProductsMixes() {
     const {products,fetchProducts} = useProductStore();
 
 
@@ -41,9 +42,6 @@ export default function ProductsPage() {
                         <p className={"text-center text-gray-500"}>No products found</p>
                     </div>
                 }
-
-
-
 
             </main>
 

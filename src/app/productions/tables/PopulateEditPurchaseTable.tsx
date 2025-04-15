@@ -4,7 +4,7 @@ import {PopulateEditPurchases} from "@/app/productions/tables/PopulateEditPurcha
 import {ExtendedProductionResponse} from "@/app/data_types";
 
 
-export async function PopulateEditPurchaseTable({production}:{production:ExtendedProductionResponse}) {
+export async function PopulateEditPurchaseTable({edit,production}:{edit:boolean,production:ExtendedProductionResponse}) {
 
     // fetch materials
     const rawMaterials = await getAllRawMaterials();
@@ -28,7 +28,7 @@ export async function PopulateEditPurchaseTable({production}:{production:Extende
 
     return (
         <>
-              <PopulateEditPurchases production={production} columns={columns}/>
+              <PopulateEditPurchases production={production} columns={columns} edit={edit}/>
         </>
     );
 }

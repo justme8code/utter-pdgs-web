@@ -97,7 +97,7 @@ export const RawMaterials: React.FC = () => {
     return (
         <div className="w-full shadow-xs p-5 hover:shadow-xl">
             <div className="flex w-full gap-10 mb-5 justify-between">
-                <h2 className="text-xl font-bold">Raw Materials</h2>
+                <h2 className="text-xl font-medium">Raw Materials</h2>
                 <div className="flex gap-5">
                     <button
                         onClick={addMaterial}

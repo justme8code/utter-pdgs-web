@@ -11,7 +11,7 @@ import {useIngredientStore} from "@/app/store/ingredientStore";
 const tableKey = 'rawMaterialsToIngredients';
 const foreign = 'populateEditPurchases';
 
-export const RawMaterialsToIngredients = ({ production, columns }: { production: ExtendedProductionResponse, columns: ColumnType[] }) => {
+export const RawMaterialsToIngredients = ({edit, production, columns }: {edit:boolean,production: ExtendedProductionResponse, columns: ColumnType[] }) => {
     const [editableData, setEditableData] = useState<DataType[]>(production.dynamicData[tableKey] || []);
     const [savedSuccessfully, setSavedSuccessfully] = useState<boolean>(false);
     const {ingredients,setIngredients} = useIngredientStore();
@@ -107,6 +107,7 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
             <h1 className="font-bold text-xl mb-4">Raw Materials To Ingredients</h1>
 
             {table && table.length>0 &&  <EditableTable
+                edit={edit}
                 onChange={setEditableData}
                 columns={columns}
                 data={editableData}
@@ -131,18 +132,24 @@ export const RawMaterialsToIngredients = ({ production, columns }: { production:
                 </div>
             }*/}
 
-            <div className="mt-4 p-4 space-x-2">
-                <button
-                    onClick={handleSubmitData}
-                    className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
-                >
-                    Save
-                </button>
-            </div>
-            : <div className={"bg-gray-200 w-full text-gray-500 text-xl font-medium flex justify-center p-5 rounded-sm"}>
-            <h1>Conversion cannot be made without Populating Raw materials Purchases</h1>
-        </div>
+            {
+                edit && (
+                    <div>
+                        <div className="mt-4 p-4 space-x-2">
+                            <button
+                                onClick={handleSubmitData}
+                                className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
+                            >
+                                Save
+                            </button>
+                        </div>
+                        <div className={"bg-gray-200 w-full text-gray-500 text-xl font-medium flex justify-center p-5 rounded-sm"}>
+                            <h1>Populate Raw Materials Before Saving</h1>
+                        </div>
 
+                    </div>
+                )
+            }
         </div>
     );
 };

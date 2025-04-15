@@ -16,10 +16,10 @@ const columns:ColumnType[] = [
     { key: "rawBrix", label: "Raw Brix", type: "number" }
 ];
 
-export const RawMaterialsToIngredientsTable = ({production}:{production:ExtendedProductionResponse}) => {
+export const RawMaterialsToIngredientsTable = ({edit,production}:{edit:boolean,production:ExtendedProductionResponse}) => {
     return (
         <>
-            <RawMaterialsToIngredients production={production} columns={columns}/>
+            <RawMaterialsToIngredients production={production} columns={columns} edit={edit}/>
         </>
     );
 };

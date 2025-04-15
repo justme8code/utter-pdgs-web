@@ -19,9 +19,10 @@ export interface EditableTableProps {
     onAdd?: (newRow: RowType) => void;
     disableFields?: (row: RowType) => string[];
     editable?: boolean;
+    edit?:boolean;
 }
 
-const EditableTable = ({columns, data,  onDelete,  onChange,disableFields }: EditableTableProps) => {
+const EditableTable = ({edit=true,columns, data,  onDelete,  onChange,disableFields }: EditableTableProps) => {
 
     const [selectedRow, setSelectedRow] = useState<RowType | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,14 +87,12 @@ const EditableTable = ({columns, data,  onDelete,  onChange,disableFields }: Edi
 
     return (
         <div className="overflow-x-auto px-4">
-
-                <button
-                    className="mb-4 bg-gray-100 ring-1 ring-gray-300 px-4 py-1 rounded-sm hover:bg-gray-300"
-                    onClick={addNewRow}
-                >
-                    + Add New Entry
-                </button>
-
+            {edit && <button
+                className="mb-4 bg-gray-100 ring-1 ring-gray-300 px-4 py-1 rounded-sm hover:bg-gray-300"
+                onClick={addNewRow}
+            >
+                + Add New Entry
+            </button>}
 
             <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg">
                 <thead className="bg-gray-200 text-gray-700">
@@ -103,11 +102,11 @@ const EditableTable = ({columns, data,  onDelete,  onChange,disableFields }: Edi
                             {col.label}
                         </th>
                     ))}
-                    {onDelete && <th className="border px-4 py-3 text-center font-semibold">Actions</th>}
+                    {edit && onDelete && <th className="border px-4 py-3 text-center font-semibold">Actions</th>}
                 </tr>
                 </thead>
                 <tbody>
-                {data && data.map((row) => (
+                {edit && data && data.map((row) => (
                     <tr
                         key={row.id}
                         className="hover:bg-gray-50 transition"
@@ -118,7 +117,7 @@ const EditableTable = ({columns, data,  onDelete,  onChange,disableFields }: Edi
                                 {row[col.key]}
                             </td>
                         ))}
-                        {onDelete && (
+                        {edit && onDelete && (
                             <td className="border px-4 py-3 text-center">
                                 <button
                                     className="text-gray-500 hover:text-red-600 transition"

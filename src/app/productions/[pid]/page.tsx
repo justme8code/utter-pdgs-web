@@ -4,6 +4,8 @@ import { fetchProductionWithDynamicData } from "@/app/actions/production";
 import { PopulateEditPurchaseTable } from "@/app/productions/tables/PopulateEditPurchaseTable";
 import { RawMaterialsToIngredientsTable } from "@/app/productions/tables/RawMaterialsToIngredientsTable";
 import {ProductMix} from "@/app/components/production/ProductMix";
+import {Button} from "@/app/components/Button";
+import Link from "next/link";
 
 export default async function ProductionPage({ params }: { params: Promise<{ pid: number }> }) {
     const { pid } = await params;
@@ -19,13 +21,14 @@ export default async function ProductionPage({ params }: { params: Promise<{ pid
                         <div className="space-y-10">
                             <ProductionInfo prod={data} />
                             <div className="space-y-10">
-                                <PopulateEditPurchaseTable production={data} />
-                                <RawMaterialsToIngredientsTable production={data} />
-                                <ProductMix/>
+                                <PopulateEditPurchaseTable production={data} edit={false} />
+                                <RawMaterialsToIngredientsTable production={data} edit={false}/>
                             </div>
                         </div>
                     )}
-
+                    <div className={"flex justify-end p-4"}>
+                         <Button label={"Update production"} href={`/productions/${pid}/update`}/>
+                    </div>
                 </div>
             </main>
         </div>

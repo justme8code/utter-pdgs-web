@@ -13,7 +13,7 @@ import {
 
 const tableKey = 'populateEditPurchases';
 
-export const PopulateEditPurchases = ({ production, columns }: { production: ExtendedProductionResponse, columns: ColumnType[] }) => {
+export const PopulateEditPurchases = ({edit, production, columns }: {edit:boolean, production: ExtendedProductionResponse, columns: ColumnType[] }) => {
     const [editableData, setEditableData] = useState<DataType[]>(production.dynamicData[tableKey]);
     const [savedSuccessfully, setSavedSuccessfully] = useState<boolean>(false);
     const { updateTable } = usePopulatePurchasesStore();
@@ -65,6 +65,7 @@ export const PopulateEditPurchases = ({ production, columns }: { production: Ext
             <h1 className="font-bold text-xl mb-4">Populate And Edit Purchases</h1>
 
             <EditableTable
+                edit={edit}
                 onChange={(data) => {
                     setEditableData(data);
                     updateTable(data);

@@ -61,7 +61,7 @@ export const TreeNav = ({
         <div className="flex flex-col font-medium">
             <button
                 onClick={toggle}
-                className={`flex items-center space-x-1 p-1 rounded-sm w-full text-left truncate ${
+                className={`flex items-center space-x-1 p-1 mb-4 rounded-sm w-full text-left truncate ${
                     isActive ? "bg-blue-200 text-blue-900 font-semibold" : ""
                 }`}
                 style={{ paddingLeft: `${depth * 8}px` }}
