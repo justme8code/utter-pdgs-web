@@ -1,118 +1,167 @@
+'use client';
 import { Modal } from "@/app/components/Modal";
 import { useState, useEffect } from "react";
 import { TextField } from "@/app/components/TextField";
-import { Button } from "@/app/components/Button";
-import { useProductForm } from "@/app/hooks/useProductForm";
 import { ModalOnAction } from "@/app/components/production/CreateProduction";
 import { useProductStore } from "@/app/store/productStore";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {Button} from "@/app/components/Button";
+import {useIngredientStore} from "@/app/store/ingredientStore";
+import {Ingredient} from "@/app/components/inventory/RawMaterials";
+
+// Define Zod schema
+const productSchema = z.object({
+    name: z.string().min(3, "Product name must be at least 3 characters").nonempty("Product name is required"),
+    description: z.string().max(100, "Description must be at most 100 characters").nonempty("Description is required"),
+    unitOfMeasure: z.string().nonempty("Unit of measure is required"),
+});
+
+type ProductFormValues = z.infer<typeof productSchema>;
 
 export const CreateProduct = ({ onClose, isOpen }: ModalOnAction) => {
-    const {
-        productDetails,
-        variantDetails,
-        handleProductChange,
-        handleVariantChange,
-        resetForm,
-        isValid,
-    } = useProductForm();
-
-    const { addProduct, isLoading, error } = useProductStore();
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const {addProduct,error,isLoading} = useProductStore();
+    const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);
+    const {ingredients,fetchIngredients} = useIngredientStore();
 
-    const handleCreateNewProduct = async () => {
-        if (!isValid()) {
-            setSuccessMessage(null);
-            return;
-        }
+    const { control, handleSubmit, formState: { errors } } = useForm<ProductFormValues>({
+        resolver: zodResolver(productSchema),
+        defaultValues: {
+            name: "",
+            description: "",
+            unitOfMeasure: "",
+        },
+    });
 
-        const payload = {
-            ...productDetails,
-            variant: variantDetails,
-        };
+    useEffect(() => {
+        fetchIngredients();
+    }, [fetchIngredients]);
 
-        await addProduct(payload);
-
+    const handleCreateNewProduct = async (data: ProductFormValues) => {
+        // Call the product store to create a new product
+         await addProduct({
+            name: data.name,
+            description: data.description,
+            unitOfMeasure: data.unitOfMeasure,
+            ingredients: selectedIngredients,
+        });
         if (!error) {
             setSuccessMessage("Product created successfully!");
-            resetForm();
             onClose?.();
         }
     };
 
-    // Clear success message on open
     useEffect(() => {
         if (isOpen) {
             setSuccessMessage(null);
         }
     }, [isOpen]);
 
+    const ErrorMessage = ({ message }: { message: string | undefined }) => (
+        <p className="text-red-500 text-sm">{message}</p>
+    );
+
     return (
         <Modal isOpen={isOpen ?? false} onClose={() => onClose && onClose()}>
-            <div className="flex flex-col space-y-4 w-96 text-black">
-                <h1 className="font-bold text-2xl mx-auto">Create New Product</h1>
-                <div className="border-b border-gray-300 w-full mb-5" />
+            <form onSubmit={handleSubmit(handleCreateNewProduct)} className={""}>
+                <div className="flex flex-col justify-between space-y-4 w-96 p-2  text-black">
+                     <div className={"space-y-5 w-full"}>
+                         <h1 className="font-bold text-2xl mx-auto">Create New Product</h1>
+                         <div className="border-b border-gray-300 w-full mb-5" />
 
-                <TextField
-                    value={productDetails.name}
-                    label="Product Name"
-                    onChange={(value) => handleProductChange("name", value)}
-                    props={{ placeholder: "Enter product name" }}
-                />
+                         <Controller
+                             name="name"
+                             control={control}
+                             render={({ field }) => (
+                                 <div>
+                                     <TextField
+                                         {...field}
+                                         label="Product Name"
+                                         placeholder="Enter product name"
+                                         type="text"
+                                         className="w-full"
+                                     />
+                                     <ErrorMessage message={errors.name?.message}/>
+                                 </div>
+                             )}
+                         />
 
-                <TextField
-                    value={productDetails.description}
-                    label="Product Description"
-                    onChange={(value) => handleProductChange("description", value)}
-                    props={{ placeholder: "Please describe the product" }}
-                />
+                         <Controller
+                             name="description"
+                             control={control}
+                             render={({ field }) => (
+                                 <div>
+                                     <TextField
+                                         {...field}
+                                         label="Product Description"
+                                         placeholder="Enter product description"
+                                         type="text"
+                                         className="w-full"
+                                     />
+                                     <ErrorMessage message={errors.description?.message}/>
+                                 </div>
+                             )}
+                         />
 
-                <TextField
-                    value={productDetails.unitOfMeasure}
-                    label="Unit of Measure"
-                    onChange={(value) => handleProductChange("unitOfMeasure", value)}
-                    props={{ placeholder: "e.g., kg, piece, liter" }}
-                />
+                         <Controller
+                             name="unitOfMeasure"
+                             control={control}
+                             render={({ field }) => (
 
-                <TextField
-                    value={productDetails.category}
-                    label="Category"
-                    onChange={(value) => handleProductChange("category", value)}
-                    props={{ placeholder: "Enter product category" }}
-                />
+                                 <div>
+                                     <TextField
+                                         {...field}
+                                         label="Unit of Measure"
+                                         placeholder="Enter unit of measure"
+                                         type="text"
+                                         className="w-full"
+                                     />
+                                     <ErrorMessage message={errors.unitOfMeasure?.message}/>
+                                 </div>
+                             )}
+                         />
 
-                <h2 className="font-semibold text-lg mt-4">Product Variant</h2>
+                     </div>
 
-                <TextField
-                    value={variantDetails.name}
-                    label="Variant Name"
-                    onChange={(value) => handleVariantChange("name", value)}
-                    props={{ placeholder: "Enter variant name (e.g., Standard)" }}
-                />
-
-                <TextField
-                    value={variantDetails.description}
-                    label="Variant Description"
-                    onChange={(value) => handleVariantChange("description", value)}
-                    props={{ placeholder: "Describe this variant" }}
-                />
-
-                <Button
-                    label={isLoading ? "Creating..." : "Create Product"}
-                    onClick={handleCreateNewProduct}
-                    className="max-w-fit mx-auto"
-                    disabled={isLoading}
-                />
-
-                {successMessage && (
-                    <div className="text-green-500 text-center text-sm font-bold">{successMessage}</div>
-                )}
-
-                {error && (
-                    <div className="bg-gray-200 w-full rounded-sm p-3">
-                        <p className="text-red-500">{error}</p>
+                    <div className="flex w-full">
+                        {ingredients.map((ingredient) => (
+                            <label key={ingredient.id} className="flex items-center space-x-2">
+                                <input
+                                    type="checkbox"
+                                    className="form-checkbox h-5 w-full text-blue-600"
+                                    checked={selectedIngredients.some((i) => i.id === ingredient.id)}
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setSelectedIngredients((prev) => [...prev, ingredient]);
+                                        } else {
+                                            setSelectedIngredients((prev) =>
+                                                prev.filter((i) => i.id !== ingredient.id)
+                                            );
+                                        }
+                                    }}
+                                />
+                                <span>{ingredient.name}</span>
+                            </label>
+                        ))}
                     </div>
-                )}
-            </div>
+                    <Button label={isLoading ? "Creating..." : "Create Product"}
+                            disabled={isLoading}
+                            type={"submit"}
+                    />
+
+                    {successMessage && (
+                        <div className="text-green-500 text-center text-sm font-bold">{successMessage}</div>
+                    )}
+
+                    {error && (
+                        <div className="bg-gray-200 w-full rounded-sm p-3">
+                            <p className="text-red-500">{error}</p>
+                        </div>
+                    )}
+                </div>
+            </form>
         </Modal>
     );
 };

@@ -1,3 +1,5 @@
+import { Ingredient } from "./components/inventory/RawMaterials";
+
 export interface VariantPayload {
     id?:number;
     name: string;
@@ -9,8 +11,8 @@ export interface ProductPayload {
     name: string;
     description: string;
     unitOfMeasure: string;
-    category: string;
-    variant: VariantPayload;
+    totalProductMixCount?:number;
+    ingredients: Ingredient[];
 }
 
 

@@ -97,7 +97,7 @@ export async function createProduct(product:ProductPayload){
 
 
 export async function getProducts(){
-    const {data,status} = await makeAuthRequest<null,ProductPayload>({
+    const {data,status} = await makeAuthRequest<null,ProductPayload[]>({
         url: `/products`,
         method: "GET",
     });

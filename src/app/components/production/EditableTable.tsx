@@ -21,7 +21,7 @@ export interface EditableTableProps {
     editable?: boolean;
 }
 
-const EditableTable = ({columns, data, onUpdate, onDelete,  onChange,disableFields }: EditableTableProps) => {
+const EditableTable = ({columns, data,  onDelete,  onChange,disableFields }: EditableTableProps) => {
 
     const [selectedRow, setSelectedRow] = useState<RowType | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,7 +32,7 @@ const EditableTable = ({columns, data, onUpdate, onDelete,  onChange,disableFiel
     };
 
     const closeModal = () => {
-        if (selectedRow) {
+        if (selectedRow && selectedRow.id) {
             // Remove unsaved row
             const updatedData = data.filter((row) => row.id !== 0);
             onChange(updatedData);
@@ -107,7 +107,7 @@ const EditableTable = ({columns, data, onUpdate, onDelete,  onChange,disableFiel
                 </tr>
                 </thead>
                 <tbody>
-                {data.map((row) => (
+                {data && data.map((row) => (
                     <tr
                         key={row.id}
                         className="hover:bg-gray-50 transition"

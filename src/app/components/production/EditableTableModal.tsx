@@ -1,14 +1,19 @@
 import { Modal } from "@/app/components/Modal";
-import { useForm } from "react-hook-form";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {RowType} from "@/app/components/production/EditableTable";
+
+interface FormData {
+    [key: string]: unknown;
+}
 
 interface EditableTableModalProps {
     isModalOpen: boolean;
     closeModal: () => void;
-    selectedRow: never;
+    selectedRow: RowType | null;
     columns: { key: string; label: string; type?: string; options?: string[] }[];
-    handleModalChange: (key: string, value: never) => void;
+    handleModalChange: (key: string, value: string) => void;
     saveChanges: () => void;
-    disableFields?: (row: never) => string[];
+    disableFields?: (row: RowType) => string[];
 }
 
 export const EditableTableModal = ({
@@ -25,21 +30,18 @@ export const EditableTableModal = ({
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm({
+    } = useForm();
 
-    });
-
-    const onSubmit = (data: never) => {
+    const onSubmit: SubmitHandler<FormData> = (data) => {
         saveChanges();
         console.log(data);
         reset();
-
     };
 
     return (
         <Modal isOpen={isModalOpen} onClose={() => {
-            reset();
             closeModal();
+            reset();
         }}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 {selectedRow && (
@@ -99,7 +101,7 @@ export const EditableTableModal = ({
                                                 />
                                                 {errors[col.key] && (
                                                     <div className="text-red-500 text-sm mt-1">
-                                                        {errors[col.key]?.message}
+                                                        <p>{String(errors[col.key]?.message)}</p>
                                                     </div>
                                                 )}
                                             </div>
@@ -110,12 +112,12 @@ export const EditableTableModal = ({
                         </div>
 
                         <div className="flex justify-end gap-2 mt-4">
-                            <button
+                           {/* <button
                                 className="bg-gray-500 text-white px-4 p-1 rounded-sm hover:bg-gray-600"
                                 onClick={closeModal}
                             >
                                 Cancel
-                            </button>
+                            </button>*/}
                             <button
                                 type="submit"
                                 className="p-1 px-4 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"

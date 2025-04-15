@@ -4,10 +4,6 @@ import {Role, Supplier, User, UserResponse} from "@/app/data_types";
 import {Ingredient, RawMaterial} from "@/app/components/inventory/RawMaterials";
 import {NewSupplier} from "@/app/store/SupplierStore";
 
-
-
-
-
 export async function createUser(previousState: unknown, formData: FormData,roles:Role[]) {
     const fullName = formData.get("fullName") as string;
     const email = formData.get("email") as string;
