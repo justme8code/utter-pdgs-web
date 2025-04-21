@@ -1,14 +1,13 @@
 'use client';
 import { useState} from "react";
-
 import { Trash } from "lucide-react";
-
 import {EditableTableModal} from "@/app/components/production/EditableTableModal";
 
+export type RowType = { sn: number, id:number,[key: string]: string | number };
+export type ColumnType = { key: string, label: string, type?: string, options?: string[], info?:boolean, donNotRender?: boolean,
 
-export type RowType = { id: number, [key: string]: string | number };
-export type ColumnType = { key: string, label: string, type?: string, options?: string[], info?:boolean};
-export type DataType = { id: number, [key: string]: string | number };
+}; // Updated ColumnType
+export type DataType = { sn: number, [key: string]: string | number };
 
 export interface EditableTableProps {
     columns: Array<ColumnType>;
@@ -22,7 +21,7 @@ export interface EditableTableProps {
     edit?:boolean;
 }
 
-const EditableTable = ({edit=true,columns, data,  onDelete,  onChange,disableFields }: EditableTableProps) => {
+const EditableTable = ({edit=true,columns, onAdd,data,  onDelete,  onChange,disableFields }: EditableTableProps) => {
 
     const [selectedRow, setSelectedRow] = useState<RowType | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,33 +32,31 @@ const EditableTable = ({edit=true,columns, data,  onDelete,  onChange,disableFie
     };
 
     const closeModal = () => {
-        if (selectedRow && selectedRow.id) {
+        if (selectedRow && selectedRow.sn) {
             // Remove unsaved row
-            const updatedData = data.filter((row) => row.id !== 0);
+            const updatedData = data.filter((row) => row.sn !== 0);
             onChange(updatedData);
         }
-
         setSelectedRow(null);
         setIsModalOpen(false);
     };
 
     const saveChanges = () => {
         if (selectedRow) {
-            if(selectedRow.id > 0) {
+            if(selectedRow.sn > 0) {
                 const updatedData = data.map((row) =>
-                    row.id === selectedRow.id ? { ...selectedRow } : row
+                    row.sn === selectedRow.sn ? { ...selectedRow } : row
                 );
                 onChange(updatedData);
-
-            }else{
-                selectedRow.id = data.length+1
+            } else {
+                selectedRow.sn = data.length + 1;
                 const updatedData = [...data, selectedRow];
                 onChange(updatedData);
-
+                if(onAdd){
+                    onAdd(selectedRow);
+                }
             }
-
         }
-
         setSelectedRow(null);
         setIsModalOpen(false);
     };
@@ -67,8 +64,9 @@ const EditableTable = ({edit=true,columns, data,  onDelete,  onChange,disableFie
     const addNewRow = () => {
         // Reset selectedRow to ensure the modal starts with a clean state
         setSelectedRow({
-            id: 0, // Temporary ID for unsaved rows
-            rawMaterials: '',
+            sn: 0, // Temporary ID for unsaved rows
+            id: 0,
+            rawMaterial: '',
             supplier: '',
             uom: 'kg',
             qty: 0,
@@ -81,9 +79,6 @@ const EditableTable = ({edit=true,columns, data,  onDelete,  onChange,disableFie
         });
         setIsModalOpen(true);
     };
-
-
-
 
     return (
         <div className="overflow-x-auto px-4">
@@ -98,9 +93,11 @@ const EditableTable = ({edit=true,columns, data,  onDelete,  onChange,disableFie
                 <thead className="bg-gray-200 text-gray-700">
                 <tr>
                     {columns.map((col) => (
-                        <th key={col.key} className="border p-2 text-center font-semibold">
-                            {col.label}
-                        </th>
+                        !col.donNotRender && ( // Only render if donNotRender is not true
+                            <th key={col.key} className="border p-2 text-center font-semibold">
+                                {col.label}
+                            </th>
+                        )
                     ))}
                     {edit && onDelete && <th className="border px-4 py-3 text-center font-semibold">Actions</th>}
                 </tr>
@@ -108,14 +105,16 @@ const EditableTable = ({edit=true,columns, data,  onDelete,  onChange,disableFie
                 <tbody>
                 {edit && data && data.map((row) => (
                     <tr
-                        key={row.id}
+                        key={row.sn}
                         className="hover:bg-gray-50 transition"
                         onClick={() => openModal(row)}
                     >
                         {columns.map((col) => (
-                            <td key={col.key} className="border p-2 text-center">
-                                {row[col.key]}
-                            </td>
+                            !col.donNotRender && ( // Only render if donNotRender is not true
+                                <td key={col.key} className="border p-2 text-center">
+                                    {row[col.key]}
+                                </td>
+                            )
                         ))}
                         {edit && onDelete && (
                             <td className="border px-4 py-3 text-center">
@@ -123,10 +122,10 @@ const EditableTable = ({edit=true,columns, data,  onDelete,  onChange,disableFie
                                     className="text-gray-500 hover:text-red-600 transition"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        const updatedData = data.filter((item) => item.id !== row.id);
+                                        const updatedData = data.filter((item) => item.sn !== row.sn);
                                         onChange(updatedData);
                                         if (onDelete) {
-                                            onDelete(row.id);
+                                            onDelete(row.sn);
                                         }
                                     }}
                                 >
@@ -143,7 +142,7 @@ const EditableTable = ({edit=true,columns, data,  onDelete,  onChange,disableFie
                 isModalOpen={isModalOpen}
                 closeModal={closeModal}
                 selectedRow={selectedRow}
-                columns={columns}
+                columns={columns.filter(col => !col.donNotRender)} // Filter columns passed to the modal
                 handleModalChange={(field, value) => {
                     setSelectedRow((prev) => (prev ? { ...prev, [field]: value } : null));
                 }}

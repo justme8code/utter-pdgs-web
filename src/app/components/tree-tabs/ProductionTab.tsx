@@ -9,11 +9,11 @@ export const ProductionTab = ({activePath,onActiveChange}:TreeViewTabProps) => {
     return (
 
             <TreeNav title="Productions" path="productions" activePath={activePath} onActiveChange={onActiveChange}>
-                <TreeNav title="All productions" path="/productions"  onToggle={() => {
-                    router.push("/productions");
-                }}/>
                 <TreeNav title="New production" path="/productions/new"  onToggle={() => {
                     router.push("/productions/new");
+                }}/>
+                <TreeNav title="All productions" path="/productions"  onToggle={() => {
+                    router.push("/productions");
                 }}/>
                 <TreeNav title="Production mixes" path="/productions/mixes" onToggle={() => {
                     router.push("/productions/mixes");

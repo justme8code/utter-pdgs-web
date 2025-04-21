@@ -1,0 +1,178 @@
+'use client';
+import DataTable, { TableColumn } from 'react-data-table-component';
+import { Modal } from "@/app/components/Modal";
+import { UpdatePurchaseEntry } from "@/app/new/UpdatePurchaseEntry";
+import { useState } from "react";
+import { SamplePurchaseEntries } from "@/app/new/play-with-data";
+import useSampleProductionStore from "@/app/store/sampleProductionStore";
+
+const customStyles = {
+    header: {
+        style: {
+            fontSize: '18px',
+            fontWeight: 'bold',
+            color: '#626567',
+            backgroundColor: '#fafafa',
+
+        },
+    },
+    rows: {
+        style: {
+            fontSize: '16px',
+            color: '#ffffff',
+            '&:hover': {
+                backgroundColor: '#E2E8F0',
+            },
+
+        },
+    },
+    headCells: {
+        style: {
+            fontSize: '16px',
+            fontWeight: 'bold',
+            color: '#303030',
+            backgroundColor: '#f3f3f3',
+        },
+    },
+    cells: {
+        style: {
+            fontSize: '16px',
+            color: '#4A5568',
+
+        },
+    },
+};
+
+const columns: TableColumn<SamplePurchaseEntries>[] = [
+    {
+        name: 'S/N',
+        selector: (row, index) => index != undefined?index + 1:1,
+        sortable: true,
+    },
+    {
+        name:'ID',
+        selector: row => row.id,
+        sortable: true,
+    },
+    {
+        name: 'Raw Material',
+        selector: row => row.rawMaterial.name,
+    },
+    {
+        name: 'Supplier',
+        selector: row => row.supplier.fullName??'',
+    },
+    {
+        name: 'UoM',
+        selector: row => row.uom,
+    },
+    {
+        name: 'Qty',
+        selector: row => row.qty.toFixed(2),
+    },
+    {
+        name: 'Weight',
+        selector: row => row.weight.toFixed(2),
+    },
+    {
+        name: 'PLost',
+        selector: row => row.productionLost.toFixed(2),
+    },
+    {
+        name: 'Usable',
+        selector: row => row.usable.toFixed(2),
+    },
+    {
+        name: 'Cost',
+        selector: row => row.cost,
+        format: row => `$${(row.cost || 0).toFixed(2)}`,
+    },
+    {
+        name: 'Average Cost',
+        selector: row => row.avgCost.toFixed(2),
+    },
+    {
+        name: 'Avg w/UoM',
+        selector: row => row.avgWeightPerUOM.toFixed(2),
+    },
+];
+
+
+export default function PurchaseEntryTable() {
+    const {production,updatePurchaseEntry,addPurchaseEntry} = useSampleProductionStore();
+    const [selectedRow, setSelectedRow] = useState<SamplePurchaseEntries | null>(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+
+    const handleAddRow = () => {
+        const newRow: SamplePurchaseEntries = {
+            id: Date.now(),
+            rawMaterial: { id: 0, name: '',uom:'' },
+            supplier: { id: 0, fullName: '' },
+            uom: '',
+            qty: 0,
+            weight: 0,
+            productionLost: 0,
+            usable: 0,
+            cost: 0,
+            avgCost: 0,
+            avgWeightPerUOM: 0,
+        };
+        setSelectedRow(newRow);
+        setIsEditMode(false); // Ensure we are in 'add' mode
+    };
+
+    const handleSaveNewRow = (newRowData: SamplePurchaseEntries) => {
+        console.log('Saving new row:', newRowData);
+        addPurchaseEntry({...newRowData,id:Date.now()});
+        setSelectedRow(null);
+    };
+
+    const handleUpdateRow = (updatedRowData: SamplePurchaseEntries) => {
+        console.log('Updating row:', updatedRowData);
+        /*setData(prevData =>
+            prevData.map(row =>
+                row.id === updatedRowData.id ? updatedRowData : row
+            )
+        );*/
+
+             updatePurchaseEntry(Number(updatedRowData.id),{...updatedRowData,id:Number(updatedRowData.id)});
+        setSelectedRow(null);
+        setIsEditMode(false);
+    };
+
+    return (
+        <div>
+            <button onClick={handleAddRow}>Add Row</button>
+
+            <DataTable
+                columns={columns}
+                data={production.purchaseEntries??[]}
+                onRowClicked={row => {
+                    console.log('Row clicked:', row);
+                    setSelectedRow(row);
+                    setIsEditMode(true);
+                }}
+
+                customStyles={customStyles}
+            />
+
+            <Modal isOpen={!!selectedRow} onClose={() => setSelectedRow(null)}>
+                {selectedRow && (
+                    <UpdatePurchaseEntry
+                        data={selectedRow}
+                        onSave={data1 => {
+                            handleSaveNewRow(data1);
+                        }}
+                        isEditMode={isEditMode}
+                        onChange={(updatedData) => {
+                            console.log('Data from modal:', updatedData);
+                            setSelectedRow(updatedData);
+                        }}
+                        onUpdate={data1 => handleUpdateRow(data1)}
+                    />
+                )}
+
+            </Modal>
+        </div>
+    );
+}

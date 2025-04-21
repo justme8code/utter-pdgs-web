@@ -12,7 +12,7 @@ export const SuppliersList = () => {
     }, [fetchSuppliers]);
 
     return (
-        <div className={"max-w-2xl shadow-xs p-5 hover:shadow-xl"}>
+        <div className={"w-full shadow-xs p-5 hover:shadow-xl"}>
             <div className={"flex items-center w-full gap-10 mb-5"}>
                 <h2 className="text-xl font-bold">Supplier Management</h2>
                 <button
@@ -35,7 +35,7 @@ export const SuppliersList = () => {
                     }}
                 />
             )}
-            <div className=" ">
+            <div className="">
                 <table className="w-full border-collapse border border-gray-300">
                     <thead>
                         <tr className="bg-gray-100">

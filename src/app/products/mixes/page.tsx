@@ -1,21 +1,10 @@
-'use client';
 
 import Sidebar from "@/app/components/SideBar";
 import {CreateAProductButton} from "@/app/components/production/CreateAProductButton";
-import {useProductStore} from "@/app/store/productStore";
-import {useEffect, useState} from "react";
-import {TreeNav} from "@/app/components/tree-tabs/TreeNav";
-import {ProductCard} from "@/app/products/ProductCard";
 
 
 export default function ProductsMixes() {
-    const {products,fetchProducts} = useProductStore();
 
-
-
-    useEffect(() => {
-        fetchProducts();
-    },[fetchProducts]);
 
     return (
 
@@ -31,17 +20,7 @@ export default function ProductsMixes() {
             </nav>
 
             <main className="flex flex-col w-full flex-1 p-4 space-y-6">
-                {
-                    products && products.length>0 ? <div className={"grid grid-cols-5 w-full"}>
-                        {products.map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))
 
-                        }
-                    </div>:<div className={"flex justify-center items-center  w-full"}>
-                        <p className={"text-center text-gray-500"}>No products found</p>
-                    </div>
-                }
 
             </main>
 

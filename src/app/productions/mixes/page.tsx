@@ -2,7 +2,7 @@
 import { Level1DataInsightSection } from "@/app/insights/Level1DataInsightSection";
 import { DataGrowthInsight } from "@/app/insights/DataGrowthInsight";
 import Sidebar from "@/app/components/SideBar";
-import {ProductMix} from "@/app/components/production/ProductMix";
+import {ProductMixPage} from "@/app/components/production/productMix/ProductMixPage";
 
 export default function Home() {
     const stats = [
@@ -31,7 +31,7 @@ export default function Home() {
                  <main className="flex flex-col w-full flex-1 p-4 space-y-6">
                      <h1 className="text-3xl font-bold">Production Insights Dashboard</h1>
 
-                     <ProductMix/>
+                     <ProductMixPage/>
                  </main>
              </div>
 

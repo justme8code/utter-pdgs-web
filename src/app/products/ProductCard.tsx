@@ -1,7 +1,6 @@
-import {ProductPayload} from "@/app/product";
+import {Product} from "@/app/product";
 
-
-export const ProductCard = ({ product }: { product: ProductPayload }) => {
+export const ProductCard = ({ product }: { product: Product }) => {
     return (
         <div className="border rounded-lg shadow-md p-4 w-50">
             <img

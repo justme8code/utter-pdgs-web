@@ -1,35 +1,53 @@
 'use client';
 
 import {TextField} from "@/app/components/TextField";
-import {CheckCircle, Circle, CircleArrowDown, RotateCw, TrashIcon} from "lucide-react";
-import React, {useCallback, useEffect, useState} from "react";
+import { RotateCw, TrashIcon} from "lucide-react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useProductStore} from "@/app/store/productStore";
-import {useIngredientStore} from "@/app/store/ingredientStore";
-import {ProductMixDataType} from "@/app/product";
+import {ProductMix} from "@/app/product";
 import {useProductionStore} from "@/app/store/productionStore";
 import {createProductMix, deleteProductMix, updateProductMix} from "@/app/actions/production";
+import {ProductSelector} from "@/app/components/production/productMix/ProductSelector";
 
-export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataType,onSave:(mix:ProductMixDataType)=>void,onDelete?:(status:boolean)=>void}) => {
-    const [productMix, setProductMix] = useState<ProductMixDataType>(mix);
+interface ProductMixComponentProps {
+    mix: ProductMix;
+    onSave: (mix: ProductMix) => void;
+    onDelete?: (status: boolean) => void;
+    edit?: boolean;
+}
+
+export const ProductMixComponent = ({mix,onSave,onDelete,edit}:ProductMixComponentProps) => {
+    const [productMix, setProductMix] = useState<ProductMix>(mix);
+    const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
     const {selectedProduction} = useProductionStore();
-    const [selectedProduct, setSelectedProduct] = useState<string>();
     const { products,fetchProducts} = useProductStore();
-    const {ingredients} = useIngredientStore();
-    const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [loading,setLoading] = useState(false);
-
 
     useEffect(() => {
         setProductMix(mix)
+        if(mix.productId){
+            setSelectedProductId(mix.productId);
+        }
     },[fetchProducts, mix, products]);
+
+
+    const selectedProduct = useMemo(() => {
+        return products.find(product => product.id === selectedProductId);
+    }, [products, selectedProductId]);
+
+
+    const ingredients = selectedProduct?.ingredients || [];
 
     const handleCreate = async ()=> {
         setLoading(true);
-        if (selectedProduction && selectedProduction.id) {
+        console.log("selected production id ", selectedProduction?.id);
+        console.log("Selected product id ", selectedProductId);
+
+        if (selectedProduction && selectedProduction.id && selectedProductId) {
 
             const s = {...productMix,
                 productionId: selectedProduction.id,
-                productId: products[selectedIndex].id,
+                productId: selectedProductId,
                 totalLitersUsed:calculatedTotalIngredientUsage()
             };
             const {data,status} = await createProductMix(s);
@@ -42,11 +60,11 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
 
     const handleUpdate = async ()=> {
         setLoading(true);
-        if (selectedProduction && selectedProduction.id) {
-            console.log("In here...");
+        if (selectedProduction && selectedProduction.id && selectedProductId) {
+            console.log("In here...  ", selectedProductId);
             const s = {...productMix,
                 productionId: selectedProduction.id,
-                productId: products[selectedIndex].id,
+                productId: selectedProductId,
                 totalLitersUsed:calculatedTotalIngredientUsage()
             };
             const {data,status} = await updateProductMix(s);
@@ -70,7 +88,6 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
 
 
     const handleCall = async ()=> {
-
         if(productMix.id && productMix.id>0){
             handleUpdate();
         }else{
@@ -89,12 +106,7 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
         }
         setLoading(false);
     }
-    const finds = ()=>{
-        if(productMix && productMix.id && productMix.id>0){
-            const i = products.findIndex(value => value.id === productMix.productId);
-            return products[i].name
-        }
-    }
+
 
     return (
         <>
@@ -105,27 +117,17 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
                             {/* Product Field */}
                             <div className={"space-y-5 font-medium"}>
                                 <h1>Product Name</h1>
-                                { finds() ? <input  disabled={true} value={finds()}
-                                                   className={"max-w-40 border border-gray-300 rounded-xs px-2 py-1 outline-none focus:ring-2 focus:ring-slate-500 focus:border-none focus:outline-none"}/>
-
-                                    : <select
-                                        value={selectedProduct || ""}
-                                        onChange={(e) => {
-                                            const index = e.target.selectedIndex;
-                                            console.log("selected index ",index)
-                                            setSelectedIndex(index);
-                                            setSelectedProduct(e.target.value);
-                                        }}
-                                        className={"max-w-40 border border-gray-300 rounded-xs px-2 py-1 outline-none focus:ring-2 focus:ring-slate-500 focus:border-none focus:outline-none"}
-                                    >
-
-                                        {products.map((product, index) => (
-                                            <option key={product.id ?? index} value={product.id ?? index}>
-                                                {product.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                }
+                                {productMix.productionId && selectedProductId? <ProductSelector
+                                    products={products}
+                                    selectedProductId={selectedProductId}
+                                    disabled={true}
+                                    onSelect={(productId) => setSelectedProductId(productId)}
+                                />:  <ProductSelector
+                                    products={products}
+                                    selectedProductId={selectedProductId}
+                                    disabled={false}
+                                    onSelect={(productId) => setSelectedProductId(productId)}
+                                />}
                             </div>
 
 
@@ -135,49 +137,46 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
                                     <h1>Ingredients</h1>
                                     <h1 className={"space-x-1"}>Litres Used</h1>
                                 </div>
-                                {ingredients.map((ingredient, index) => (
-                                    <div key={index} className={"flex justify-center gap-5 mb-2"}>
-                                        <TextField
-                                            props={{disabled:true}}
-                                            className={"max-w-40 text-center"}
-                                            defaultValue={ingredient.name}
-                                        />
 
-                                        {/*litres used*/}
-                                        <TextField
-                                            className={"max-w-40 text-center"}
-                                            placeholder={`Litres Used ${index + 1}`}
-                                            type={"number"}
-                                            value={
-                                                productMix.ingredientUsages?.find(u => u.ingredientId === ingredient.id)?.litresUsed ?? 0
-                                            }
-                                            onChange={(value) => {
-                                                const litres = Number(value);
+                                 {ingredients.map((ing, index) => (
+                                     <div key={index} className={"flex justify-center gap-5 mb-2"}>
+                                         <TextField
+                                             props={{ disabled: true }}
+                                             className={"max-w-40 text-center"}
+                                             value={ing.name??""}
+                                         />
+                                         <TextField
+                                             className={"max-w-40 text-center"}
+                                             placeholder={`Litres Used ${index + 1}`}
+                                             type={"number"}
+                                             value={
+                                                 productMix.ingredientUsages?.find(u => u.ingredientId === ing.id)?.litresUsed ?? 0
+                                             }
+                                             onChange={(value) => {
+                                                 const litres = Number(value);
 
-                                                setProductMix(prev => {
-                                                    const existingUsages = [...(prev.ingredientUsages ?? [])];
-                                                    const usageIndex = existingUsages.findIndex(u => u.ingredientId === ingredient.id);
-                                                    if (usageIndex !== -1) {
-                                                        // Update existing
-                                                        existingUsages[usageIndex].litresUsed = litres;
-                                                    } else {
-                                                        // Add new
-                                                        if(ingredient.id){
-                                                            existingUsages.push({
-                                                                ingredientId: ingredient.id,
-                                                                litresUsed: litres,
-                                                            });
-                                                        }
-                                                    }
-                                                    return {
-                                                        ...prev,
-                                                        ingredientUsages: existingUsages,
-                                                    };
-                                                });
-                                            }}
-                                        />
-                                    </div>
-                                ))}
+                                                 setProductMix(prev => {
+                                                     const existingUsages = [...(prev.ingredientUsages ?? [])];
+                                                     const usageIndex = existingUsages.findIndex(u => u.ingredientId === ing.id);
+                                                     if (usageIndex !== -1) {
+                                                         existingUsages[usageIndex].litresUsed = litres;
+                                                     } else {
+                                                         if (ing.id) {
+                                                             existingUsages.push({
+                                                                 ingredientId: ing.id,
+                                                                 litresUsed: litres,
+                                                             });
+                                                         }
+                                                     }
+                                                     return {
+                                                         ...prev,
+                                                         ingredientUsages: existingUsages,
+                                                     };
+                                                 });
+                                             }}
+                                         />
+                                     </div>
+                                 ))}
                             </div>
 
                             {/* Total Litres Used */}
@@ -265,26 +264,27 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
 
 
                         </div>
-                        <div className={"flex justify-end gap-4"}>
-                            <button
-                                className={`text-sm px-3 py-2 rounded flex items-center gap-2 transition ${
-                                    loading
-                                        ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                                        : productMix.id && productMix.id > 0
-                                            ? "bg-gray-400 hover:bg-gray-500 text-black"
-                                            : "bg-blue-500 hover:bg-blue-600 text-white"
-                                }`}
+                        {edit && (
+                            <div className={"flex justify-end gap-4"}>
+                                <button
+                                    className={`text-sm px-3 py-2 rounded flex items-center gap-2 transition ${
+                                        loading
+                                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                                            : productMix.id && productMix.id > 0
+                                                ? "bg-gray-400 hover:bg-gray-500 text-black"
+                                                : "bg-blue-500 hover:bg-blue-600 text-white"
+                                    }`}
 
-                                type="submit" onClick={() => {
-                                handleCall();
-                            }}>
+                                    type="submit" onClick={() => {
+                                    handleCall();
+                                }}>
 
-                                <RotateCw className="h-5 w-5" />
-                                {productMix.id && productMix.id > 0? "Update":loading?"processing...":"Submit"}
-                            </button>
+                                    <RotateCw className="h-5 w-5" />
+                                    {productMix.id && productMix.id > 0? "Update":loading?"processing...":"Submit"}
+                                </button>
 
-                            {
-                                productMix.id && productMix.id > 0 &&  <button
+                                {
+                                    productMix.id && productMix.id > 0 &&  <button
                                         className={`text-sm px-3 py-2 rounded flex items-center gap-2 transition ${
                                             loading
                                                 ? "bg-red-300 text-white cursor-not-allowed"
@@ -303,7 +303,8 @@ export const ProductMixComponent = ({mix,onSave,onDelete}:{mix:ProductMixDataTyp
                                 }
 
 
-                        </div>
+                            </div>
+                        )}
                     </>
                 ):<div>
                     <h1>Create a Product to create a Product Mix</h1>

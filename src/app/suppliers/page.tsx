@@ -1,10 +1,8 @@
 'use client';
 import Sidebar from "@/app/components/SideBar";
-import {Ingredients} from "@/app/components/inventory/Ingredients";
+import {SuppliersList} from "@/app/components/inventory/SuppliersList";
 
-export default function IngredientInventoryPage() {
-
-
+export default function SuppliersPage() {
     return (
         <div className="flex">
             <Sidebar />
@@ -17,7 +15,7 @@ export default function IngredientInventoryPage() {
 
                 </nav>
                 <div className={"flex"}>
-                    <Ingredients/>
+                   <SuppliersList/>
                 </div>
 
                 {/* <SuppliersList/>*/}

@@ -1,15 +1,15 @@
 // src/store/productStore.ts
 import { create } from "zustand";
-import { ProductPayload } from "../product";
+import { Product } from "../product";
 import { createProduct, getProducts } from "@/app/actions/production";
 
 interface ProductState {
-    products: ProductPayload[];
+    products: Product[];
     isLoading: boolean;
     error: string | null;
 
     fetchProducts: () => Promise<void>;
-    addProduct: (payload: ProductPayload) => Promise<void>;
+    addProduct: (payload: Product) => Promise<void>;
 }
 
 function extractErrorMessage(error: unknown): string {

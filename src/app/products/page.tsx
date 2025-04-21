@@ -10,8 +10,6 @@ import {TreeNav} from "@/app/components/tree-tabs/TreeNav";
 export default function ProductsPage() {
     const {products,fetchProducts} = useProductStore();
 
-
-
     useEffect(() => {
         fetchProducts();
     },[fetchProducts]);
@@ -41,8 +39,6 @@ export default function ProductsPage() {
                         <p className={"text-center text-gray-500"}>No products found</p>
                     </div>
                 }
-
-
 
 
             </main>

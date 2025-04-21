@@ -25,7 +25,7 @@ export const Modal = ({ isOpen, onClose, children,className }: ModalProps) => {
     if (!isOpen) return null; // Don't render modal if not open
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/20 bg-opacity-50 w-full z-20">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/20 bg-opacity-50 w-full z-50">
             <div className={`bg-white p-6 rounded-lg shadow-lg relative ${className}`}>
                 <button
                     onClick={onClose}

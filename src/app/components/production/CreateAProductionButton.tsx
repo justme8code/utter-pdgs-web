@@ -23,7 +23,6 @@ export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void 
             {
                 isModalOpen && <CreateProduction isOpen={isModalOpen} onClose={async () => {
                     await handleCreateProduction();
-                    window.location.reload();
                 }}   />
             }
 

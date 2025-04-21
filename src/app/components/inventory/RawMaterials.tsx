@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { TextField } from "@/app/components/TextField";
 import {addNewMaterial, deleteMaterial, getAllRawMaterials} from "@/app/actions/inventory";
-import { RefreshCcw, Trash } from "lucide-react";
+import {Trash } from "lucide-react";
 
 export interface RawMaterial {
     id?: number;
     name: string;
+    uom:string;
     ingredients?: Ingredient[];
 }
 
@@ -17,7 +18,7 @@ export interface Ingredient {
 }
 
 export const RawMaterials: React.FC = () => {
-    const [rawMaterials, setRawMaterials] = useState<{ id?: number; name: string }[]>([]);
+    const [rawMaterials, setRawMaterials] = useState<{ id?: number; name: string,uom:string }[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
@@ -41,11 +42,14 @@ export const RawMaterials: React.FC = () => {
     }, []);
 
     const addMaterial = () => {
-        setRawMaterials([...rawMaterials, { name: "" }]);
+        setRawMaterials([...rawMaterials, { name: "",uom:"" }]);
     };
 
     const updateTextField = (index: number, value: string) => {
         setRawMaterials(rawMaterials.map((m, idx) => (idx === index ? { ...m, name: value } : m)));
+    };
+    const updateUOM = (index: number, value: string) => {
+        setRawMaterials(rawMaterials.map((m, idx) => (idx === index ? { ...m,uom:value } : m)));
     };
 
     const saveMaterials = async () => {
@@ -120,6 +124,7 @@ export const RawMaterials: React.FC = () => {
                 <thead>
                 <tr className="bg-gray-200 text-left">
                     <th className="p-2 border-b border-l w-3/4 border-gray-300">Name</th>
+                    <th className="p-2 border-b border-l w-3/4 border-gray-300">Unit Of Measurement</th>
                     <th className="p-2 border-b border-l text-center border-gray-300">Actions</th>
                 </tr>
                 </thead>
@@ -131,6 +136,13 @@ export const RawMaterials: React.FC = () => {
                                 value={material.name}
                                 onChange={value => updateTextField(index, value)}
                                 props={{ placeholder: "Enter material name" }}
+                            />
+                        </td>
+                        <td className="p-2 border border-gray-300">
+                            <TextField
+                                value={material.uom}
+                                onChange={value => updateUOM(index,value)}
+                                props={{ placeholder: "Enter UOM" }}
                             />
                         </td>
                         <td className="p-2">

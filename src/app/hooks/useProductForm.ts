@@ -1,10 +1,10 @@
 // hooks/useProductForm.ts
 import { useState } from "react";
-import {ProductPayload, VariantPayload} from "@/app/product";
+import {Product, VariantPayload} from "@/app/product";
 
 
 export const useProductForm = () => {
-  const [productDetails, setProductDetails] = useState<Omit<ProductPayload, 'variant'>>({
+  const [productDetails, setProductDetails] = useState<Omit<Product, 'variant'>>({
     name: "",
     description: "",
     unitOfMeasure: "",
@@ -17,7 +17,7 @@ export const useProductForm = () => {
   });
 
   const handleProductChange = (
-    field: keyof Omit<ProductPayload, 'variant'>,
+    field: keyof Omit<Product, 'variant'>,
     value: string
   ) => {
     setProductDetails((prev) => ({

@@ -2,7 +2,8 @@
 import {myRequest} from "@/app/api/axios";
 import {ExtendedProductionResponse, Production, ProductionResponse, StaffResponse} from "../data_types";
 import {makeAuthRequest, verifySession} from "@/app/actions/main";
-import {ProductMixDataType, ProductPayload} from "@/app/product";
+import {ProductMix, Product} from "@/app/product";
+import {SampleMaterialToIngredients, SampleProduction, SamplePurchaseEntries} from "@/app/new/play-with-data";
 
 
 export async function fetchProductions(page: number, size: number) {
@@ -30,7 +31,7 @@ export async function fetchStaffs() {
 
 export async function createProduction(production: Production) {
     const token = await verifySession();
-    const data = await myRequest<Production, ProductionResponse|string>({
+    const data = await myRequest<Production, ProductionResponse>({
         url: `/productions`,
         method: "POST",
         data: production,
@@ -85,8 +86,8 @@ export async function createProductionDynamicData<T>(
 }
 
 
-export async function createProduct(product:ProductPayload){
-    const {data,status} = await makeAuthRequest<ProductPayload,ProductPayload>({
+export async function createProduct(product:Product){
+    const {data,status} = await makeAuthRequest<Product,Product>({
         url: `/products`,
         method: "POST",
         data: product,
@@ -97,15 +98,15 @@ export async function createProduct(product:ProductPayload){
 
 
 export async function getProducts(){
-    const {data,status} = await makeAuthRequest<null,ProductPayload[]>({
+    const {data,status} = await makeAuthRequest<null,Product[]>({
         url: `/products`,
         method: "GET",
     });
     return {data:data,status:status === 200 };
 }
 
-export async function createProductMix(productMix:ProductMixDataType){
-    const {data,status} = await makeAuthRequest<ProductMixDataType,ProductMixDataType>({
+export async function createProductMix(productMix:ProductMix){
+    const {data,status} = await makeAuthRequest<ProductMix,ProductMix>({
         url: `/product-mixes`,
         method: "POST",
         data: productMix
@@ -113,8 +114,8 @@ export async function createProductMix(productMix:ProductMixDataType){
     return {data:data,status:status === 201 };
 }
 
-export async function updateProductMix(productMix:ProductMixDataType){
-    const {data,status} = await makeAuthRequest<ProductMixDataType,ProductMixDataType>({
+export async function updateProductMix(productMix:ProductMix){
+    const {data,status} = await makeAuthRequest<ProductMix,ProductMix>({
         url: `/product-mixes/${productMix.id}`,
         method: "PUT",
         data: productMix
@@ -123,7 +124,7 @@ export async function updateProductMix(productMix:ProductMixDataType){
 }
 
 export async function deleteProductMix(id:number){
-    const {data,status} = await makeAuthRequest<ProductMixDataType,ProductMixDataType>({
+    const {data,status} = await makeAuthRequest<ProductMix,ProductMix>({
         url: `/product-mixes/${id}`,
         method: "DELETE"
     });
@@ -131,10 +132,45 @@ export async function deleteProductMix(id:number){
 }
 
 export async function fetchProductionMixes(productionId:number){
-    const {data,status} = await makeAuthRequest<number,ProductMixDataType[]>({
+    const {data,status} = await makeAuthRequest<number,ProductMix[]>({
         url: `/productions/${productionId}/product-mixes`,
         method: "GET",
     });
     return {data:data,status:status === 200 };
 
+}
+
+// get production entries
+export async function fetchProductionEntries(id:number){
+        const {data,status} = await makeAuthRequest<number,SampleProduction>({
+        url: `/productions/${id}/entries`,
+        });
+        return {data:data,status:status === 200 };
+}
+
+export async function updateProductionEntry(id:number,entry:SampleProduction){
+    const {data,status} = await makeAuthRequest<SampleProduction,SampleProduction>({
+        url: `/productions/${id}/entries`,
+        method: "POST",
+        data: entry
+    });
+    return {data:data,status:status === 200 };
+}
+
+export async function updateProductionMaterialToIngredients(productionId:number,materialsToIngredients:SampleMaterialToIngredients[]){
+    const {status} = await makeAuthRequest<SampleMaterialToIngredients[],null>({
+        url: `/productions/${productionId}/entries/material-to-ingredients`,
+        method: "PUT",
+        data: materialsToIngredients
+    });
+    return {status:status === 200 };
+}
+
+export async function updateProductionPurchaseEntry (productionId:number,purchaseEntry:SamplePurchaseEntries){
+    const {status} = await makeAuthRequest<SamplePurchaseEntries,null>({
+        url: `/productions/${productionId}/entries/purchase-entries`,
+        method: "PUT",
+        data: purchaseEntry
+    });
+    return {status:status === 200 };
 }

@@ -6,7 +6,7 @@ export interface VariantPayload {
     description: string;
 }
 
-export interface ProductPayload {
+export interface Product {
     id?:number;
     name: string;
     description: string;
@@ -25,20 +25,12 @@ interface Variant {
     description: string;
 }
 
-export interface Product {
-    name: string;
-    description: string;
-    unitOfMeasure: string;
-    category: string;
-    variant: Variant;
-}
-
 
 export interface IngredientUsage {
     ingredientId: number;
     litresUsed: number;
 }
-export interface ProductMixDataType {
+export interface ProductMix {
     id?: number;
     productionId?: number;
     productId?: number;

@@ -10,6 +10,7 @@ import {ProductionTab} from "@/app/components/tree-tabs/ProductionTab";
 import {OverViewTab} from "@/app/components/tree-tabs/OverViewTab";
 import {ProductTab} from "@/app/components/tree-tabs/ProductsTab";
 import {InventoryTab} from "@/app/components/tree-tabs/InventoryTab";
+import {SuppliersTab} from "@/app/components/tree-tabs/SuppliersTab";
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +55,10 @@ export default function Sidebar() {
                                 <ProductTab activePath={activePath} onActiveChange={setActivePath} />
 
                                 <InventoryTab activePath={activePath} onActiveChange={setActivePath}/>
+
+                                <SuppliersTab activePath={activePath} onActiveChange={setActivePath}/>
                             </ul>
+                            <LogoutButton/>
                         </nav>
                     </div>
                 </div>
