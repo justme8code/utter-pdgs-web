@@ -47,7 +47,7 @@ export const Button: React.FC<ButtonProps> = ({
     );
 
     const finalClass = `${baseStyles} ${variantStyles[variant]} ${
-        disabled ? "opacity-50 cursor-not-allowed" : ""
+        disabled ? "opacity-20 cursor-not-allowed" : ""
     } ${className}`;
 
     if (href) {

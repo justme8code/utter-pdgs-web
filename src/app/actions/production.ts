@@ -148,14 +148,6 @@ export async function fetchProductionEntries(id:number){
         return {data:data,status:status === 200 };
 }
 
-export async function updateProductionEntry(id:number,entry:SampleProduction){
-    const {data,status} = await makeAuthRequest<SampleProduction,SampleProduction>({
-        url: `/productions/${id}/entries`,
-        method: "POST",
-        data: entry
-    });
-    return {data:data,status:status === 200 };
-}
 
 export async function updateProductionMaterialToIngredients(productionId:number,materialsToIngredients:SampleMaterialToIngredients[]){
     const {status} = await makeAuthRequest<SampleMaterialToIngredients[],null>({
@@ -166,11 +158,20 @@ export async function updateProductionMaterialToIngredients(productionId:number,
     return {status:status === 200 };
 }
 
-export async function updateProductionPurchaseEntry (productionId:number,purchaseEntry:SamplePurchaseEntries){
-    const {status} = await makeAuthRequest<SamplePurchaseEntries,null>({
+export async function updateProductionPurchaseEntry (productionId:number,purchaseEntries:SamplePurchaseEntries[]){
+    const {status} = await makeAuthRequest<SamplePurchaseEntries[],null>({
         url: `/productions/${productionId}/entries/purchase-entries`,
         method: "PUT",
-        data: purchaseEntry
+        data: purchaseEntries
+    });
+    return {status:status === 200 };
+}
+
+export async function deleteProductionPurchaseEntry(productionId:number,purchaseEntriesId:number[]){
+    const {status} = await makeAuthRequest<number[],null>({
+        url: `/productions/${productionId}/entries/purchase-entries`,
+        method: "DELETE",
+        data: purchaseEntriesId
     });
     return {status:status === 200 };
 }

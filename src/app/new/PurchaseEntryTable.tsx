@@ -5,6 +5,8 @@ import { UpdatePurchaseEntry } from "@/app/new/UpdatePurchaseEntry";
 import { useState } from "react";
 import { SamplePurchaseEntries } from "@/app/new/play-with-data";
 import useSampleProductionStore from "@/app/store/sampleProductionStore";
+import {Button} from "@/app/components/Button";
+import useSelectedPurchaseEntriesStore from "@/app/store/selectedPurchaseEntriesStore";
 
 const customStyles = {
     header: {
@@ -51,7 +53,7 @@ const columns: TableColumn<SamplePurchaseEntries>[] = [
     },
     {
         name:'ID',
-        selector: row => row.id,
+        selector: row => row.id ?? 0,
         sortable: true,
     },
     {
@@ -94,19 +96,31 @@ const columns: TableColumn<SamplePurchaseEntries>[] = [
     {
         name: 'Avg w/UoM',
         selector: row => row.avgWeightPerUOM.toFixed(2),
-    },
+    }
 ];
 
 
 export default function PurchaseEntryTable() {
     const {production,updatePurchaseEntry,addPurchaseEntry} = useSampleProductionStore();
     const [selectedRow, setSelectedRow] = useState<SamplePurchaseEntries | null>(null);
+    const {setPurchaseEntries}=useSelectedPurchaseEntriesStore();
     const [isEditMode, setIsEditMode] = useState(false);
+
+    const handleSelectedRowsChange = ({ selectedRows }:{selectedRows:SamplePurchaseEntries[]}) => {
+        // You can set state or dispatch with something like Redux so we can use the retrieved data
+        console.log('Selected Rows: ', selectedRows);
+        // add selectedRows Id
+        if(selectedRows && selectedRows.length > 0){
+            const selectedIds = selectedRows.map(row => row.id !== undefined?row.id:0);
+            if(selectedIds && selectedIds.length > 0) {
+                setPurchaseEntries(selectedIds);
+            }
+        }
+    };
 
     const handleAddRow = () => {
         const newRow: SamplePurchaseEntries = {
-            id: Date.now(),
-            rawMaterial: { id: 0, name: '',uom:'' },
+            rawMaterial: { id: 0, name: '',uom:'',ingredients:[] },
             supplier: { id: 0, fullName: '' },
             uom: '',
             qty: 0,
@@ -123,28 +137,23 @@ export default function PurchaseEntryTable() {
 
     const handleSaveNewRow = (newRowData: SamplePurchaseEntries) => {
         console.log('Saving new row:', newRowData);
-        addPurchaseEntry({...newRowData,id:Date.now()});
+        addPurchaseEntry({...newRowData,id:'New'+Date.now()});
         setSelectedRow(null);
     };
 
     const handleUpdateRow = (updatedRowData: SamplePurchaseEntries) => {
         console.log('Updating row:', updatedRowData);
-        /*setData(prevData =>
-            prevData.map(row =>
-                row.id === updatedRowData.id ? updatedRowData : row
-            )
-        );*/
-
-             updatePurchaseEntry(Number(updatedRowData.id),{...updatedRowData,id:Number(updatedRowData.id)});
+        updatePurchaseEntry(Number(updatedRowData.id),{...updatedRowData,id:Number(updatedRowData.id)});
         setSelectedRow(null);
         setIsEditMode(false);
     };
 
     return (
-        <div>
-            <button onClick={handleAddRow}>Add Row</button>
+        <div className={"space-y-5"}>
+            <Button label={"Add row"} onClick={handleAddRow} variant={"secondary"}/>
 
             <DataTable
+                title={"Purchase Entries"}
                 columns={columns}
                 data={production.purchaseEntries??[]}
                 onRowClicked={row => {
@@ -152,25 +161,33 @@ export default function PurchaseEntryTable() {
                     setSelectedRow(row);
                     setIsEditMode(true);
                 }}
-
+                selectableRows
+                onSelectedRowsChange={handleSelectedRowsChange}
                 customStyles={customStyles}
             />
 
             <Modal isOpen={!!selectedRow} onClose={() => setSelectedRow(null)}>
-                {selectedRow && (
-                    <UpdatePurchaseEntry
-                        data={selectedRow}
-                        onSave={data1 => {
-                            handleSaveNewRow(data1);
-                        }}
-                        isEditMode={isEditMode}
-                        onChange={(updatedData) => {
-                            console.log('Data from modal:', updatedData);
-                            setSelectedRow(updatedData);
-                        }}
-                        onUpdate={data1 => handleUpdateRow(data1)}
-                    />
-                )}
+                <div className={"mb-5  border-b-1 border-gray-200 space-y-3 p-2"}>
+                    <h1 className={"font-medium text-2xl"}>Purchase Entry</h1>
+                    <h2 className={"text-gray-500 font-medium"}>Update/New entry</h2>
+                </div>
+
+                 <div className={"p-2"}>
+                     {selectedRow && (
+                         <UpdatePurchaseEntry
+                             data={selectedRow}
+                             onSave={data1 => {
+                                 handleSaveNewRow(data1);
+                             }}
+                             isEditMode={isEditMode}
+                             onChange={(updatedData) => {
+                                 console.log('Data from modal:', updatedData);
+                                 setSelectedRow(updatedData);
+                             }}
+                             onUpdate={data1 => handleUpdateRow(data1)}
+                         />
+                     )}
+                 </div>
 
             </Modal>
         </div>

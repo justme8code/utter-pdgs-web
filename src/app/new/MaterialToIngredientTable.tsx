@@ -62,6 +62,10 @@ const columns: TableColumn<SampleMaterialToIngredients>[] = [
         sortable: true,
     },
     {
+        name: 'Ingredients',
+        selector: row => row.purchaseEntry.rawMaterial.ingredients.map(ingredient => ingredient.name).join(', ')??[],
+    },
+    {
         name: 'Total Usable',
         selector: row => row.totalUsable,
         sortable: true,
@@ -89,11 +93,7 @@ const columns: TableColumn<SampleMaterialToIngredients>[] = [
         selector: row => row.costPerLitre,
         sortable: true,
         format: row => `$${row.costPerLitre.toFixed(2)}`, // Ensures two decimal places
-    },
-    {
-        name: 'Ingredients',
-        selector: row => row.ingredients.map(ingredient => ingredient.name).join(', '),
-    },
+    }
 ];
 
 
@@ -131,7 +131,8 @@ export default function MaterialToIngredientTable() {
             !production.materialToIngredients?.some(material => material.purchaseEntry.id === entry.id)
         );
 
-        if (purchaseEntry) {
+
+        if (purchaseEntry && purchaseEntry.id && typeof purchaseEntry.id !== 'string') {
             console.log('Found purchase entry:', purchaseEntry);
 
             // Create a new SampleMaterialToIngredients object

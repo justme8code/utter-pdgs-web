@@ -4,6 +4,7 @@ import {SamplePurchaseEntries, SampleRawMaterial, SampleSupplier} from "@/app/ne
 import useRawMaterialStore from "@/app/store/useRawMaterialStore";
 import useSupplierStore from "@/app/store/SupplierStore";
 import {useForm} from "react-hook-form";
+import {Button} from "@/app/components/Button";
 
 interface UpdatePurchaseEntryProps {
     data: SamplePurchaseEntries;
@@ -80,195 +81,199 @@ export const UpdatePurchaseEntry = ({ data, onUpdate,onChange,onSave,isEditMode 
     }
 
     return (
-        <form onSubmit={handleSubmit(handleSaveAndUpdate)} className={"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"}>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Raw Material Name</label>
-                <select
-                    className={"bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"}
-                    value={formData.rawMaterial?.id || ""}
-                    onChange={(e) => {
-                        const selectedMaterial = rawMaterials.find(material => material.id === parseInt(e.target.value));
-                        handleChange("rawMaterial", selectedMaterial);
-                    }}
-                >
-                      <option value="" disabled={true}>Select Raw Material</option>
-                    {rawMaterials.map((material) => (
-                        <option key={material.id} value={material.id}>
-                            {material.name}
-                        </option>
-                    ))}
-                </select>
-                
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">UoM</label>
-                <input
-                    {...register("uom", {
-                        required: `UOM  is required, please select a raw material.`,
-                    })}
-                    name={"uom"}
-                    disabled={true}
-                    type="text"
-                    value={formData.rawMaterial?.uom || ''}
-                    className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
-                />
+        <form onSubmit={handleSubmit(handleSaveAndUpdate)}  >
+            <div className={"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"}>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Raw Material Name</label>
+                    <select
+                        className={"bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"}
+                        value={formData.rawMaterial?.id || ""}
+                        onChange={(e) => {
+                            const selectedMaterial = rawMaterials.find(material => material.id === parseInt(e.target.value));
+                            handleChange("rawMaterial", selectedMaterial);
+                        }}
+                    >
+                        <option value="" disabled={true}>Select Raw Material</option>
+                        {rawMaterials.map((material) => (
+                            <option key={material.id} value={material.id}>
+                                {material.name}
+                            </option>
+                        ))}
+                    </select>
 
-                {errors["uom"] && (
-                    <div className="text-red-500 text-sm mt-1">
-                        <p>{String(errors["uom"]?.message)}</p>
-                    </div>
-                )}
-            </div>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">UoM</label>
+                    <input
+                        {...register("uom", {
+                            required: `UOM  is required, please select a raw material.`,
+                        })}
+                        name={"uom"}
+                        disabled={true}
+                        type="text"
+                        value={formData.rawMaterial?.uom || ''}
+                        className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                    />
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Supplier Full Name</label>
-                <select
-                    className={"bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"}
-                    value={formData.supplier?.id?.toString() || ""}
-                    onChange={(e) => {
-                        const selectedSupplier = suppliers.find(supplier => supplier.id.toString() === e.target.value);
-                        handleChange("supplier", selectedSupplier);
-                    }}
-                >
-                    <option value="">Select Supplier</option>
-                    {suppliers.map((supplier) => (
-                        <option key={supplier.id} value={supplier.id.toString()}>
-                            {supplier.fullName}
-                        </option>
-                    ))}
-                </select>
-            </div>
+                    {errors["uom"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["uom"]?.message)}</p>
+                        </div>
+                    )}
+                </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Quantity</label>
-                <input
-                    {...register("qty", {
-                        required: "Quantity is required, please insert a quantity.",
-                        min: { value: 1, message: "Quantity must be at least 1." },
-                    })}
-                    name={"qty"}
-                    type="number"
-                    value={formData.qty || 0}
-                    onChange={(e) => handleChange("qty", parseFloat(e.target.value))}
-                    className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
-                />
-                {errors["qty"] && (
-                    <div className="text-red-500 text-sm mt-1">
-                        <p>{String(errors["qty"]?.message)}</p>
-                    </div>
-                )}
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Weight</label>
-                <input
-                    {...register("weight", {
-                        required: "Weight is required.",
-                        min: { value: 0, message: "Weight cannot be negative." },
-                    })}
-                    type="number"
-                    value={formData.weight || 0}
-                    onChange={(e) => handleChange("weight", parseFloat(e.target.value))}
-                    className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
-                />
-                {errors["weight"] && (
-                    <div className="text-red-500 text-sm mt-1">
-                        <p>{String(errors["weight"]?.message)}</p>
-                    </div>
-                )}
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Production Lost</label>
-                <input
-                    {...register("productionLost", {
-                        required: "Production lost is required.",
-                        min: { value: 0, message: "Production lost cannot be negative." },
-                    })}
-                    type="number"
-                    value={formData.productionLost || 0}
-                    onChange={(e) => handleChange("productionLost", parseFloat(e.target.value))}
-                    className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
-                />
-                {errors["productionLost"] && (
-                    <div className="text-red-500 text-sm mt-1">
-                        <p>{String(errors["productionLost"]?.message)}</p>
-                    </div>
-                )}
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Usable</label>
-                <input
-                    {...register("usable", {
-                        required: "Usable is required.",
-                        min: { value: 0, message: "Usable cannot be negative." },
-                    })}
-                    type="number"
-                    value={formData.usable || 0}
-                    onChange={(e) => handleChange("usable", parseFloat(e.target.value))}
-                    className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
-                />
-                {errors["usable"] && (
-                    <div className="text-red-500 text-sm mt-1">
-                        <p>{String(errors["usable"]?.message)}</p>
-                    </div>
-                )}
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Cost</label>
-                <input
-                    {...register("cost", {
-                        required: "Cost is required.",
-                        min: { value: 0, message: "Cost cannot be negative." },
-                    })}
-                    type="number"
-                    value={formData.cost ?? 0}
-                    onChange={(e) => handleChange("cost", parseFloat(e.target.value))}
-                    className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
-                />
-                {errors["cost"] && (
-                    <div className="text-red-500 text-sm mt-1">
-                        <p>{String(errors["cost"]?.message)}</p>
-                    </div>
-                )}
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Average Cost (auto)</label>
-                <input
-                    {...register("avgCost", {
-                        required: "Average cost is required.",
-                        min: { value: 0, message: "Average cost cannot be negative." },
-                    })}
-                    type="number"
-                    value={formData.avgCost || 0}
-                    readOnly={true}
-                    className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
-                />
-                {errors["avgCost"] && (
-                    <div className="text-red-500 text-sm mt-1">
-                        <p>{String(errors["avgCost"]?.message)}</p>
-                    </div>
-                )}
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Average Weight Per UoM (auto)</label>
-                <input
-                    {...register("avgWeightPerUOM", {
-                        required: "Average weight per UoM is required.",
-                        min: { value: 0, message: "Average weight per UoM cannot be negative." },
-                    })}
-                    readOnly={true}
-                    type="number"
-                    value={formData.avgWeightPerUOM || 0}
-                    className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
-                />
-                {errors["avgWeightPerUOM"] && (
-                    <div className="text-red-500 text-sm mt-1">
-                        <p>{String(errors["avgWeightPerUOM"]?.message)}</p>
-                    </div>
-                )}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Supplier Full Name</label>
+                    <select
+                        className={"bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"}
+                        value={formData.supplier?.id?.toString() || ""}
+                        onChange={(e) => {
+                            const selectedSupplier = suppliers.find(supplier => supplier.id.toString() === e.target.value);
+                            handleChange("supplier", selectedSupplier);
+                        }}
+                    >
+                        <option value="">Select Supplier</option>
+                        {suppliers.map((supplier) => (
+                            <option key={supplier.id} value={supplier.id.toString()}>
+                                {supplier.fullName}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Quantity</label>
+                    <input
+                        {...register("qty", {
+                            required: "Quantity is required, please insert a quantity.",
+                            min: { value: 1, message: "Quantity must be at least 1." },
+                        })}
+                        name={"qty"}
+                        type="number"
+                        value={formData.qty || 0}
+                        onChange={(e) => handleChange("qty", parseFloat(e.target.value))}
+                        className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                    />
+                    {errors["qty"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["qty"]?.message)}</p>
+                        </div>
+                    )}
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Weight</label>
+                    <input
+                        {...register("weight", {
+                            required: "Weight is required.",
+                            min: { value: 0, message: "Weight cannot be negative." },
+                        })}
+                        type="number"
+                        value={formData.weight || 0}
+                        onChange={(e) => handleChange("weight", parseFloat(e.target.value))}
+                        className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                    />
+                    {errors["weight"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["weight"]?.message)}</p>
+                        </div>
+                    )}
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Production Lost</label>
+                    <input
+                        {...register("productionLost", {
+                            required: "Production lost is required.",
+                            min: { value: 0, message: "Production lost cannot be negative." },
+                        })}
+                        type="number"
+                        value={formData.productionLost || 0}
+                        onChange={(e) => handleChange("productionLost", parseFloat(e.target.value))}
+                        className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                    />
+                    {errors["productionLost"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["productionLost"]?.message)}</p>
+                        </div>
+                    )}
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Usable</label>
+                    <input
+                        {...register("usable", {
+                            required: "Usable is required.",
+                            min: { value: 0, message: "Usable cannot be negative." },
+                        })}
+                        type="number"
+                        value={formData.usable || 0}
+                        onChange={(e) => handleChange("usable", parseFloat(e.target.value))}
+                        className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                    />
+                    {errors["usable"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["usable"]?.message)}</p>
+                        </div>
+                    )}
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Cost</label>
+                    <input
+                        {...register("cost", {
+                            required: "Cost is required.",
+                            min: { value: 0, message: "Cost cannot be negative." },
+                        })}
+                        type="number"
+                        value={formData.cost ?? 0}
+                        onChange={(e) => handleChange("cost", parseFloat(e.target.value))}
+                        className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                    />
+                    {errors["cost"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["cost"]?.message)}</p>
+                        </div>
+                    )}
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Average Cost (auto)</label>
+                    <input
+                        {...register("avgCost", {
+                            required: "Average cost is required.",
+                            min: { value: 0, message: "Average cost cannot be negative." },
+                        })}
+                        type="number"
+                        value={formData.avgCost || 0}
+                        readOnly={true}
+                        className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                    />
+                    {errors["avgCost"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["avgCost"]?.message)}</p>
+                        </div>
+                    )}
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Average Weight Per UoM (auto)</label>
+                    <input
+                        {...register("avgWeightPerUOM", {
+                            required: "Average weight per UoM is required.",
+                            min: { value: 0, message: "Average weight per UoM cannot be negative." },
+                        })}
+                        readOnly={true}
+                        type="number"
+                        value={formData.avgWeightPerUOM || 0}
+                        className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                    />
+                    {errors["avgWeightPerUOM"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["avgWeightPerUOM"]?.message)}</p>
+                        </div>
+                    )}
+                </div>
             </div>
 
            
-             <button type={"submit"}>{isEditMode?"Update Row":"Save New Row"}</button>
+            <div className={"flex justify-center"}>
+                <Button type={"submit"} label={isEditMode?"Update Row":"Save New Row"} className={"max-h-12 max-w-40"}/>
+            </div>
  
         </form>
     );

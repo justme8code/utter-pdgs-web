@@ -2,6 +2,7 @@ type SampleRawMaterial = {
     id?: number;
     name: string;
     uom: string;
+    ingredients: SampleIngredient[];
 };
 
 type SampleIngredient = {
@@ -20,7 +21,7 @@ type SampleProductionBatches = {
 };
 
 type SamplePurchaseEntries = {
-    id?: number | string;
+    id?: number | string
     rawMaterial: SampleRawMaterial;
     supplier: SampleSupplier;
     uom: string;
@@ -36,7 +37,7 @@ type SamplePurchaseEntries = {
 type SampleMaterialToIngredients = {
     id?: number;
     purchaseEntry: {
-        id?: number | string;
+        id: number | string;
         rawMaterial: SampleRawMaterial;
     };
     totalUsable: number;
@@ -48,7 +49,7 @@ type SampleMaterialToIngredients = {
 };
 
 type SampleProduction = {
-    id?: number;
+    id: number;
     productionBatches?: SampleProductionBatches[];
     purchaseEntries?: SamplePurchaseEntries[];
     materialToIngredients?: SampleMaterialToIngredients[];
