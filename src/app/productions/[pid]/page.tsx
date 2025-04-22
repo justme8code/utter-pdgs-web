@@ -1,6 +1,8 @@
 import Sidebar from "@/app/components/SideBar";
 import {fetchProductionEntries} from "@/app/actions/production";
 import {Tables} from "@/app/productions/[pid]/Tables";
+import {ProductionInfo} from "@/app/components/production/ProductionInfo";
+import {ProductMixPage} from "@/app/components/production/productMix/ProductMixPage";
 
 
 
@@ -9,27 +11,16 @@ export default async function ProductionPage({ params }: { params: Promise<{ pid
     /*const { data, status } = await fetchProductionWithDynamicData(pid);*/
     const {data,status} = await fetchProductionEntries(pid);
     return (
-        <div className="flex">
-            <Sidebar />
-            {!data && !status? <p></p> : (<Tables sampleProduction={data} />)}
-           {/* <main className="flex gap-20 flex-col w-full h-screen  space-x-10">
-                <div className="flex-1 flex flex-col h-full p-2 gap-5">
-                    {!status ? (
-                        <p>Could not find production...</p>
-                    ) : (
-                        <div className="space-y-10">
-                            <ProductionInfo prod={data} />
-                            <div className="space-y-10">
+         <>
+             {!data && !status? <p></p> : (
+                 <div className="w-full bg-gray-50">
+                     <ProductionInfo prod={data} />
+                     <div className="flex flex-col justify-center items-center">
+                         <Tables sampleProduction={data} />
+                     </div>
 
-                            </div>
-                        </div>
-                    )}
-                    <div className={"flex justify-end p-4"}>
-                         <Button label={"Update production"} href={`/productions/${pid}/update`}/>
-                    </div>
-                </div>
-            </main>*/}
-        </div>
+                 </div>)}
+         </>
 
     );
 }

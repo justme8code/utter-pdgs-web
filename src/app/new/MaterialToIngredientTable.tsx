@@ -6,6 +6,11 @@ import {SampleMaterialToIngredients} from "@/app/new/play-with-data";
 import {UpdateMaterialToIngredient} from "@/app/new/UpdateMaterialToIngredient";
 import useSampleProductionStore from "@/app/store/sampleProductionStore";
 import {useIngredientStore} from "@/app/store/ingredientStore";
+import {Button} from "@/app/components/Button";
+import {
+    calAverageCostPerKgBasedOnTotalWeight,
+    calAverageWeightPerUOMBasedOnTotalWeight
+} from "@/app/production-computing-formulas";
 
 const customStyles = {
     header: {
@@ -63,7 +68,11 @@ const columns: TableColumn<SampleMaterialToIngredients>[] = [
     },
     {
         name: 'Ingredients',
-        selector: row => row.purchaseEntry.rawMaterial.ingredients.map(ingredient => ingredient.name).join(', ')??[],
+        selector: row => "Auto",
+    },
+    {
+        name: "Output Litres",
+        selector: row => row.outPutLitres.toFixed(2)
     },
     {
         name: 'Total Usable',
@@ -72,14 +81,18 @@ const columns: TableColumn<SampleMaterialToIngredients>[] = [
         format: row => row.totalUsable.toFixed(2), // Ensures one decimal place
     },
     {
-        name: 'Production Litres Lost',
-        selector: row => row.productionLost,
+        name: 'Litres Lost',
+        selector: row => row.litresLost.toFixed(2),
         sortable: true,
-        format: row => row.productionLost.toFixed(2), // Ensures one decimal place
     },
     {
         name: 'Batch',
         selector: row => row.batch,
+        sortable: true,
+    },
+    {
+        name: 'Usable',
+        selector: row => row.usable.toFixed(2)??0.0,
         sortable: true,
     },
     {
@@ -92,7 +105,11 @@ const columns: TableColumn<SampleMaterialToIngredients>[] = [
         name: 'Cost/Litre',
         selector: row => row.costPerLitre,
         sortable: true,
-        format: row => `$${row.costPerLitre.toFixed(2)}`, // Ensures two decimal places
+        format: row => `₦${row.costPerLitre.toFixed(2)}`, // Ensures two decimal places
+    },
+    {
+        name: "Raw Brix",
+        selector: row => row.rawBrix.toFixed(2)
     }
 ];
 
@@ -103,24 +120,17 @@ export default function MaterialToIngredientTable() {
     const {production,updateMaterialToIngredient,addMaterialToIngredient} = useSampleProductionStore();
     const [selectedRow, setSelectedRow] = useState<SampleMaterialToIngredients | null>(null);
     const [isEditMode, setIsEditMode] = useState(false);
-    const {ingredients,fetchIngredients} = useIngredientStore();
-
-    useEffect(() => {
-        if(!ingredients || ingredients.length === 0) {
-            fetchIngredients();
-        }
-    }, [fetchIngredients, ingredients]);
 
     const handleSaveNewRow = (newRowData: SampleMaterialToIngredients) => {
         console.log('Saving new row:', newRowData);
         addMaterialToIngredient({...newRowData,id:Date.now()});
         setSelectedRow(null);
-        setSelectedRow(null);
+        setIsEditMode(false);
     };
 
     const handleUpdateRow = (updatedRowData: SampleMaterialToIngredients) => {
         console.log('Updating row:', updatedRowData);
-        updateMaterialToIngredient(Number(updatedRowData.id),{...updatedRowData,id:Number(updatedRowData.id)});
+        updateMaterialToIngredient(Number(updatedRowData.purchaseEntry.id),updatedRowData);
         setSelectedRow(null);
         setIsEditMode(false);
     };
@@ -130,25 +140,25 @@ export default function MaterialToIngredientTable() {
         const purchaseEntry = production.purchaseEntries?.find(entry =>
             !production.materialToIngredients?.some(material => material.purchaseEntry.id === entry.id)
         );
-
-
         if (purchaseEntry && purchaseEntry.id && typeof purchaseEntry.id !== 'string') {
             console.log('Found purchase entry:', purchaseEntry);
-
+            const p = production.materialToIngredients?production.materialToIngredients[production.materialToIngredients.length - 1]:undefined;
             // Create a new SampleMaterialToIngredients object
             const newMaterialToIngredient: SampleMaterialToIngredients = {
                 purchaseEntry: {
                     id: purchaseEntry.id,
                     rawMaterial: purchaseEntry.rawMaterial,
+                    cost: purchaseEntry.cost,
                 },
                 totalUsable: purchaseEntry.usable,
-                productionLost: purchaseEntry.productionLost,
-                batch: 0, // Default value, update as needed
+                litresLost: 0.0, // Default value, update as needed
+                batch: p?.batch?p.batch+1:1, // Default value, update as needed,
+                usable:0,
+                outPutLitres:0.0,
                 litresPerKg: 0.0, // Default value, update as needed
                 costPerLitre: 0.0, // Default value, update as needed
-                ingredients: ingredients.filter(ingredient =>
-                    ingredient.rawMaterials && ingredient.rawMaterials.some(rawMaterial => rawMaterial.id === purchaseEntry.rawMaterial.id)
-                ),
+                rawBrix:0.0
+
             };
 
             console.log('New MaterialToIngredient:', newMaterialToIngredient);
@@ -162,10 +172,10 @@ export default function MaterialToIngredientTable() {
 
     return (
         <div>
-            <button onClick={handleAddBatch}>
-                Add batch
-            </button>
+            <Button label={"Add batch"} onClick={handleAddBatch} variant={"secondary"}/>
+
             <DataTable
+                title={"Material To Ingredient"}
                 columns={columns}
                 data={production.materialToIngredients??[]}
                 onRowClicked={row => {

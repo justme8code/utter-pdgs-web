@@ -11,6 +11,7 @@ import {OverViewTab} from "@/app/components/tree-tabs/OverViewTab";
 import {ProductTab} from "@/app/components/tree-tabs/ProductsTab";
 import {InventoryTab} from "@/app/components/tree-tabs/InventoryTab";
 import {SuppliersTab} from "@/app/components/tree-tabs/SuppliersTab";
+import {ProductTaste} from "@/app/components/tree-tabs/ProductTaste";
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +26,7 @@ export default function Sidebar() {
     }
 
     return (
-        <div className="flex z-50 h-screen max-w-48">
+        <div className="flex z-50 max-w-56 h-screen overflow-y-auto">
             <button
                 className="p-3 md:hidden fixed top-4 left-4 z-50 rounded-full"
                 onClick={() => setIsOpen(!isOpen)}
@@ -55,6 +56,8 @@ export default function Sidebar() {
                                 <ProductTab activePath={activePath} onActiveChange={setActivePath} />
 
                                 <InventoryTab activePath={activePath} onActiveChange={setActivePath}/>
+
+                                <ProductTaste activePath={activePath} onActiveChange={setActivePath}/>
 
                                 <SuppliersTab activePath={activePath} onActiveChange={setActivePath}/>
                             </ul>

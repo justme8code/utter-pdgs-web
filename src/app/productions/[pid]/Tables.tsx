@@ -104,7 +104,7 @@ export const Tables = ({sampleProduction}:{sampleProduction:SampleProduction}) =
         setLoading(false);
     };
     return (
-        <main className="flex gap-20 flex-col w-full h-screen space-x-10 bg-gray-50">
+        <main className="flex gap-20 flex-col w-full space-x-10 ">
             <div className="flex-1 flex flex-col h-full p-2 gap-5">
 
                     <div className="space-y-10">

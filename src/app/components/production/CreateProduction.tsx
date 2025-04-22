@@ -4,6 +4,7 @@ import { TextField } from "@/app/components/TextField";
 import { Button } from "@/app/components/Button";
 import { createProduction } from "@/app/actions/production";
 import {useCreateProductionStore} from "@/app/store/createdProductionStore";
+import {useRouter} from "next/navigation";
 
 export interface ModalOnAction {
     onClose?: () => void;
@@ -19,6 +20,7 @@ export const CreateProduction = ({ onClose, isOpen }: ModalOnAction) => {
     });
     const [isError, setIsError] = useState<string|null>(null);
     const {fetchP} = useCreateProductionStore();
+    const router = useRouter();
 
 
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -60,6 +62,7 @@ export const CreateProduction = ({ onClose, isOpen }: ModalOnAction) => {
                 await fetchP(response.data.id);
                 setSuccessMessage("Production added successfully!");
                 setNewProduction({ name: "", startDate: "", endDate: "", status: "RUNNING" });
+                router.push(`/productions/${response.data.id}`)
             }
         } catch (error) {
             console.error("Unexpected error:", error);

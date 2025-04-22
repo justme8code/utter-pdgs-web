@@ -57,15 +57,15 @@ const useSampleProductionStore = create<SampleProductionState>((set) => ({
             },
         })
     ),
-  updateMaterialToIngredient: (id, updatedIngredient) =>
-    set((state) => ({
-      production: {
-        ...state.production,
-        materialToIngredients: state.production.materialToIngredients?.map((ingredient) =>
-          ingredient.id === id ? { ...ingredient, ...updatedIngredient } : ingredient
-        ),
-      },
-    })),
+    updateMaterialToIngredient: (purchaseEntryId, materialToIngredient) =>
+        set((state) => ({
+            production: {
+                ...state.production,
+                materialToIngredients: state.production.materialToIngredients?.map((item) =>
+                    item.purchaseEntry.id === purchaseEntryId ? { ...item, ...materialToIngredient } : item
+                ),
+            },
+        })),
   removeMaterialToIngredient: (id) =>
     set((state) => ({
       production: {

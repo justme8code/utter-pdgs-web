@@ -9,23 +9,17 @@ export default function RawMaterialInventoryPage() {
 
 
     return (
-        <div className="flex">
-            <Sidebar />
-            <main className="flex gap-10 flex-col w-full h-screen space-x-10 bg-gray-50">
+        <div>
+            <nav className="bg-white  shadow px-6 py-4 flex justify-between items-center w-full">
+                <div className="text-xl font-bold ">
+                    Inventory/Raw Materials
+                </div>
 
-                <nav className="bg-white  shadow px-6 py-4 flex justify-between items-center w-full">
-                    <div className="text-xl font-bold ">
-                        Inventory/Raw Materials
-                    </div>
+            </nav>
 
-                </nav>
-
-               <div className={"flex"}>
-                   <RawMaterials/>
-               </div>
-
-               {/* <SuppliersList/>*/}
-            </main>
+            <div className={"flex"}>
+                <RawMaterials/>
+            </div>
         </div>
     );
 }

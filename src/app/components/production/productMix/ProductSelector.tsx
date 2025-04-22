@@ -22,6 +22,7 @@ export const ProductSelector = ({ products, selectedProductId, disabled, onSelec
             }}
             className="max-w-40 border px-2 py-1"
         >
+            <option value="" disabled={true}>Select product</option>
             {products.map(product => (
                 <option key={product.id} value={product.id}>{product.name}</option>
             ))}

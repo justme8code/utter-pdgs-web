@@ -1,9 +1,7 @@
 'use client';
 import {CreateAProductionButton} from "@/app/components/production/CreateAProductionButton";
-import {ProductionInfo} from "@/app/components/production/ProductionInfo";
-import {RawMaterialsToIngredientsTable} from "@/app/productions/tables/RawMaterialsToIngredientsTable";
 import {useCreateProductionStore} from "@/app/store/createdProductionStore";
-import PopulateEditPurchaseTable from "@/app/productions/tables/PopulateEditPurchaseTable";
+
 import {ProductionResponse} from "@/app/data_types";
 
 
@@ -57,8 +55,7 @@ export const CreatedProductionInfo = () => {
                                 <div>
                                     <ProdInf prod={production} />
                                     <div className="space-y-10">
-                                        <PopulateEditPurchaseTable production={production} edit={true} />
-                                        <RawMaterialsToIngredientsTable production={production} edit={true}/>
+
                                     </div>
                                 </div>
                             )}

@@ -7,6 +7,7 @@ import ProductionList from "./ProductionLIst";
 import { ProductionResponse } from "@/app/data_types";
 import { TextField } from "@/app/components/TextField";
 import { CreateAProductionButton } from "@/app/components/production/CreateAProductionButton";
+import {LoadData} from "@/app/LoadData";
 
 export const ClientProductionPagination = ({ productions }: { productions: ProductionResponse[] }) => {
     const searchParams = useSearchParams();
@@ -42,6 +43,7 @@ export const ClientProductionPagination = ({ productions }: { productions: Produ
 
     return (
         <>
+            <LoadData/>
             <nav className="flex justify-between items-center mb-4 bg-white p-2 shadow-sm">
                 <h1 className="text-xl font-medium">Productions</h1>
                 <div className="flex items-center gap-3">

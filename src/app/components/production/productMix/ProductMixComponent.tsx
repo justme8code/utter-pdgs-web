@@ -40,8 +40,6 @@ export const ProductMixComponent = ({mix,onSave,onDelete,edit}:ProductMixCompone
 
     const handleCreate = async ()=> {
         setLoading(true);
-        console.log("selected production id ", selectedProduction?.id);
-        console.log("Selected product id ", selectedProductId);
 
         if (selectedProduction && selectedProduction.id && selectedProductId) {
 
@@ -264,7 +262,7 @@ export const ProductMixComponent = ({mix,onSave,onDelete,edit}:ProductMixCompone
 
 
                         </div>
-                        {edit && (
+                        { (
                             <div className={"flex justify-end gap-4"}>
                                 <button
                                     className={`text-sm px-3 py-2 rounded flex items-center gap-2 transition ${

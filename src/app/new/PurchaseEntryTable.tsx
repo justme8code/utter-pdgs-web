@@ -2,11 +2,13 @@
 import DataTable, { TableColumn } from 'react-data-table-component';
 import { Modal } from "@/app/components/Modal";
 import { UpdatePurchaseEntry } from "@/app/new/UpdatePurchaseEntry";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { SamplePurchaseEntries } from "@/app/new/play-with-data";
 import useSampleProductionStore from "@/app/store/sampleProductionStore";
 import {Button} from "@/app/components/Button";
 import useSelectedPurchaseEntriesStore from "@/app/store/selectedPurchaseEntriesStore";
+import useRawMaterialStore from "@/app/store/useRawMaterialStore";
+import useSupplierStore from "@/app/store/SupplierStore";
 
 const customStyles = {
     header: {
@@ -87,7 +89,7 @@ const columns: TableColumn<SamplePurchaseEntries>[] = [
     {
         name: 'Cost',
         selector: row => row.cost,
-        format: row => `$${(row.cost || 0).toFixed(2)}`,
+        format: row => `₦ ${(row.cost || 0).toFixed(2)}`,
     },
     {
         name: 'Average Cost',
@@ -105,6 +107,8 @@ export default function PurchaseEntryTable() {
     const [selectedRow, setSelectedRow] = useState<SamplePurchaseEntries | null>(null);
     const {setPurchaseEntries}=useSelectedPurchaseEntriesStore();
     const [isEditMode, setIsEditMode] = useState(false);
+    const {fetchRawMaterials} = useRawMaterialStore();
+    const {fetchSuppliers} = useSupplierStore();
 
     const handleSelectedRowsChange = ({ selectedRows }:{selectedRows:SamplePurchaseEntries[]}) => {
         // You can set state or dispatch with something like Redux so we can use the retrieved data
@@ -143,10 +147,22 @@ export default function PurchaseEntryTable() {
 
     const handleUpdateRow = (updatedRowData: SamplePurchaseEntries) => {
         console.log('Updating row:', updatedRowData);
-        updatePurchaseEntry(Number(updatedRowData.id),{...updatedRowData,id:Number(updatedRowData.id)});
-        setSelectedRow(null);
-        setIsEditMode(false);
+        // check if updatedRowData.id is of type string or number
+        const id:number| string = typeof updatedRowData.id === "string"?updatedRowData.id:Number(updatedRowData.id);
+        if(id != undefined){
+            updatePurchaseEntry(id,{...updatedRowData,id:id});
+            setSelectedRow(null);
+            setIsEditMode(false);
+        }
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchRawMaterials();
+            await fetchSuppliers();
+        }
+        fetchData();
+    }, [fetchRawMaterials, fetchSuppliers]);
 
     return (
         <div className={"space-y-5"}>

@@ -39,17 +39,32 @@ type SampleMaterialToIngredients = {
     purchaseEntry: {
         id: number | string;
         rawMaterial: SampleRawMaterial;
+        cost:number;
     };
+    usable:number;
     totalUsable: number;
-    productionLost: number;
+    litresLost: number;
+    outPutLitres: number;
     batch: number;
     litresPerKg: number;
     costPerLitre: number;
-    ingredients: SampleIngredient[];
+    rawBrix: number;
 };
 
 type SampleProduction = {
     id: number;
+    createdAt: string;
+    productionNumber: string,
+    name: string,
+    startDate: string,
+    endDate: string,
+    staff:{
+        id: number,
+        userId: number,
+        userFullName: string,
+        companyRole:string
+    },
+    status: "RUNNING" | "COMPLETED" | "PAUSED",
     productionBatches?: SampleProductionBatches[];
     purchaseEntries?: SamplePurchaseEntries[];
     materialToIngredients?: SampleMaterialToIngredients[];

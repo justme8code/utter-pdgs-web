@@ -42,7 +42,7 @@ export const ProductMixPage = () => {
              {/* New button to open the modal */}
              {ingredients && ingredients.length > 0 && (
                  <button
-                     className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+                     className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600"
                      onClick={() => setIsModalOpen(true)}
                  >
                      Create Production Mix

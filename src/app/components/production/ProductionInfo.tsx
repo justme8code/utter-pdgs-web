@@ -1,11 +1,10 @@
 'use client';
-import {ProductionResponse} from "@/app/data_types";
 import {useProductionStore} from "@/app/store/productionStore";
 import {useEffect} from "react";
-import StatusToggle from "@/app/components/production/StatusToggle";
 import CurrentStatus from "@/app/components/production/CurrentStatus";
+import {SampleProduction} from "@/app/new/play-with-data";
 
-export const ProductionInfo = ({prod}:{prod:ProductionResponse}) => {
+export const ProductionInfo = ({prod}:{prod:SampleProduction}) => {
     const {setSelectedProduction} = useProductionStore();
 
     useEffect(() => {
@@ -14,7 +13,7 @@ export const ProductionInfo = ({prod}:{prod:ProductionResponse}) => {
 
     return (
         <>
-            <div className={"flex sticky top-0 items-center gap-x-2 ring-1 bg-gray-50 ring-gray-200 p-2 justify-between "}>
+            <div className={"flex sticky top-0 items-center gap-x-2 bg-white p-2 justify-between "}>
                 <h1 className={"text-xl"}>{prod.status === "RUNNING" || prod.status === "PAUSED" ? " On Going Production : ": "Production Completed" }</h1>
                 <div className={"flex items-center gap-x-2 text-md font-bold"}>
                     <h1 className={""}>{prod.productionNumber}</h1>

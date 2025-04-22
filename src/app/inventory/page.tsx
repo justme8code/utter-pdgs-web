@@ -8,18 +8,15 @@ export default function InventoryPage() {
 
 
     return (
-        <div className="flex">
-            <Sidebar />
-            <main className="flex gap-20 flex-col w-full h-screen p-6 space-x-10">
-                <h1 className={"text-4xl font-bold"}>Inventory</h1>
+        <div>
+            <h1 className={"text-4xl font-bold"}>Inventory</h1>
 
-               <div className={"flex gap-5"}>
-                   <RawMaterials/>
-                   <Ingredients/>
-               </div>
+            <div className={"flex gap-5"}>
+                <RawMaterials/>
+                <Ingredients/>
+            </div>
 
-                <SuppliersList/>
-            </main>
+            <SuppliersList/>
         </div>
     );
 }

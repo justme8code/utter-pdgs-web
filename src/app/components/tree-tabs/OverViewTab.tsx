@@ -1,4 +1,4 @@
-import {useState} from "react";
+
 import {TreeNav} from "@/app/components/tree-tabs/TreeNav";
 
 export interface TreeViewTabProps {
@@ -11,8 +11,6 @@ export const OverViewTab = ({activePath,onActiveChange}:TreeViewTabProps) => {
 
         <TreeNav title="Overview" path="overview" activePath={activePath} onActiveChange={onActiveChange}>
             <TreeNav title="Data Insights" path="root/data">
-            </TreeNav>
-            <TreeNav title="Ongoing Productions" path="root/frontend">
             </TreeNav>
             <TreeNav title="My Dashboard" path="root/backend">
             </TreeNav>

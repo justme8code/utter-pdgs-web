@@ -5,6 +5,10 @@ import useRawMaterialStore from "@/app/store/useRawMaterialStore";
 import useSupplierStore from "@/app/store/SupplierStore";
 import {useForm} from "react-hook-form";
 import {Button} from "@/app/components/Button";
+import {
+    calAverageCostPerKgBasedOnTotalWeight,
+    calAverageWeightPerUOMBasedOnTotalWeight
+} from "@/app/production-computing-formulas";
 
 interface UpdatePurchaseEntryProps {
     data: SamplePurchaseEntries;
@@ -19,8 +23,8 @@ type PurchaseEntryValues = SamplePurchaseEntries[PurchaseEntryKeys];
 
 export const UpdatePurchaseEntry = ({ data, onUpdate,onChange,onSave,isEditMode }:UpdatePurchaseEntryProps) => {
     const [formData, setFormData] = useState<SamplePurchaseEntries>(data);
-    const {rawMaterials,fetchRawMaterials} = useRawMaterialStore();
-    const {suppliers,fetchSuppliers} = useSupplierStore();
+    const {rawMaterials} = useRawMaterialStore();
+    const {suppliers} = useSupplierStore();
     const {
         register,
         handleSubmit,
@@ -33,13 +37,7 @@ export const UpdatePurchaseEntry = ({ data, onUpdate,onChange,onSave,isEditMode 
         setFormData(data); // Update local form state when the 'data' prop changes
     }, [data]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            await fetchRawMaterials();
-            await fetchSuppliers();
-        }
-        fetchData();
-    }, [fetchRawMaterials, fetchSuppliers]);
+
 
     const handleChange = (field: PurchaseEntryKeys, value: PurchaseEntryValues) => {
         const updatedFormData = { ...formData };
@@ -66,6 +64,21 @@ export const UpdatePurchaseEntry = ({ data, onUpdate,onChange,onSave,isEditMode 
         } else if (field === "avgWeightPerUOM" && value) {
             updatedFormData.avgWeightPerUOM = value as number; // Type assertion
         }
+
+
+        // Do calculations if fields that impact avgCost or avgWeightPerUOM changed
+        if (["weight", "usable", "cost", "qty"].includes(field)) {
+            const { cost, weight,qty } = updatedFormData;
+
+            // Safe default values
+            const costSafe = cost ?? 0;
+            const weightSafe = weight ?? 0;
+            const qtySafe = qty ?? 0;
+
+            updatedFormData.avgCost = calAverageCostPerKgBasedOnTotalWeight({cost:costSafe,weight:weightSafe});
+            updatedFormData.avgWeightPerUOM = calAverageWeightPerUOMBasedOnTotalWeight({weight:weightSafe,qty:qtySafe});
+        }
+
         setFormData(updatedFormData);
         onChange(updatedFormData);
     };
@@ -86,6 +99,9 @@ export const UpdatePurchaseEntry = ({ data, onUpdate,onChange,onSave,isEditMode 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Raw Material Name</label>
                     <select
+                        {...register("rawMaterial", {
+                            required: `Raw material is required.`,
+                        })}
                         className={"bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"}
                         value={formData.rawMaterial?.id || ""}
                         onChange={(e) => {
@@ -100,13 +116,17 @@ export const UpdatePurchaseEntry = ({ data, onUpdate,onChange,onSave,isEditMode 
                             </option>
                         ))}
                     </select>
-
+                    {errors["rawMaterial"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["rawMaterial"]?.message)}</p>
+                        </div>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">UoM</label>
                     <input
                         {...register("uom", {
-                            required: `UOM  is required, please select a raw material.`,
+                            required: `Select a raw material.`,
                         })}
                         name={"uom"}
                         disabled={true}
@@ -125,27 +145,35 @@ export const UpdatePurchaseEntry = ({ data, onUpdate,onChange,onSave,isEditMode 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Supplier Full Name</label>
                     <select
+                        {...register("supplier", {
+                            required: `Supplier is required`,
+                        })}
                         className={"bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"}
-                        value={formData.supplier?.id?.toString() || ""}
+                        value={formData.supplier?.id || ""}
                         onChange={(e) => {
-                            const selectedSupplier = suppliers.find(supplier => supplier.id.toString() === e.target.value);
+                            const selectedSupplier = suppliers.find(supplier => supplier.id === parseInt(e.target.value));
                             handleChange("supplier", selectedSupplier);
                         }}
                     >
-                        <option value="">Select Supplier</option>
+                        <option value="" disabled={true}>Select supplier</option>
                         {suppliers.map((supplier) => (
                             <option key={supplier.id} value={supplier.id.toString()}>
                                 {supplier.fullName}
                             </option>
                         ))}
                     </select>
+                    {errors["supplier"] && (
+                        <div className="text-red-500 text-sm mt-1">
+                            <p>{String(errors["supplier"]?.message)}</p>
+                        </div>
+                    )}
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Quantity</label>
                     <input
                         {...register("qty", {
-                            required: "Quantity is required, please insert a quantity.",
+                            required: "Quantity is required.",
                             min: { value: 1, message: "Quantity must be at least 1." },
                         })}
                         name={"qty"}
@@ -215,7 +243,7 @@ export const UpdatePurchaseEntry = ({ data, onUpdate,onChange,onSave,isEditMode 
                     )}
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">Cost</label>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">₦ Cost</label>
                     <input
                         {...register("cost", {
                             required: "Cost is required.",
@@ -240,7 +268,7 @@ export const UpdatePurchaseEntry = ({ data, onUpdate,onChange,onSave,isEditMode 
                             min: { value: 0, message: "Average cost cannot be negative." },
                         })}
                         type="number"
-                        value={formData.avgCost || 0}
+                        value={formData.avgCost|| 0}
                         readOnly={true}
                         className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
                     />

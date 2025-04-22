@@ -3,6 +3,11 @@ import React, { useState, useEffect } from "react";
 import {SampleIngredient, SampleMaterialToIngredients} from "@/app/new/play-with-data";
 import { useForm } from "react-hook-form";
 import {Button} from "@/app/components/Button";
+import {
+    calAverageCostPerKgBasedOnTotalWeight, calAverageWeightPerUOMBasedOnTotalWeight,
+    calculateCostPerLitre,
+    calculateLitresPerKg
+} from "@/app/production-computing-formulas";
 
 type UpdateMaterialToIngredientProps = {
     data: SampleMaterialToIngredients;
@@ -40,12 +45,34 @@ export const UpdateMaterialToIngredient = ({
 
         if (field === "totalUsable" && value) {
             updatedFormData.totalUsable = value as number;
-        } else if (field === "productionLost" && value) {
-            updatedFormData.productionLost = value as number;
+        } else if (field === "litresLost" && value) {
+            updatedFormData.litresLost = value as number;
         } else if (field === "batch" && value) {
             updatedFormData.batch = value as number;
-        } else if (field === "ingredients" && value) {
+        } /*else if (field === "ingredients" && value) {
             updatedFormData.ingredients = value as SampleIngredient[];
+        }*/else if (field === "usable" && value){
+            updatedFormData.usable = value as number;
+        }else if (field === "costPerLitre" && value){
+            updatedFormData.costPerLitre = value as number;
+        }else if (field === "litresPerKg" && value){
+            updatedFormData.litresPerKg = value as number;
+        }else if (field === "rawBrix" && value){
+            updatedFormData.rawBrix = value as number;
+        }else if (field === "outPutLitres" && value){
+            updatedFormData.outPutLitres = value as number;
+        }
+        console.log("litresLost", updatedFormData.litresLost);
+
+        if (["usable","totalUsable"].includes(field)) {
+            const {totalUsable,usable } = updatedFormData;
+
+            // Safe default values
+            const usableSafe = usable ?? 0;
+            const totalUsableSafe = totalUsable ?? 0;
+
+            updatedFormData.costPerLitre = calculateCostPerLitre({totalCost:formData.purchaseEntry.cost, usableLitres:usableSafe});
+            updatedFormData.litresPerKg = calculateLitresPerKg({usableLitres:usableSafe,totalUsable:totalUsableSafe});
         }
 
 
@@ -81,9 +108,9 @@ export const UpdateMaterialToIngredient = ({
                              required: "Total usable is required.",
                              min: { value: 0.0, message: "Total usable cannot be negative." },
                          })}
+                            disabled={true}
                          type="number"
                          value={formData.totalUsable || 0.0}
-                         onChange={(e) => handleChange("totalUsable", parseFloat(e.target.value))}
                          className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
                      />
                      {errors["totalUsable"] && (
@@ -93,29 +120,48 @@ export const UpdateMaterialToIngredient = ({
                      )}
                  </div>
                  <div className="mb-4">
-                     <label className="block text-gray-700 text-sm font-bold mb-2">Ingredients</label>
+                     <label className="block text-gray-700 text-sm font-bold mb-2">Ingredients (auto)</label>
                      <input
                          type="text"
                          disabled={true}
-                         value={formData.purchaseEntry.rawMaterial.ingredients.map((ing) => ing.name).join(", ")}
+                         title={formData.purchaseEntry.rawMaterial.ingredients.map((ing) => ing.name).join(", ")}
+                         defaultValue={"Auto"}
                          className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
                      />
                  </div>
                  <div className="mb-4">
-                     <label className="block text-gray-700 text-sm font-bold mb-2">Production Lost</label>
+                     <label className="block text-gray-700 text-sm font-bold mb-2">Output Litres</label>
                      <input
-                         {...register("productionLost", {
-                             required: "Production lost is required.",
-                             min: { value: 0.0, message: "Production lost cannot be negative." },
+                         {...register("outPutLitres", {
+                             required: "Output litres is required.",
+                             min: { value: 0.0, message: "Output litres required." },
                          })}
                          type="number"
-                         value={formData.productionLost || 0.0}
-                         onChange={(e) => handleChange("productionLost", parseFloat(e.target.value))}
+                         value={formData.outPutLitres || 0.0}
+                         onChange={(e) => handleChange("outPutLitres", parseFloat(e.target.value))}
                          className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
                      />
-                     {errors["productionLost"] && (
+                     {errors["outPutLitres"] && (
                          <div className="text-red-500 text-sm mt-1">
-                             <p>{String(errors["productionLost"]?.message)}</p>
+                             <p>{String(errors["outPutLitres"]?.message)}</p>
+                         </div>
+                     )}
+                 </div>
+                 <div className="mb-4">
+                     <label className="block text-gray-700 text-sm font-bold mb-2">Litres Lost</label>
+                     <input
+                         {...register("litresLost", {
+                             required: "Litres lost is required.",
+                             min: { value: 0.0, message: "Litres lost cannot be negative." },
+                         })}
+                         type="number"
+                         value={formData.litresLost || 0.0}
+                         onChange={(e) => handleChange("litresLost", parseFloat(e.target.value))}
+                         className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                     />
+                     {errors["litresLost"] && (
+                         <div className="text-red-500 text-sm mt-1">
+                             <p>{String(errors["litresLost"]?.message)}</p>
                          </div>
                      )}
                  </div>
@@ -126,9 +172,9 @@ export const UpdateMaterialToIngredient = ({
                              required: "Batch is required.",
                              min: { value: 0, message: "Batch cannot be negative." },
                          })}
+                         readOnly={true}
                          type="number"
                          value={formData.batch || 0}
-                         onChange={(e) => handleChange("batch", parseFloat(e.target.value))}
                          className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
                      />
                      {errors["batch"] && (
@@ -138,7 +184,25 @@ export const UpdateMaterialToIngredient = ({
                      )}
                  </div>
                  <div className="mb-4">
-                     <label className="block text-gray-700 text-sm font-bold mb-2">Litres Per Kg</label>
+                     <label className="block text-gray-700 text-sm font-bold mb-2">Usable</label>
+                     <input
+                         {...register("usable", {
+                             required: "Usable is required.",
+                             min: { value: 0, message: "Usable cannot be negative." },
+                         })}
+                         type="number"
+                         value={formData.usable || 0}
+                         onChange={(e) => handleChange("usable", parseFloat(e.target.value))}
+                         className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                     />
+                     {errors["usable"] && (
+                         <div className="text-red-500 text-sm mt-1">
+                             <p>{String(errors["usable"]?.message)}</p>
+                         </div>
+                     )}
+                 </div>
+                 <div className="mb-4">
+                     <label className="block text-gray-700 text-sm font-bold mb-2">Litres Per Kg  (auto)</label>
                      <input
                          {...register("litresPerKg", {
                              required: "Litres per kg is required.",
@@ -156,7 +220,7 @@ export const UpdateMaterialToIngredient = ({
                      )}
                  </div>
                  <div className="mb-4">
-                     <label className="block text-gray-700 text-sm font-bold mb-2">Cost Per Litre</label>
+                     <label className="block text-gray-700 text-sm font-bold mb-2">₦ Cost Per Litre (auto)</label>
                      <input
                          {...register("costPerLitre", {
                              required: "Cost per litre is required.",
@@ -173,10 +237,29 @@ export const UpdateMaterialToIngredient = ({
                          </div>
                      )}
                  </div>
+                 <div className="mb-4">
+                     <label className="block text-gray-700 text-sm font-bold mb-2">Raw Brix</label>
+                     <input
+                         {...register("rawBrix", {
+                             required: "Raw brix is required.",
+                             min: { value: 0.0, message: "Output litres required." },
+                         })}
+                         type="number"
+                         value={formData.rawBrix || 0.0}
+                         onChange={(e) => handleChange("rawBrix", parseFloat(e.target.value))}
+                         className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded mt-1"
+                     />
+                     {errors["rawBrix"] && (
+                         <div className="text-red-500 text-sm mt-1">
+                             <p>{String(errors["rawBrix"]?.message)}</p>
+                         </div>
+                     )}
+                 </div>
+
 
              </div>
             <div className={"flex justify-center"}>
-                <Button type={"submit"} label={isEditMode?"Update Row":"Save New Row"} className={"max-h-12 max-w-40"}/>
+                <Button type={"submit"} label={"Update Row"} className={"max-h-12 max-w-40"}/>
             </div>
         </form>
     );
