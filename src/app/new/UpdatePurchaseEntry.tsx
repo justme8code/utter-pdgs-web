@@ -1,4 +1,4 @@
-'use client';
+
 import React, { useState, useEffect } from "react";
 import {SamplePurchaseEntries, SampleRawMaterial, SampleSupplier} from "@/app/new/play-with-data";
 import useRawMaterialStore from "@/app/store/useRawMaterialStore";

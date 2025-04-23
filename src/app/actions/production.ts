@@ -8,7 +8,7 @@ import {SampleMaterialToIngredients, SampleProduction, SamplePurchaseEntries} fr
 
 export async function fetchProductions(page: number, size: number) {
     const token = await verifySession();
-    return await myRequest<null,ProductionResponse[]>({
+    return await myRequest<null,SampleProduction[]>({
         url: `/productions?page=${page}&size=${size}`,
         method: "GET",
         headers: {

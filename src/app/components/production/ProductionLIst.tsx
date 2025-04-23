@@ -1,11 +1,11 @@
 "use client";
 
-import { ProductionResponse } from "@/app/data_types";
 import { useRouter } from "next/navigation";
 import React from "react";
+import {SampleProduction} from "@/app/new/play-with-data";
 
 interface ProductionListProps {
-    productions: ProductionResponse[];
+    productions: SampleProduction[];
     error: { state: boolean; message: string };
 }
 
@@ -51,10 +51,22 @@ export default function ProductionList({ productions, error }: ProductionListPro
                                 <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.startDate}</td>
                                 <td className="py-3 px-5 border-r border-gray-300 text-gray-700">{production.endDate}</td>
                                 <td className="py-3 px-5 border-r border-gray-300 text-gray-700">
-                                    {production.staff.userFullName} ({production.staff.companyRole})
+                                    {
+                                        production.staff && (
+                                            <div>
+                                                {production.staff.userFullName} ({production.staff.companyRole})
+                                            </div>
+                                        )
+                                    }
                                 </td>
                                 <td className="py-3 px-5 border-r border-gray-300">
-                                    <span className={`font-bold ${statusColors[production.status]}`}>{production.status}</span>
+                                    {
+                                        production.status && (
+                                            <div className={`font-bold ${statusColors[production.status]}`}>
+                                                {production.status}
+                                            </div>
+                                        )
+                                    }
                                 </td>
                             </tr>
                         ))

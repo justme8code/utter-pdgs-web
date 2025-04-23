@@ -4,12 +4,12 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import ProductionList from "./ProductionLIst";
-import { ProductionResponse } from "@/app/data_types";
 import { TextField } from "@/app/components/TextField";
 import { CreateAProductionButton } from "@/app/components/production/CreateAProductionButton";
 import {LoadData} from "@/app/LoadData";
+import {SampleProduction} from "@/app/new/play-with-data";
 
-export const ClientProductionPagination = ({ productions }: { productions: ProductionResponse[] }) => {
+export const ClientProductionPagination = ({ productions }: { productions: SampleProduction[] }) => {
     const searchParams = useSearchParams();
     const router = useRouter();
 

@@ -87,7 +87,7 @@ export const TasteBudInfo = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
                 {/* Section: Basic Info */}
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-bold text-gray-700">Taste Bud Evaluation</h2>
+                    <h2 className="text-2xl font-bold text-gray-700">Juice Evaluation</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <input {...register('name')} placeholder="Name" className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
                         <input {...register('batchRange')} placeholder="Batch Range" className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" />

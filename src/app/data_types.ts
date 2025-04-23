@@ -59,7 +59,10 @@ export type Staff = {
 
 export type Supplier = {
     id: number,
-    fullName: string
+    fullName: string,
+    address: string;
+    phoneNumber: string;
+    emailAddress: string;
 }
 
 export type Pageable<T> = {

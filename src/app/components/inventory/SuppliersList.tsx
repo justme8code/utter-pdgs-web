@@ -51,8 +51,10 @@ export const SuppliersList = () => {
                                     <button
                                         className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full mr-2"
                                         onClick={() => {
-                                            setSelectedSupplier(supplier);
-                                            setIsOpen(true);
+                                             if(supplier) {
+                                                 setSelectedSupplier(supplier);
+                                                 setIsOpen(true);
+                                             }
                                         }}
                                     >
                                         Edit

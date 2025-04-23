@@ -1,10 +1,9 @@
-'use client';
+
 import React, { useState, useEffect } from "react";
-import {SampleIngredient, SampleMaterialToIngredients} from "@/app/new/play-with-data";
+import { SampleMaterialToIngredients} from "@/app/new/play-with-data";
 import { useForm } from "react-hook-form";
 import {Button} from "@/app/components/Button";
 import {
-    calAverageCostPerKgBasedOnTotalWeight, calAverageWeightPerUOMBasedOnTotalWeight,
     calculateCostPerLitre,
     calculateLitresPerKg
 } from "@/app/production-computing-formulas";

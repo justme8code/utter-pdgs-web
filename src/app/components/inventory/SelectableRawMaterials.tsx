@@ -1,4 +1,4 @@
-'use client';
+
 import React, { useEffect, useState, useRef } from "react";
 import { RawMaterial } from "@/app/components/inventory/RawMaterials";
 import {getAllRawMaterials} from "@/app/actions/inventory";

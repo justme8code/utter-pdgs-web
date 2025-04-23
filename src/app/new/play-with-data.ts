@@ -64,7 +64,7 @@ type SampleProduction = {
         userFullName: string,
         companyRole:string
     },
-    status?: "RUNNING" | "COMPLETED" | "PAUSED",
+    status?: "RUNNING" | "COMPLETED" | "STOPPED",
     productionBatches?: SampleProductionBatches[];
     purchaseEntries?: SamplePurchaseEntries[];
     materialToIngredients?: SampleMaterialToIngredients[];

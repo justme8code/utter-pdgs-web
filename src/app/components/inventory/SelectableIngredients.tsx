@@ -1,8 +1,8 @@
-'use client';
+
 import React, { useEffect, useState } from "react";
 import { getAllIngredients } from "@/app/actions/inventory";
 import { Ingredient } from "@/app/components/inventory/RawMaterials";
-import {ArrowDown, ArrowRight, ChevronDown, ChevronRight} from "lucide-react";
+import {ChevronDown, ChevronRight} from "lucide-react";
 
 export const SelectableIngredients = ({
                                           alreadySelectedIngredients,

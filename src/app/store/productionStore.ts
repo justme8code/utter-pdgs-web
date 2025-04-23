@@ -1,28 +1,13 @@
 import { create } from 'zustand'
+import {SampleProduction} from "@/app/new/play-with-data";
 
-// Define the ProductionResponse type
-export type ProductionResponse = {
-    createdAt: string;
-    id: number;
-    productionNumber: string;
-    name: string;
-    startDate: string;
-    endDate: string;
-    staff: {
-        id: number;
-        userId: number;
-        userFullName: string;
-        companyRole: string;
-    };
-    status: "RUNNING" | "COMPLETED" | "PAUSED";
-};
 
 // Zustand store for managing a single selected production
 type ProductionStore = {
-    selectedProduction: ProductionResponse | null;
+    selectedProduction: SampleProduction | null;
     loading: boolean;
-    setSelectedProduction: (production: ProductionResponse) => void;
-    updateProductionStatus: (status: "RUNNING" | "COMPLETED" | "PAUSED") => void;
+    setSelectedProduction: (production: SampleProduction) => void;
+    updateProductionStatus: (status: "RUNNING" | "COMPLETED" | "STOPPED") => void;
     setLoading: (loading: boolean) => void;
     resetSelectedProduction: () => void;
 };

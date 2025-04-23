@@ -8,13 +8,15 @@ export const ProductionInfo = ({prod}:{prod:SampleProduction}) => {
     const {setSelectedProduction} = useProductionStore();
 
     useEffect(() => {
-        setSelectedProduction(prod);
+         if(prod){
+             setSelectedProduction(prod);
+         }
     }, [prod, setSelectedProduction]);
 
     return (
         <>
             <div className={"flex sticky top-0 items-center gap-x-2 bg-white p-2 justify-between "}>
-                <h1 className={"text-xl"}>{prod.status === "RUNNING" || prod.status === "PAUSED" ? " On Going Production : ": "Production Completed" }</h1>
+                <h1 className={"text-xl"}>{prod.status === "RUNNING" || prod.status === "STOPPED" ? " On Going Production : ": "Production Completed" }</h1>
                 <div className={"flex items-center gap-x-2 text-md font-bold"}>
                     <h1 className={""}>{prod.productionNumber}</h1>
                     <h1>|</h1>

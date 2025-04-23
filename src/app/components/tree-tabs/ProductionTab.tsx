@@ -1,4 +1,4 @@
-'use client';
+// Created by:  <Thompson Oretan>
 import {TreeNav} from "@/app/components/tree-tabs/TreeNav";
 import {TreeViewTabProps} from "@/app/components/tree-tabs/OverViewTab";
 import {useRouter} from "next/navigation";
