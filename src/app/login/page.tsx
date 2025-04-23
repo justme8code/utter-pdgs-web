@@ -1,7 +1,5 @@
 'use client';
-import Image from "next/image";
 import Login from "@/app/components/Login";
-import Sidebar from "@/app/components/SideBar";
 
 export default function LoginPage() {
   return (

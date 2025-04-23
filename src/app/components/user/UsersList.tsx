@@ -1,6 +1,5 @@
-import {Trash, Trash2, User2, UserPen} from "lucide-react";
+import {Trash,UserPen} from "lucide-react";
 import React, {useEffect, useState} from "react";
-import useAuthStore from "@/app/store/useAuthStore";
 import {CreateUserModal} from "@/app/components/user/CreateUserModal";
 import {fetchUsers} from "@/app/actions/inventory";
 import {UserResponse} from "@/app/data_types";
@@ -12,8 +11,6 @@ export const UsersList = () => {
     const [users, setUsers] = useState<UserResponse[]>([]);
     const [selectedUser, setSelectedUser] = useState<UserResponse| undefined>();
     const [isOpen,setIsOpen] = useState(false);
-    const { auth } = useAuthStore();
-
     useEffect(() => {
 
             const res = async ()=>{

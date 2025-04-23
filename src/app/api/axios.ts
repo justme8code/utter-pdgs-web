@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig} from "axios";
 import { BASE_URL } from "@/app/api/urls";
-import {verifySession} from "@/app/actions/main";
 
 export const axiosInstance = axios.create({
     baseURL: BASE_URL,

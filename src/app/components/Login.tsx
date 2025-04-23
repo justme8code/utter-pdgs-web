@@ -11,6 +11,8 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState("");
     const router = useRouter();
     const { setAuth } = useAuthStore(); // Zustand function to set auth state
+
+
     const [error, action, isPending] = useActionState(loginUser, undefined);
 
     async function loginUser(previousState: unknown, formData: FormData) {
@@ -46,6 +48,12 @@ const Login: React.FC = () => {
         <LoadingWrapper isLoading={isPending}>
             <div className="flex justify-center border-1 border-gray-200 items-center p-6 w-full max-w-md">
                 <form action={action} className="flex flex-col gap-10 w-full">
+                    {error ? (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <strong className="font-bold">Error!</strong>
+                            <span className="block sm:inline">{error}</span>
+                        </div>
+                    ) : null}
                     <div className="flex justify-center">
                         <h1 className="font-bold text-3xl">UtterPDGS</h1>
                         <h1 className="text-2xl">|</h1>

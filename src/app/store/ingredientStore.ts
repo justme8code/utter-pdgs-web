@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Ingredient } from "@/app/components/inventory/RawMaterials";
-import {getAllIngredients, updateIngredient} from "@/app/actions/inventory";
+import {getAllIngredients} from "@/app/actions/inventory";
 
 interface IngredientState {
     ingredients: Ingredient[];
@@ -8,7 +8,7 @@ interface IngredientState {
     setIngredients: (ings: Ingredient[]) => void;
 }
 
-export const useIngredientStore = create<IngredientState>((set, get) => ({
+export const useIngredientStore = create<IngredientState>((set) => ({
     ingredients: [],
 
     // Fetch ingredients from an API

@@ -4,8 +4,6 @@ import {myRequest} from "@/app/api/axios";
 import {createSession, deleteSession} from "./main";
 import {AuthResponse} from "@/app/store/useAuthStore";
 
-
-const routeTo = "/productions"
 const loginRoute = "/login"
 
 export async function login(previousState: unknown, formData: FormData) {

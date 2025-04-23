@@ -19,6 +19,8 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ user, isOpen, 
     const { auth } = useAuthStore();
     const isEdit = !!user;
 
+
+
     const [error, action, isPending] = useActionState(async (previousState: unknown, formData: FormData) => {
         const status = await createUser(previousState, formData, selectedRoles);
         if (status) {
@@ -55,6 +57,12 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ user, isOpen, 
             <h2 className="text-xl font-bold mb-4">{user ? "Edit User" : "Add User"}</h2>
             {successMessage && <p className="text-green-500 font-semibold">{successMessage}</p>}
             <form action={action} className="space-y-5 w-full">
+                {error ? (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong className="font-bold">Error!</strong>
+                        <span className="block sm:inline">{error}</span>
+                    </div>
+                ) : null}
                 <TextField
                     name="fullName"
                     label="Full Name"
