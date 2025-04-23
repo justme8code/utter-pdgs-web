@@ -1,5 +1,4 @@
-
-import Sidebar from "@/app/components/SideBar";
+// Created by:  <Thompson Oretan>
 import {CreateAProductButton} from "@/app/components/production/CreateAProductButton";
 
 

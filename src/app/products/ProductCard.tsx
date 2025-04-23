@@ -1,13 +1,13 @@
 import {Product} from "@/app/product";
+import {Milk} from "lucide-react";
 
 export const ProductCard = ({ product }: { product: Product }) => {
     return (
         <div className="border rounded-lg shadow-md p-4 w-50">
-            <img
-                src={undefined}
-                alt={""}
-                className="w-full h-60 object-cover rounded-md mb-4"
-            />
+
+            <div className={"flex w-full justify-center"}>
+                <Milk className="w-20 h-60 text-gray-500"/>
+            </div>
              <div className={"space-y-2"}>
                  <h2 className="text-sm font-semibold text-center">{product.name}</h2>
                  {/*  <p className="text-gray-600 text-xs text-center">{product.description}</p>*/}
