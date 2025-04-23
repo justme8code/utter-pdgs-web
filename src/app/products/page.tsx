@@ -1,10 +1,8 @@
 'use client';
 import { ProductCard } from "./ProductCard";
-import Sidebar from "@/app/components/SideBar";
 import {CreateAProductButton} from "@/app/components/production/CreateAProductButton";
 import {useProductStore} from "@/app/store/productStore";
-import {useEffect, useState} from "react";
-import {TreeNav} from "@/app/components/tree-tabs/TreeNav";
+import {useEffect} from "react";
 
 
 export default function ProductsPage() {
