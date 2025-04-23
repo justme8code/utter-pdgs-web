@@ -1,16 +1,11 @@
 'use client';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import { Modal } from "@/app/components/Modal";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {SampleMaterialToIngredients} from "@/app/new/play-with-data";
 import {UpdateMaterialToIngredient} from "@/app/new/UpdateMaterialToIngredient";
 import useSampleProductionStore from "@/app/store/sampleProductionStore";
-import {useIngredientStore} from "@/app/store/ingredientStore";
 import {Button} from "@/app/components/Button";
-import {
-    calAverageCostPerKgBasedOnTotalWeight,
-    calAverageWeightPerUOMBasedOnTotalWeight
-} from "@/app/production-computing-formulas";
 
 const customStyles = {
     header: {
@@ -57,7 +52,7 @@ const columns: TableColumn<SampleMaterialToIngredients>[] = [
         sortable: true,
     },
     {
-        name: 'Purchase ID',
+        name: 'PID',
         selector: row => row.purchaseEntry.id,
         sortable: true,
     },
@@ -68,7 +63,7 @@ const columns: TableColumn<SampleMaterialToIngredients>[] = [
     },
     {
         name: 'Ingredients',
-        selector: row => "Auto",
+        selector: () => "Auto",
     },
     {
         name: "Output Litres",

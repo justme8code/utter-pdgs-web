@@ -1,6 +1,6 @@
 'use server';
 import {myRequest} from "@/app/api/axios";
-import {ExtendedProductionResponse, Production, ProductionResponse, StaffResponse} from "../data_types";
+import {ExtendedProductionResponse, Pageable, Production, ProductionResponse, StaffResponse} from "../data_types";
 import {makeAuthRequest, verifySession} from "@/app/actions/main";
 import {ProductMix, Product} from "@/app/product";
 import {SampleMaterialToIngredients, SampleProduction, SamplePurchaseEntries} from "@/app/new/play-with-data";
@@ -59,10 +59,6 @@ export async function fetchProductionWithDynamicData(id: number) {
         url: `/productions/${id}/dynamic`,
     });
     return {data:data,status:status}
-}
-
-export async function deleteProduction(id: number) {
-
 }
 
 export async function updateProductionStatus(id:number,pStatus: "RUNNING" | "COMPLETED" | "Pause") {
@@ -174,4 +170,12 @@ export async function deleteProductionPurchaseEntry(productionId:number,purchase
         data: purchaseEntriesId
     });
     return {status:status === 200 };
+}
+
+export async function fetchProductMixes(page:number,size:number,search:string){
+     const {data,status} = await makeAuthRequest<number[],Pageable<ProductMix>>({
+         url: `/product-mixes/page?search=${search}&page=${page}&size=${size}`,
+         method: "GET",
+     });
+     return {data:data,status:status === 200 };
 }

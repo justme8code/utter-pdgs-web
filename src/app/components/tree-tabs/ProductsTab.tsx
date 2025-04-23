@@ -6,8 +6,8 @@ export const ProductTab = ({activePath,onActiveChange}:TreeViewTabProps) => {
     const router = useRouter();
     return (
 
-        <TreeNav title="Products" path="products" activePath={activePath} onActiveChange={onActiveChange}>
-            <TreeNav title="All products" path="/products" activePath={activePath} onActiveChange={onActiveChange}
+        <TreeNav title="Product" path="product" activePath={activePath} onActiveChange={onActiveChange}>
+            <TreeNav title="Products" path="/products" activePath={activePath} onActiveChange={onActiveChange}
                      onToggle={() => {
                          router.push("/products");
                      }}/>

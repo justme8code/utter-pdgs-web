@@ -12,7 +12,11 @@ export async function middleware(request: NextRequest) {
         /^\/productions$/,         // Protects /productions
         /^\/productions\/\d+$/,
         /^\/inventory$/,
-        /^\/products$/,         // Protects /products
+        /^\/products$/,
+        /^\/tastebuds$/,          // Protects /tastebuds
+        /^\/suppliers$/,          // Protects /suppliers
+
+        // Protects /products
     ];
 
 
@@ -27,5 +31,5 @@ export async function middleware(request: NextRequest) {
 
 // Apply middleware to relevant routes
 export const config = {
-    matcher: ['/','/productions/:path*','/inventory','/products/:path*'],
+    matcher: ['/','/productions/:path*','/inventory','/products/:path*','/tastebuds/:path*','/suppliers/:path*','/products/:path*'],
 };

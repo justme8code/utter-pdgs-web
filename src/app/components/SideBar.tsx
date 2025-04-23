@@ -1,6 +1,4 @@
 'use client';
-
-import Link from 'next/link';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
@@ -26,7 +24,7 @@ export default function Sidebar() {
     }
 
     return (
-        <div className="flex z-50 max-w-56 h-screen overflow-y-auto">
+        <div className="flex z-50 max-w-56 h-screen overflow-y-auto shadow-xs">
             <button
                 className="p-3 md:hidden fixed top-4 left-4 z-50 rounded-full"
                 onClick={() => setIsOpen(!isOpen)}
@@ -36,19 +34,22 @@ export default function Sidebar() {
 
             <div className={`h-full`}>
                 <div className={`fixed top-0 left-0 max-w-52 h-full justify-between p-5 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform md:translate-x-0 md:relative md:w-64`}>
-                    <div className={"h-96 space-y-5"}>
-                        {auth && (
-                            <div className={"p-2"}>
-                                <h1 className="text-xl font-bold ">{auth.user.fullName}</h1>
-                                <h1 className="text-xs font-bold ">{auth.user.staffProfession}</h1>
-                            </div>
-                        )}
-                        <nav>
+                    <div className={"h-full flex flex-col justify-between"}>
+
+                        <nav className={"space-y-5"}>
+                            {auth && (
+                                <div className={"p-2"}>
+                                    <h1 className="text-xl font-bold ">{auth.user.fullName}</h1>
+                                    <h1 className="text-xs font-bold ">{auth.user.staffProfession}</h1>
+                                </div>
+                            )}
+
                             <ul className="space-y-3">
                                 <OverViewTab
                                     activePath={activePath}
                                     onActiveChange={setActivePath}
                                 />
+
                                 <ProductionTab
                                     activePath={activePath}
                                     onActiveChange={setActivePath}
@@ -61,8 +62,8 @@ export default function Sidebar() {
 
                                 <SuppliersTab activePath={activePath} onActiveChange={setActivePath}/>
                             </ul>
-                            <LogoutButton/>
                         </nav>
+                        <LogoutButton/>
                     </div>
                 </div>
             </div>

@@ -19,10 +19,13 @@ export const CreateSupplierModal: React.FC<CreateSupplierModalProps> = ({ suppli
     const validateForm = (formData: FormData) => {
         const newErrors: { [key: string]: string } = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\+?[0-9]{7,15}$/;
 
         if (!formData.get("fullName")) newErrors.fullName = "Full Name is required.";
         if (!formData.get("address")) newErrors.address = "Address is required.";
-        if (!formData.get("phoneNumber")) newErrors.phoneNumber = "Phone Number is required.";
+        if (!phoneRegex.test(formData.get("phoneNumber") as string)) {
+            newErrors.phoneNumber = "Phone Number is required.";
+        }
         if (!formData.get("emailAddress")) {
             newErrors.emailAddress = "Email Address is required.";
         } else if (!emailRegex.test(formData.get("emailAddress") as string)) {
@@ -33,6 +36,7 @@ export const CreateSupplierModal: React.FC<CreateSupplierModalProps> = ({ suppli
         return Object.keys(newErrors).length === 0;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [error, action, isPending] = useActionState(async (previousState: unknown, formData: FormData) => {
         if (!validateForm(formData)) return;
 
@@ -56,6 +60,7 @@ export const CreateSupplierModal: React.FC<CreateSupplierModalProps> = ({ suppli
         <Modal isOpen={isOpen} onClose={onClose} className={"w-full max-w-md"}>
             <h2 className="text-xl font-bold mb-4">{supplier ? "Edit Supplier" : "Add Supplier"}</h2>
             {successMessage && <p className="text-green-500 font-semibold">{successMessage}</p>}
+
             <form action={action} className="space-y-5 w-full">
                 <div>
                     <TextField

@@ -14,7 +14,7 @@ export const SuppliersList = () => {
     return (
         <div className={"w-full shadow-xs p-5 hover:shadow-xl"}>
             <div className={"flex items-center w-full gap-10 mb-5"}>
-                <h2 className="text-xl font-bold">Supplier Management</h2>
+                <h2 className="text-xl font-bold">Suppliers</h2>
                 <button
                     onClick={() => {
                         setSelectedSupplier(null);

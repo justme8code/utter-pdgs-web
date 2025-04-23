@@ -18,7 +18,7 @@ export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void 
                 onClick={() => setIsModalOpen(true)}
             >
                 <Plus/>
-                <p>New Production</p>
+                <p>Production</p>
             </button>
             {
                 isModalOpen && <CreateProduction isOpen={isModalOpen} onClose={async () => {

@@ -111,32 +111,40 @@ export const Tables = ({sampleProduction}:{sampleProduction:SampleProduction}) =
                         {/*<ProductionInfo prod={data} />*/}
                         <div className="space-y-10 p-20">
                             <PurchaseEntryTable/>
-                             <div className={"flex justify-end w-full gap-10"}>
-                                 <Button label={"Delete"}
-                                         variant={"danger"}
-                                         className={""}
-                                         disabled={loading}
-                                         onClick={() =>  {handleDeletePurchaseEntries()}}
-                                 />
+                            {
+                                production.purchaseEntries && production.purchaseEntries?.length>0 && (
+                                    <div className={"flex justify-end w-full gap-10"}>
+                                        <Button label={"Delete"}
+                                                variant={"danger"}
+                                                className={""}
+                                                disabled={loading}
+                                                onClick={() =>  {handleDeletePurchaseEntries()}}
+                                        />
 
-                                 <Button label={"Save entries"}
-                                         className={""}
-                                            disabled={loading}
-                                            onClick={() =>  {handleSavePurchaseEntries()}}
-                                 />
+                                        <Button label={"Save entries"}
+                                                className={""}
+                                                disabled={loading}
+                                                onClick={() =>  {handleSavePurchaseEntries()}}
+                                        />
 
-                             </div>
+                                    </div>
+                                )
+                            }
                             <MaterialToIngredientTable/>
-                            <div className={"flex justify-end w-full"}>
-                                <Button label={"Save conversion"}
-                                        className={"max-h-12 max-w-40"}
-                                        disabled={loading}
-                                        onClick={() =>  {
-                                            handleSaveConversion();
-                                        }}
-                                />
+                            {
+                                production && production.materialToIngredients && production.materialToIngredients?.length > 0 && (
+                                    <div className={"flex justify-end w-full"}>
+                                        <Button label={"Save conversion"}
+                                                className={"max-h-12 max-w-40"}
+                                                disabled={loading}
+                                                onClick={() =>  {
+                                                    handleSaveConversion();
+                                                }}
+                                        />
 
-                            </div>
+                                    </div>
+                                )
+                            }
                         </div>
                     </div>
 

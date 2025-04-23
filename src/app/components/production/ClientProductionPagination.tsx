@@ -17,7 +17,7 @@ export const ClientProductionPagination = ({ productions }: { productions: Produ
     const initialSize = parseInt(searchParams.get("size") || "100", 10);
 
     const [page, setPage] = useState(initialPage);
-    const [size, setSize] = useState(initialSize);
+    const [size] = useState(initialSize);
     const [filteredProductions, setFilteredProductions] = useState(productions);
     const [searchValue, setSearchValue] = useState("");
 
@@ -44,7 +44,7 @@ export const ClientProductionPagination = ({ productions }: { productions: Produ
     return (
         <>
             <LoadData/>
-            <nav className="flex justify-between items-center mb-4 bg-white p-2 shadow-sm">
+            <nav className="flex justify-between items-center mb-4 bg-white w-full p-2">
                 <h1 className="text-xl font-medium">Productions</h1>
                 <div className="flex items-center gap-3">
                     <TextField
@@ -53,6 +53,7 @@ export const ClientProductionPagination = ({ productions }: { productions: Produ
                         props={{ className: "bg-gray-300 p-1 px-4 outline-none border-none rounded-sm", placeholder: "Search Productions" }}
                         label=""
                     />
+                    <CreateAProductionButton />
                 </div>
             </nav>
 

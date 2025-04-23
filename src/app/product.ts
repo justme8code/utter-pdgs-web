@@ -14,32 +14,19 @@ export interface Product {
     totalProductMixCount?:number;
     ingredients: Ingredient[];
 }
-
-
-interface Production {
-    id: number;
-}
-
-interface Variant {
-    name: string;
-    description: string;
-}
-
-
 export interface IngredientUsage {
     ingredientId: number;
     litresUsed: number;
 }
 export interface ProductMix {
-    id?: number;
-    productionId?: number;
-    productId?: number;
-    ingredientUsages?: IngredientUsage[];
-    totalLitersUsed?: number;
-    qty?: number;
-    brixOnDiluent?: number;
-    initialBrix?: number;
-    finalBrix?: number;
-    initialPH?: number;
-    finalPH?: number;
+    id: number;
+    productionId: number;
+    productId: number;
+    ingredientUsages: IngredientUsage[];
+    totalLitersUsed: number;
+    brixOnDiluent: number;
+    initialBrix: number;
+    finalBrix: number;
+    initialPH: number;
+    finalPH: number;
 }

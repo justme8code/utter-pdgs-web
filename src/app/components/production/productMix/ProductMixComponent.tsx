@@ -1,4 +1,3 @@
-'use client';
 
 import {TextField} from "@/app/components/TextField";
 import { RotateCw, TrashIcon} from "lucide-react";
@@ -10,25 +9,26 @@ import {createProductMix, deleteProductMix, updateProductMix} from "@/app/action
 import {ProductSelector} from "@/app/components/production/productMix/ProductSelector";
 
 interface ProductMixComponentProps {
-    mix: ProductMix;
-    onSave: (mix: ProductMix) => void;
+    mix: ProductMix | null; // Updated to allow null
+    onSaveProductMix: (mix: ProductMix) => void;
     onDelete?: (status: boolean) => void;
     edit?: boolean;
 }
 
-export const ProductMixComponent = ({mix,onSave,onDelete,edit}:ProductMixComponentProps) => {
-    const [productMix, setProductMix] = useState<ProductMix>(mix);
+export const ProductMixComponent = ({ mix, onSaveProductMix, onDelete }: ProductMixComponentProps) => {
+    // Initialize state with mix or fallback to an empty object cast as ProductMix
+    const [productMix, setProductMix] = useState<ProductMix>(mix || {} as ProductMix);
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
     const {selectedProduction} = useProductionStore();
     const { products,fetchProducts} = useProductStore();
     const [loading,setLoading] = useState(false);
 
     useEffect(() => {
-        setProductMix(mix)
-        if(mix.productId){
+        setProductMix(mix || {} as ProductMix);
+        if (mix && mix.productId) {
             setSelectedProductId(mix.productId);
         }
-    },[fetchProducts, mix, products]);
+    }, [mix, products, fetchProducts]);
 
 
     const selectedProduct = useMemo(() => {
@@ -50,7 +50,7 @@ export const ProductMixComponent = ({mix,onSave,onDelete,edit}:ProductMixCompone
             };
             const {data,status} = await createProductMix(s);
             if(status){
-                onSave(data);
+                onSaveProductMix(data);
             }
         }
         setLoading(false);
@@ -122,7 +122,7 @@ export const ProductMixComponent = ({mix,onSave,onDelete,edit}:ProductMixCompone
                                     onSelect={(productId) => setSelectedProductId(productId)}
                                 />:  <ProductSelector
                                     products={products}
-                                    selectedProductId={selectedProductId}
+                                    selectedProductId={selectedProductId?? undefined}
                                     disabled={false}
                                     onSelect={(productId) => setSelectedProductId(productId)}
                                 />}

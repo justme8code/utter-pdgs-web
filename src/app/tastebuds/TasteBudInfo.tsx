@@ -2,7 +2,7 @@
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+
 
 const tasteBudSchema = z.object({
     name: z.string().min(1, 'Name required'),
@@ -21,17 +21,27 @@ const tasteBudSchema = z.object({
     ),
 });
 
+// New type definition using z.infer
+type TasteBudFormData = z.infer<typeof tasteBudSchema>;
+
+// Updated defaultProducts with explicit initial values for optional fields
 const defaultProducts = [
-    { title: 'Watermelon and pineapple' },
-    { title: 'Carrot and pineapple with ginger' },
-    { title: 'Mango' },
-    { title: 'Pineapple' },
-    { title: 'Pineapple and ginger' },
-    { title: 'Pineapple and Coconut' },
+    { title: 'Watermelon and pineapple', taste: undefined, afterTaste: undefined, viscosity: undefined, comments: '', release: '' },
+    { title: 'Carrot and pineapple with ginger', taste: undefined, afterTaste: undefined, viscosity: undefined, comments: '', release: '' },
+    { title: 'Mango', taste: undefined, afterTaste: undefined, viscosity: undefined, comments: '', release: '' },
+    { title: 'Pineapple', taste: undefined, afterTaste: undefined, viscosity: undefined, comments: '', release: '' },
+    { title: 'Pineapple and ginger', taste: undefined, afterTaste: undefined, viscosity: undefined, comments: '', release: '' },
+    { title: 'Pineapple and Coconut', taste: undefined, afterTaste: undefined, viscosity: undefined, comments: '', release: '' },
 ];
 
+// Interface for CircleBox props
+interface CircleBoxProps {
+    value?: number;
+    onClick: () => void;
+}
+
 export const TasteBudInfo = () => {
-    const { control, handleSubmit, register } = useForm({
+    const { control, handleSubmit, register } = useForm<TasteBudFormData>({
         resolver: zodResolver(tasteBudSchema),
         defaultValues: {
             name: '',
@@ -47,12 +57,14 @@ export const TasteBudInfo = () => {
         name: 'products',
     });
 
-    const onSubmit = (data) => {
+    const onSubmit = (data: TasteBudFormData) => {
         console.log(data);
     };
 
-    const CircleBox = ({ value, onClick }) => {
-        const colors = {
+    // Typed CircleBox component
+    const CircleBox: React.FC<CircleBoxProps> = ({ value, onClick }) => {
+        // Updated colors type annotation to avoid TS7053
+        const colors: Record<number, string> = {
             1: 'bg-green-500',
             2: 'bg-red-500',
         };
@@ -115,16 +127,16 @@ export const TasteBudInfo = () => {
                         {fields.map((field, index) => (
                             <tr key={field.id} className="hover:bg-gray-50 transition">
                                 <td className="p-4 border-b border-gray-200">{field.title}</td>
-                                {['taste', 'afterTaste', 'viscosity'].map((attr) => (
+                                {(['taste', 'afterTaste', 'viscosity'] as const).map((attr) => (
                                     <td key={attr} className="p-4 border-b border-gray-200 text-center">
                                         <Controller
                                             control={control}
                                             name={`products.${index}.${attr}`}
                                             render={({ field: { value, onChange } }) => (
                                                 <CircleBox
-                                                    value={value}
+                                                    value={value as number | undefined}
                                                     onClick={() => {
-                                                        let newValue = value === 1 ? 2 : value === 2 ? undefined : 1;
+                                                        const newValue: number | undefined = value === 1 ? 2 : value === 2 ? undefined : 1;
                                                         onChange(newValue);
                                                     }}
                                                 />

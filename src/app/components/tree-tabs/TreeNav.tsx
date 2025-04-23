@@ -1,5 +1,6 @@
 import { ReactNode, useState, isValidElement, cloneElement } from "react";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import {FaChevronDown} from "react-icons/fa6";
+import {FaChevronRight} from "react-icons/fa6";
 
 interface TreeNavProps {
     title: string;
@@ -67,7 +68,7 @@ export const TreeNav = ({
                 style={{ paddingLeft: `${depth * 8}px` }}
             >
                 {hasChildren ? (
-                    <span>{expanded ? <ArrowDown size={16} /> : <ArrowRight size={16} />}</span>
+                    <span>{expanded ? <FaChevronDown size={10} /> : <FaChevronRight size={10} />}</span>
                 ) : (
                     <span className="text-gray-400  inline-block"></span>
                 )}

@@ -1,10 +1,7 @@
-import Sidebar from "@/app/components/SideBar";
 import {fetchProductionEntries} from "@/app/actions/production";
 import {Tables} from "@/app/productions/[pid]/Tables";
 import {ProductionInfo} from "@/app/components/production/ProductionInfo";
 import {ProductMixPage} from "@/app/components/production/productMix/ProductMixPage";
-
-
 
 export default async function ProductionPage({ params }: { params: Promise<{ pid: number }> }) {
     const { pid } = await params;
@@ -19,6 +16,7 @@ export default async function ProductionPage({ params }: { params: Promise<{ pid
                          <Tables sampleProduction={data} />
                      </div>
 
+                     <ProductMixPage/>
                  </div>)}
          </>
 
