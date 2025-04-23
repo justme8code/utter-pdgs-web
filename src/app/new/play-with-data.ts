@@ -53,18 +53,18 @@ type SampleMaterialToIngredients = {
 
 type SampleProduction = {
     id: number;
-    createdAt: string;
-    productionNumber: string,
-    name: string,
-    startDate: string,
-    endDate: string,
-    staff:{
+    createdAt?: string;
+    productionNumber?: string,
+    name?: string,
+    startDate?: string,
+    endDate?: string,
+    staff?:{
         id: number,
         userId: number,
         userFullName: string,
         companyRole:string
     },
-    status: "RUNNING" | "COMPLETED" | "PAUSED",
+    status?: "RUNNING" | "COMPLETED" | "PAUSED",
     productionBatches?: SampleProductionBatches[];
     purchaseEntries?: SamplePurchaseEntries[];
     materialToIngredients?: SampleMaterialToIngredients[];

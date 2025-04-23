@@ -15,7 +15,7 @@ interface SampleProductionState {
 
 const useSampleProductionStore = create<SampleProductionState>((set) => ({
   production: {
-    id: undefined,
+    id: 0,
     productionBatches: [],
     purchaseEntries: [],
     materialToIngredients: [],

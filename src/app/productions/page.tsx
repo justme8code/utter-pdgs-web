@@ -1,5 +1,4 @@
 import { ProductionPagination } from "@/app/components/production/ProductionPagination";
-import Sidebar from "@/app/components/SideBar";
 
 export default async function ProductionPage({searchParams}: {
     searchParams: Promise<{ page?: string; size?: string }>
