@@ -1,13 +1,10 @@
 'use client';
-import Sidebar from "@/app/components/SideBar";
-
 import {UsersList} from "@/app/components/user/UsersList";
 
 export default function InventoryPage() {
 
     return (
         <div className="flex">
-            <Sidebar />
             <main className="flex w-full h-screen p-6 space-x-10">
                 <UsersList/>
             </main>
