@@ -4,6 +4,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { ProductMix } from "@/app/product";
 import { fetchProductMixes } from "@/app/actions/production";
 import { TextField } from "@/app/components/TextField";
+import Loading from "@/app/loading";
 
 const customStyles = {
     header: {
@@ -174,6 +175,7 @@ export default function ProductMixPage() {
                     onChangePage={handlePageChange}
                     onChangeRowsPerPage={handleRowsPerPageChange}
                     progressPending={loading}
+                    progressComponent={<Loading/>}
                 />
             </div>
         </div>

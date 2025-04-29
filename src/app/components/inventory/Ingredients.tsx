@@ -9,6 +9,7 @@ import {
 import { Ingredient, RawMaterial } from "@/app/components/inventory/RawMaterials";
 import {RefreshCcw, Trash} from "lucide-react";
 import { SelectableRawMaterials } from "@/app/components/inventory/SelectableRawMaterials";
+import Loading from "@/app/loading";
 
 export const Ingredients: React.FC = () => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
@@ -88,86 +89,90 @@ export const Ingredients: React.FC = () => {
     };
 
     return (
-        <div className="w-full shadow-xs p-5 hover:shadow-xl">
-            <div className="flex w-full gap-10 mb-5 justify-between">
-                <h2 className="text-xl font-medium text-gray-500">Ingredients</h2>
-                <div className="flex gap-5">
-                    <button
-                        onClick={addIngredient}
-                        className="bg-gray-200 ring-1 ring-gray-300 flex items-center text-sm gap-2 p-1 rounded-xs"
-                    >
-                        <p>Add New Ingredient</p>
-                    </button>
-                    <button
-                        onClick={saveMaterials}
-                        className="bg-green-500 text-white px-4 py-1 rounded-xs disabled:bg-gray-400"
-                        disabled={loading}
-                    >
-                        {loading ? "Saving..." : "Save Ingredient"}
-                    </button>
-                </div>
-            </div>
-            {error && <p className="text-red-500 font-bold">{error}</p>}
-            {success && <p className="text-green-500 font-bold">{success}</p>}
-            <table className="w-full border-collapse border border-gray-300 relative">
-                <thead>
-                <tr className="bg-gray-200 text-left">
-                    <th className="p-2 border-b border-l w-1/4 border-gray-300">Name</th>
-                    <th className="p-2 border-b border-l w-full border-gray-300">Raw Materials Used</th>
-                    <th className="p-2 border-b border-l text-center border-gray-300">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {ingredients.map((ingredient, index) => (
-                    <tr key={index} className="border-b border-gray-300">
-                        <td className="p-2 border border-gray-300">
-                            <TextField
-                                value={ingredient.name}
-                                onChange={value => updateTextField(index, value)}
-                                props={{ placeholder: "Enter ingredient name" }}
-                            />
-                        </td>
-                        <td className="p-2 border border-gray-300 overflow-x-auto max-w-lg whitespace-nowrap">
-                            <div className="flex w-full">
-                                {ingredient.rawMaterials && ingredient.rawMaterials.length > 0 ? (
-                                    <div className="flex gap-2 w-full scrollbar-thin scrollbar-thumb-gray-300">
-                                        {ingredient.rawMaterials.map(rawMaterial => (
-                                            <span key={rawMaterial.id} className="bg-gray-200 px-2 py-1 rounded text-sm">
+        <div className={"w-full"}>
+            {loading ? <Loading/> :(
+                <div className="w-full shadow-xs p-5 hover:shadow-xl">
+                    <div className="flex w-full gap-10 mb-5 justify-between">
+                        <h2 className="text-xl font-medium text-gray-500">Ingredients</h2>
+                        <div className="flex gap-5">
+                            <button
+                                onClick={addIngredient}
+                                className="bg-gray-200 ring-1 ring-gray-300 flex items-center text-sm gap-2 p-1 rounded-xs"
+                            >
+                                <p>Add New Ingredient</p>
+                            </button>
+                            <button
+                                onClick={saveMaterials}
+                                className="bg-green-500 text-white px-4 py-1 rounded-xs disabled:bg-gray-400"
+                                disabled={loading}
+                            >
+                                {loading ? "Saving..." : "Save Ingredient"}
+                            </button>
+                        </div>
+                    </div>
+                    {error && <p className="text-red-500 font-bold">{error}</p>}
+                    {success && <p className="text-green-500 font-bold">{success}</p>}
+                    <table className="w-full border-collapse border border-gray-300 relative">
+                        <thead>
+                        <tr className="bg-gray-200 text-left">
+                            <th className="p-2 border-b border-l w-1/4 border-gray-300">Name</th>
+                            <th className="p-2 border-b border-l w-full border-gray-300">Raw Materials Used</th>
+                            <th className="p-2 border-b border-l text-center border-gray-300">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {ingredients.map((ingredient, index) => (
+                            <tr key={index} className="border-b border-gray-300">
+                                <td className="p-2 border border-gray-300">
+                                    <TextField
+                                        value={ingredient.name}
+                                        onChange={value => updateTextField(index, value)}
+                                        props={{ placeholder: "Enter ingredient name" }}
+                                    />
+                                </td>
+                                <td className="p-2 border border-gray-300 overflow-x-auto max-w-lg whitespace-nowrap">
+                                    <div className="flex w-full">
+                                        {ingredient.rawMaterials && ingredient.rawMaterials.length > 0 ? (
+                                            <div className="flex gap-2 w-full scrollbar-thin scrollbar-thumb-gray-300">
+                                                {ingredient.rawMaterials.map(rawMaterial => (
+                                                    <span key={rawMaterial.id} className="bg-gray-200 px-2 py-1 rounded text-sm">
                                                     {rawMaterial.name}
                                                 </span>
-                                        ))}
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <span className="text-gray-500">No Raw Material Used</span>
+                                        )}
+                                        <SelectableRawMaterials
+                                            onSelectedRawMaterials={rawMaterials => addSelectedRawMaterials(index, rawMaterials)}
+                                            alreadySelectedRawMaterials={ingredient.rawMaterials ?? []}
+                                        />
                                     </div>
-                                ) : (
-                                    <span className="text-gray-500">No Raw Material Used</span>
-                                )}
-                                <SelectableRawMaterials
-                                    onSelectedRawMaterials={rawMaterials => addSelectedRawMaterials(index, rawMaterials)}
-                                    alreadySelectedRawMaterials={ingredient.rawMaterials ?? []}
-                                />
-                            </div>
-                        </td>
-                        <td className="p-2">
-                            <div className="flex gap-2">
-                                <button
-                                    title="Update"
-                                    className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
-                                    onClick={() => updateIng(index, ingredient.rawMaterials || [])}
-                                >
-                                    <RefreshCcw/>
-                                </button>
-                                <button
-                                    title="Delete"
-                                    className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
-                                    onClick={() => {}}
-                                >
-                                    <Trash />
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+                                </td>
+                                <td className="p-2">
+                                    <div className="flex gap-2">
+                                        <button
+                                            title="Update"
+                                            className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
+                                            onClick={() => updateIng(index, ingredient.rawMaterials || [])}
+                                        >
+                                            <RefreshCcw/>
+                                        </button>
+                                        <button
+                                            title="Delete"
+                                            className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
+                                            onClick={() => {}}
+                                        >
+                                            <Trash />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 };

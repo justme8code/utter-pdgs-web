@@ -11,8 +11,11 @@ import {InventoryTab} from "@/app/components/tree-tabs/InventoryTab";
 import {SuppliersTab} from "@/app/components/tree-tabs/SuppliersTab";
 import {ProductTaste} from "@/app/components/tree-tabs/ProductTaste";
 import {FeedbackTab} from "@/app/components/tree-tabs/FeedbackTab";
-import {UsersTab} from "@/app/components/tree-tabs/UsersTab";
+
 import Image from "next/image";
+
+import {hasRole} from "@/app/utils/auth";
+import {ManagementTab} from "@/app/components/tree-tabs/ManagementTab";
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -66,10 +69,12 @@ export default function Sidebar() {
                                 <ProductTaste activePath={activePath} onActiveChange={setActivePath}/>
 
                                 <SuppliersTab activePath={activePath} onActiveChange={setActivePath}/>
-
+                                {
+                                    auth?.user && hasRole({ userRoles: auth?.user?.roles?.map((role) => role.userRole),requiredRole:"ROLE_ADMIN"}) && (
+                                        <ManagementTab activePath={activePath} onActiveChange={setActivePath}/>
+                                    )
+                                }
                                 <FeedbackTab activePath={activePath} onActiveChange={setActivePath}/>
-
-                                <UsersTab activePath={activePath} onActiveChange={setActivePath}/>
                             </ul>
                         </nav>
                     </div>

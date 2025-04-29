@@ -2,7 +2,7 @@ import {TreeViewTabProps} from "@/app/components/tree-tabs/OverViewTab";
 import {useRouter} from "next/navigation";
 import {TreeNav} from "@/app/components/tree-tabs/TreeNav";
 
-export const UsersTab = ({activePath,onActiveChange}:TreeViewTabProps) => {
+export const ManagementTab = ({activePath,onActiveChange}:TreeViewTabProps) => {
     const router = useRouter();
     return (
 
@@ -10,6 +10,11 @@ export const UsersTab = ({activePath,onActiveChange}:TreeViewTabProps) => {
             <TreeNav title="Users" path="users" activePath={activePath} onActiveChange={onActiveChange}
                      onToggle={() => {
                          router.push("/management/users");
+                     }}>
+            </TreeNav>
+            <TreeNav title="Permissions" path="permissions" activePath={activePath} onActiveChange={onActiveChange}
+                     onToggle={() => {
+                         router.push("/management/permissions");
                      }}>
             </TreeNav>
         </TreeNav>
