@@ -1,5 +1,6 @@
 import useAuthStore from "@/app/store/useAuthStore";
 import {handleLogout} from "@/app/actions/login";
+import {LogOutIcon} from "lucide-react";
 
 export const LogoutButton = () => {
     const {clearAuth} = useAuthStore();
@@ -10,10 +11,10 @@ export const LogoutButton = () => {
     }
     return (
         <>
-            <button className={"w-full hover:bg-gray-500 text-left p-2 rounded-sm"} onClick={() => {
+            <button className={"w-full flex items-center gap-3  hover:bg-red-200 text-left p-2 rounded-sm"} onClick={() => {
                 logout();
             }}>
-                Logout
+               <LogOutIcon size={15}/> Logout
             </button>
         </>
     );
