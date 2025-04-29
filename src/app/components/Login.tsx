@@ -5,6 +5,7 @@ import LoadingWrapper from "@/app/components/LoadingWrapper";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/actions/login";
 import useAuthStore, {AuthResponse, UserRole} from "@/app/store/useAuthStore";
+import Image from "next/image";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -47,7 +48,10 @@ const Login: React.FC = () => {
     return (
         <LoadingWrapper isLoading={isPending}>
             <div className="flex justify-center border-1 border-gray-200 items-center p-6 w-full max-w-md">
-                <form action={action} className="flex flex-col gap-10 w-full">
+                <form action={action} className="flex flex-col gap-4 w-full">
+                    <div className={"flex justify-center w-full"}>
+                        <Image alt={"logo"} src={"/logo.png"} width={100} height={100}/>
+                    </div>
                     {error ? (
                         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                             <strong className="font-bold">Error!</strong>
@@ -55,9 +59,9 @@ const Login: React.FC = () => {
                         </div>
                     ) : null}
                     <div className="flex justify-center">
-                        <h1 className="font-bold text-3xl">UtterPDGS</h1>
-                        <h1 className="text-2xl">|</h1>
-                        <h1 className="text-2xl">Login</h1>
+                        <h1 className="font-bold text-xl">PDGS</h1>
+                        <h1 className="text-xl">|</h1>
+                        <h1 className="text-xl">Login</h1>
                     </div>
                     <TextField
                         value={email}

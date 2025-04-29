@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import useAuthStore from "@/app/store/useAuthStore";
@@ -11,6 +11,8 @@ import {InventoryTab} from "@/app/components/tree-tabs/InventoryTab";
 import {SuppliersTab} from "@/app/components/tree-tabs/SuppliersTab";
 import {ProductTaste} from "@/app/components/tree-tabs/ProductTaste";
 import {FeedbackTab} from "@/app/components/tree-tabs/FeedbackTab";
+import {UsersTab} from "@/app/components/tree-tabs/UsersTab";
+import Image from "next/image";
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,10 +36,12 @@ export default function Sidebar() {
             </button>
 
             <div className={`h-full`}>
-                <div className={`fixed top-0 left-0 max-w-52 h-full justify-between p-5 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform md:translate-x-0 md:relative md:w-64`}>
-                    <div className={"h-full flex flex-col justify-between"}>
-
-                        <nav className={"space-y-5"}>
+                <div className={`max-w-52 h-full justify-between p-3 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform md:translate-x-0 md:relative md:w-64`}>
+                    <div className={"flex flex-col justify-between"}>
+                        <nav className={""}>
+                            <div className={"flex p-3 w-full"}>
+                                <Image alt={"logo"} src={"/logo.png"} width={70} height={70}/>
+                            </div>
                             {auth && (
                                 <div className={"p-2"}>
                                     <h1 className="text-xl font-bold ">{auth.user.fullName}</h1>
@@ -45,7 +49,7 @@ export default function Sidebar() {
                                 </div>
                             )}
 
-                            <ul className="space-y-3">
+                            <ul className="space-y-3  h-[calc(80vh)] overflow-y-auto ">
                                 <OverViewTab
                                     activePath={activePath}
                                     onActiveChange={setActivePath}
@@ -64,10 +68,12 @@ export default function Sidebar() {
                                 <SuppliersTab activePath={activePath} onActiveChange={setActivePath}/>
 
                                 <FeedbackTab activePath={activePath} onActiveChange={setActivePath}/>
+
+                                <UsersTab activePath={activePath} onActiveChange={setActivePath}/>
                             </ul>
                         </nav>
-                        <LogoutButton/>
                     </div>
+                    <LogoutButton/>
                 </div>
             </div>
         </div>

@@ -11,12 +11,12 @@ export default async function ProductionPage({ params }: { params: Promise<{ pid
          <>
              {!data && !status? <p></p> : (
                  <div className="w-full bg-gray-50">
-                     <ProductionInfo prod={data} />
-                     <div className="flex flex-col justify-center items-center">
-                         <Tables sampleProduction={data} />
-                     </div>
-
-                     <ProductMixPage/>
+                     {/* Wrap all production-related components in WithRole */}
+                         <ProductionInfo prod={data} />
+                         <div className="flex flex-col justify-center items-center">
+                             <Tables sampleProduction={data} />
+                         </div>
+                         <ProductMixPage />
                  </div>)}
          </>
 

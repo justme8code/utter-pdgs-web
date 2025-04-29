@@ -118,13 +118,17 @@ export const Tables = ({sampleProduction}:{sampleProduction:SampleProduction}) =
                                                 variant={"danger"}
                                                 className={""}
                                                 disabled={loading}
-                                                onClick={() =>  {handleDeletePurchaseEntries()}}
+                                                onClick={() => {
+                                                    handleDeletePurchaseEntries()
+                                                }}
                                         />
 
                                         <Button label={"Save entries"}
                                                 className={""}
                                                 disabled={loading}
-                                                onClick={() =>  {handleSavePurchaseEntries()}}
+                                                onClick={() => {
+                                                    handleSavePurchaseEntries()
+                                                }}
                                         />
 
                                     </div>

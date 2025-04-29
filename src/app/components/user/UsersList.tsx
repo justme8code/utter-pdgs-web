@@ -1,12 +1,9 @@
+'use client';
 import {Trash,UserPen} from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {CreateUserModal} from "@/app/components/user/CreateUserModal";
 import {fetchUsers} from "@/app/actions/inventory";
 import {UserResponse} from "@/app/data_types";
-
-
-
-
 export const UsersList = () => {
     const [users, setUsers] = useState<UserResponse[]>([]);
     const [selectedUser, setSelectedUser] = useState<UserResponse| undefined>();
@@ -22,22 +19,20 @@ export const UsersList = () => {
     },[])
 
     return (
-        <div className={"w-full"}>
-
-            <div className={"flex items-center w-full gap-10 mb-5"}>
-                <h2 className="text-xl font-bold ">User Management</h2>
-                <button onClick={() => {
-                    setSelectedUser(undefined);
-                    setIsOpen(true);
-                }} className={"bg-gray-200  text-sm ring-1 ring-gray-300 flex items-center gap-2 p-1 rounded-sm "}>
-                    <p>Create New User</p>
-                </button>
-            </div>
+        <div className={"w-full p-6"}>
             {isOpen && <CreateUserModal user={selectedUser} isOpen={isOpen} onClose={() => {
                 setSelectedUser(undefined);
                 setIsOpen(false);
             }} />}
-            <div className="max-w-4xl">
+            <div className="max-w-4xl space-y-5">
+                <div className={"flex w-full justify-end"}>
+                    <button onClick={() => {
+                        setSelectedUser(undefined);
+                        setIsOpen(true);
+                    }} className={"bg-gray-200  text-sm ring-1 ring-gray-300 flex items-center gap-2 p-1 rounded-sm "}>
+                        <p>Create New User</p>
+                    </button>
+                </div>
                 <table className="w-full border-collapse border border-gray-300">
                     <thead>
                     <tr className="bg-gray-100">
