@@ -1,0 +1,15 @@
+to create a new raw material
+[
+  {
+    "name": "Pineapple"
+  }
+]
+we just need the name.
+it returns
+ [
+      {
+          "id": 1,
+          "name": "Pineapple",
+          "ingredients": null
+      }
+  ]
