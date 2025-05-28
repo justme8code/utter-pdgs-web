@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ffab3cf4-6b00-4c48-b67d-5e07ed1e3833" name="Changes" comment="Fixed negative purchase value issue,&#10;Fixed error where raw material doesn't have ingredients and software crashes&#10;enhanced the ui." />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SET_USER_NAME_GLOBALLY" value="false" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1748468150" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="backup-main" />
+                    <option name="lastUsedInstant" value="1748468104" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="dev" />
+                    <option name="lastUsedInstant" value="1748467456" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2x2BhzUyV7KWcIz1OeWzzqs2vQT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "ReactCreateComponentLastSelected": "arrowFunctionComponent",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "credentialsType com.jetbrains.nodejs.remote.NodeJSCreateRemoteSdkForm": "SSH Configuration",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.Next.js: server-side.executor": "Run",
+    "npm.dev.executor": "Run",
+    "settings.editor.selected.configurable": "reference.settings.deploy.options",
+    "ts.external.directory.path": "/home/thompson/WebstormProjects/utter-pdgs-web/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/app/ui/form" />
+      <recent name="$PROJECT_DIR$/src/app/ui/form/purchaseForm" />
+      <recent name="$PROJECT_DIR$/src/app/ui/dailog" />
+      <recent name="$PROJECT_DIR$/src/app/ui" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.Next.js: server-side">
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="sshConfig://thompson@homelab.solu.com.ng:22 agent/home/thompson/.nvm/versions/node/v22.14.0/bin/node" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="JavaScript Debug.Next.js: debug client-side" />
+      <item itemvalue="npm.Next.js: server-side" />
+      <item itemvalue="npm.dev" />
+    </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-WS-251.25410.117" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SshConsoleOptionsProvider">
+    <option name="myEncoding" value="UTF-8" />
+    <option name="myConnectionType" value="SSH_CONFIG" />
+    <option name="myConnectionId" value="thompson@homelab.solu.com.ng:22 agent" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ffab3cf4-6b00-4c48-b67d-5e07ed1e3833" name="Changes" comment="" />
+      <created>1747126410589</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1747126410589</updated>
+      <workItem from="1747126411773" duration="12863000" />
+      <workItem from="1747205023187" duration="10743000" />
+      <workItem from="1747232870992" duration="11081000" />
+      <workItem from="1747265568625" duration="6557000" />
+      <workItem from="1747375448040" duration="21050000" />
+      <workItem from="1747407449936" duration="4235000" />
+      <workItem from="1747479756672" duration="1592000" />
+      <workItem from="1747645620597" duration="24000" />
+      <workItem from="1747646939864" duration="1297000" />
+      <workItem from="1747648242231" duration="129000" />
+      <workItem from="1747648375429" duration="206000" />
+      <workItem from="1747648585696" duration="17851000" />
+      <workItem from="1747728200701" duration="3610000" />
+      <workItem from="1747731913443" duration="19335000" />
+      <workItem from="1748021695457" duration="109000" />
+      <workItem from="1748243296834" duration="2320000" />
+      <workItem from="1748250955918" duration="16353000" />
+      <workItem from="1748359969849" duration="141000" />
+      <workItem from="1748360116224" duration="3197000" />
+      <workItem from="1748455841069" duration="11038000" />
+      <workItem from="1748468479979" duration="233000" />
+    </task>
+    <task id="LOCAL-00001" summary="Fixed negative purchase value issue,&#10;Fixed error where raw material doesn't have ingredients and software crashes&#10;enhanced the ui.">
+      <option name="closed" value="true" />
+      <created>1748463305806</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1748463305809</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Fixed negative purchase value issue,&#10;Fixed error where raw material doesn't have ingredients and software crashes&#10;enhanced the ui.">
+      <option name="closed" value="true" />
+      <created>1748464775486</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1748464775486</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fixed negative purchase value issue,&#10;Fixed error where raw material doesn't have ingredients and software crashes&#10;enhanced the ui.">
+      <option name="closed" value="true" />
+      <created>1748465032615</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1748465032615</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fixed negative purchase value issue,&#10;Fixed error where raw material doesn't have ingredients and software crashes&#10;enhanced the ui." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed negative purchase value issue,&#10;Fixed error where raw material doesn't have ingredients and software crashes&#10;enhanced the ui." />
+  </component>
+</project>
