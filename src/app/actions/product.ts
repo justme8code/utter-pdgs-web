@@ -1,7 +1,6 @@
 'use server';
-import {Product, ProductMix} from "@/app/product";
 import {makeAuthRequest} from "@/app/actions/main";
-import {Pageable} from "@/app/types";
+import {Pageable, Product, ProductMix} from "@/app/types";
 
 export async function createProduct(product:Product){
     const {data,status} = await makeAuthRequest<Product,Product>({
