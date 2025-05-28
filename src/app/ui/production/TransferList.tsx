@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect} from "react";
 import {PurchaseTransfer} from "@/app/types";
 import {fetchPurchaseTransfers} from "@/app/actions/purchaseTransfer";
 import {TransferCard} from "@/app/ui/production/TransferCard";

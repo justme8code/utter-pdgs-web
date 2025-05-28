@@ -1,8 +1,4 @@
 'use client';
-import React, { useCallback, useEffect, useState } from "react";
-
-import { TextField } from "@/app/components/TextField";
-import Loading from "@/app/loading";
 
 export default function ProductMixPage() {
    /* const [data, setData] = useState<ProductMix[]>([]);

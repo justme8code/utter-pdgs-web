@@ -1,4 +1,4 @@
-import {ProductMix} from "@/app/product";
+import {ProductMix} from "@/app/types";
 
 const ProductMixCard = ({ mix }: { mix: ProductMix }) => (
     <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-xl transition duration-300 w-full sm:w-[48%] lg:w-[32%]">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { Conversion, ConversionField, Ingredient, Purchase } from "@/app/types";
 import {
     calculateCostPerLitre,
@@ -8,6 +8,15 @@ import { checkNan } from "@/app/utils/functions";
 
 type ConversionFieldKeys = keyof ConversionField;
 type ConversionFieldValues = ConversionField[ConversionFieldKeys];
+
+type NumericFieldKey =
+    | 'kgUsed'
+    | 'usableLitres'
+    | 'outPutLitres'
+    | 'productionLitresLost'
+    | 'costPerLitre'
+    | 'rawBrix'
+    | 'litresPerKg';
 
 
 //  Simplified EditableConversion component
@@ -33,7 +42,7 @@ export const EditableConversion = ({
         costPerLitre: undefined,
         rawBrix: undefined,
         litresPerKg: undefined,
-        ingredient,
+        ingredient:ingredient,
     };
     const [formData, setFormData] = useState<ConversionField>(field);
 
@@ -41,14 +50,16 @@ export const EditableConversion = ({
     const handleChange = (fieldKey: keyof ConversionField, value: ConversionFieldValues) => {
         const updatedFormData = { ...formData };
 
-        if (['outPutLitres', 'productionLitresLost', 'rawBrix', 'kgUsed'].includes(fieldKey)) {
-            const parsedValue = value === '' ? undefined : parseFloat(value);
-            updatedFormData[fieldKey] = isNaN(parsedValue) ? undefined : parsedValue;
+        if ((['outPutLitres', 'productionLitresLost', 'rawBrix', 'kgUsed'] as string[]).includes(fieldKey)) {
+           if(value){
+               const parsedValue = value === '' ? undefined : parseFloat(value.toString());
+               (updatedFormData as Record<NumericFieldKey, number | undefined>)[fieldKey as NumericFieldKey] = isNaN(parsedValue??NaN) ? undefined : parsedValue;
+           }
         }
 
-        const out = checkNan(updatedFormData.outPutLitres);
-        const lost = checkNan(updatedFormData.productionLitresLost);
-        const usable = out - lost;
+        const out =  parseFloat(checkNan(updatedFormData.outPutLitres));
+        const lost =  parseFloat(checkNan(updatedFormData.productionLitresLost));
+        const usable =  (out - lost);
 
         updatedFormData.usableLitres = usable.toFixed(2);
         updatedFormData.costPerLitre = calculateCostPerLitre({
@@ -72,7 +83,9 @@ export const EditableConversion = ({
         updatedFormData.productionLitresLost = parseFloat(updatedFormData.productionLitresLost as string).toFixed(2);
         updatedFormData.rawBrix = parseFloat(updatedFormData.rawBrix as string).toFixed(2);
 
-        onFieldChange(ingredient.id, updatedFormData);
+        if(ingredient.id){
+            onFieldChange(ingredient.id, updatedFormData);
+        }
     };
 
     const renderField = (

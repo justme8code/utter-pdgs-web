@@ -1,31 +1,31 @@
 import React from "react";
-import { UseFormRegister, FieldError } from "react-hook-form";
+import {UseFormRegister, FieldError, FieldValues, Path} from "react-hook-form";
 
-interface ReusableInputProps {
+interface ReusableInputProps<T extends FieldValues> {
     label: string;
-    name: string;
-    register: UseFormRegister<any>; // Adjust 'any' to your form type if known
+    name: Path<T>;
+    register: UseFormRegister<T>;
     error?: FieldError;
     type?: string;
-    value?: any;
+    value?: T[keyof T];
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     readOnly?: boolean;
     disabled?: boolean;
     min?: number;
 }
 
-const ReusableInput = ({
-                           label,
-                           name,
-                           register,
-                           error,
-                           type = "text",
-                           value,
-                           onChange,
-                           readOnly = false,
-                           disabled = false,
-                           min,
-                       }: ReusableInputProps) => {
+const ReusableInput = <T extends FieldValues,>({
+                               label,
+                               name,
+                               register,
+                               error,
+                               type = "text",
+                               value,
+                               onChange,
+                               readOnly = false,
+                               disabled = false,
+                               min,
+                           }: ReusableInputProps<T>) => {
     return (
         <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">{label}</label>
@@ -35,7 +35,7 @@ const ReusableInput = ({
                     min: min !== undefined ? { value: min, message: `${label} cannot be less than ${min}.` } : undefined,
                 })}
                 type={type}
-                name={name}
+                name={String(name)}
                 value={value}
                 onChange={onChange}
                 readOnly={readOnly}
