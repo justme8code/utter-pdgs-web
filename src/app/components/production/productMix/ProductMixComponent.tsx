@@ -4,7 +4,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {useProductStore} from "@/app/store/productStore";
 import {useProductionStore} from "@/app/store/productionStore";
 import {ProductSelector} from "@/app/components/production/productMix/ProductSelector";
-import {createProductMix, deleteProductMix, updateProductMix} from "@/app/actions/productMix";
+import {createProductMix, updateProductMix} from "@/app/actions/productMix";
 import {ProductionStore, ProductMix} from "@/app/types";
 import {useLoadingUI} from "@/app/store/useLoadingUI";
 
@@ -15,7 +15,7 @@ interface ProductMixComponentProps {
     onEdit?: boolean;
 }
 
-export const ProductMixComponent = ({onEdit, mix, onSaveProductMix, onDelete }: ProductMixComponentProps) => {
+export const ProductMixComponent = ({onEdit, mix, onSaveProductMix}: ProductMixComponentProps) => {
     // Initialize state with mix or fallback to an empty object cast as ProductMix
     const [productMix, setProductMix] = useState<ProductMix>(mix || {} as ProductMix);
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
@@ -144,18 +144,7 @@ export const ProductMixComponent = ({onEdit, mix, onSaveProductMix, onDelete }: 
 
     }
 
-    const deletePM = async ()=>{
-        setLoading(true);
-        if(productMix.id && productMix.id>0){
-            if(selectedProduction && selectedProduction.id){
-                const {status} = await deleteProductMix(selectedProduction.id,productMix.id);
-                if(status && onDelete){
-                    onDelete(status);
-                }
-            }
-        }
-        setLoading(false);
-    }
+
 
 
     return (
