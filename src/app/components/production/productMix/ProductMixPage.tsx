@@ -7,7 +7,6 @@ import {useProductionStore} from "@/app/store/productionStore";
 import {Modal} from "../../Modal";
 import {useIngredientStore} from "@/app/store/ingredientStore";
 import {ProductMix} from "@/app/types";
-import {fetchProductionMixes} from "@/app/actions/production";
 
 
 export const ProductMixPage = () => {

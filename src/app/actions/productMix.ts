@@ -4,7 +4,7 @@ import {makeAuthRequest} from "@/app/actions/main";
 import {ProductionStore, ProductMix, ProductMixOutput} from "../types";
 
 export async function createProductMix(productionId:number,productMix:ProductMix){
-    const {data,status,error} = await makeAuthRequest<ProductMix,{ productMix:ProductMix,productionStore:ProductionStore}>({
+    const {data,status} = await makeAuthRequest<ProductMix,{ productMix:ProductMix,productionStore:ProductionStore}>({
         url: `/productions/${productionId}/product-mixes`,
         method: "POST",
         data: productMix
