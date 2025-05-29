@@ -2,8 +2,8 @@
 import React, {useEffect, useState} from "react";
 
 import {CreateSupplierModal} from "./CreateSupplierModal";
-import {Supplier} from "@/app/data_types";
 import useSupplierStore from "@/app/store/SupplierStore";
+import { Supplier } from "@/app/types";
 
 export const SuppliersList = () => {
     const { suppliers, fetchSuppliers } = useSupplierStore();
