@@ -45,7 +45,10 @@ export const CreateSupplierModal: React.FC<CreateSupplierModalProps> = ({isEdit,
 
     const onSubmit = async (data: SupplierFormData) => {
         if (!isEdit) {
-            const { status } = await createSuppliers(data);
+            const { status } = await createSuppliers({
+                id: null,
+                ...data
+            });
             if (status) {
                 alert("Supplier created!");
                 setTimeout(() => window.location.reload(), 1500);
@@ -53,7 +56,10 @@ export const CreateSupplierModal: React.FC<CreateSupplierModalProps> = ({isEdit,
             }
         } else {
            if(supplier && supplier.id && supplier.id > 0){
-                const { status } = await updateSupplier(supplier.id,data);
+                const { status } = await updateSupplier(supplier.id,{
+                    id:supplier.id,
+                    ...data
+                });
                 if (status) {
                     alert("Supplier updated!");
                     setTimeout(() => window.location.reload(), 1500);

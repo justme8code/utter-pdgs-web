@@ -1,17 +1,13 @@
-import {Product} from "@/app/product";
 
 // ProductSelector.tsx
-export const ProductSelector = ({ products, selectedProductId, disabled, onSelect }: {
+import {Product} from "@/app/types";
+
+export const ProductSelector = ({ products, selectedProductId,onSelect }: {
     products: Product[];
     selectedProductId?: number;
-    disabled: boolean;
     onSelect: (productId: number) => void;
 }) => {
-    const selected = products.find(p => p.id === selectedProductId);
 
-    if (disabled) {
-        return <input disabled value={selected?.name || ""} className="max-w-40 border px-2 py-1" />;
-    }
 
     return (
         <select

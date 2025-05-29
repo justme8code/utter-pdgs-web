@@ -2,10 +2,10 @@
 import React, {useEffect, useState} from "react";
 import {TextField} from "@/app/components/TextField";
 import {addNewIngredient, deleteIngredient, getAllIngredients, updateIngredient,} from "@/app/actions/inventory";
-import {Ingredient, RawMaterial} from "@/app/components/inventory/RawMaterials";
 import {RefreshCcw, Trash} from "lucide-react";
 import {SelectableRawMaterials} from "@/app/components/inventory/SelectableRawMaterials";
 import Loading from "@/app/loading";
+import {Ingredient, RawMaterial} from "@/app/types";
 
 export const Ingredients: React.FC = () => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
@@ -152,6 +152,7 @@ export const Ingredients: React.FC = () => {
                         <tr className="bg-gray-200 text-left">
                             <th className="p-2 border-b border-l w-1/4 border-gray-300">Name</th>
                             <th className="p-2 border-b border-l w-full border-gray-300">Raw Materials Used</th>
+                            <th className="p-2 border-b border-l w-full border-gray-300">Unit</th>
                             <th className="p-2 border-b border-l text-center border-gray-300">Actions</th>
                         </tr>
                         </thead>
@@ -165,8 +166,8 @@ export const Ingredients: React.FC = () => {
                                         props={{ placeholder: "Enter ingredient name" }}
                                     />
                                 </td>
-                                <td className="p-2 border border-gray-300 overflow-x-auto max-w-lg whitespace-nowrap">
-                                    <div className="flex w-full">
+                                <td className="p-2 border border-gray-300 overflow-x-auto ">
+                                    <div className="flex ">
                                         {ingredient.rawMaterials && ingredient.rawMaterials.length > 0 ? (
                                             <div className="flex gap-2 w-full scrollbar-thin scrollbar-thumb-gray-300">
                                                 {ingredient.rawMaterials.map(rawMaterial => (
@@ -184,6 +185,11 @@ export const Ingredients: React.FC = () => {
                                         />
                                     </div>
                                 </td>
+
+                                <td className="p-2 border border-gray-300 overflow-x-auto max-w-lg whitespace-nowrap">
+
+                                </td>
+
                                 <td className="p-2">
                                     <div className="flex gap-2">
                                         <button
@@ -197,7 +203,9 @@ export const Ingredients: React.FC = () => {
                                             title="Delete"
                                             className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
                                             onClick={() => {
-                                                handleDelete(ingredient.id)
+                                                 if(ingredient.id) {
+                                                     handleDelete(ingredient.id)
+                                                 }
                                             }}
                                         >
                                             <Trash />

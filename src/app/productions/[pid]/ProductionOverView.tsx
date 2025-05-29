@@ -15,7 +15,7 @@ interface Prop {
     conversions:Conversion[];
 }
 export default function ProductionOverView({data}:{data: Prop}) {
-    const {setSelectedProduction} = useProductionStore();
+    const {selectedProduction,setSelectedProduction} = useProductionStore();
     const {setPurchases} = usePurchaseStore();
     const {setConversions} = useConversionStore();
 
@@ -33,7 +33,7 @@ export default function ProductionOverView({data}:{data: Prop}) {
             <ProductionInfo />
             <div className={"flex w-full p-4 items-start justify-between"}>
                 <ProductionStore/>
-                {!data.production.finalized &&  <BalanceSidebar><TransferList/></BalanceSidebar>}
+                {selectedProduction && !selectedProduction.finalized &&  <BalanceSidebar><TransferList/></BalanceSidebar>}
             </div>
         </div>
     );

@@ -15,6 +15,7 @@ export default function RawMaterialInventoryPage() {
             <div className={"flex p-4"}>
                 <RawMaterials/>
             </div>
+
         </div>
     );
 }

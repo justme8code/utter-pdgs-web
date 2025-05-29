@@ -4,9 +4,10 @@ import {TextField} from "@/app/components/TextField";
 import {addNewMaterial, deleteMaterial, getAllRawMaterials} from "@/app/actions/inventory";
 import {Trash} from "lucide-react";
 import Loading from "@/app/inventory/raw-materials/loading";
+import {RawMaterial} from "@/app/types";
 
 export const RawMaterials: React.FC = () => {
-    const [rawMaterials, setRawMaterials] = useState<{ id?: number; name: string,uom:string }[]>([]);
+    const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
