@@ -1,7 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
-import {RawMaterial} from "@/app/components/inventory/RawMaterials";
+
 import {getAllRawMaterials} from "@/app/actions/inventory";
 import {Plus} from "lucide-react";
+import { RawMaterial } from "@/app/types";
 
 export const SelectableRawMaterials = ({
                                            alreadySelectedRawMaterials,
