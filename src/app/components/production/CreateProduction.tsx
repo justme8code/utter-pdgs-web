@@ -5,7 +5,6 @@ import {Button} from "@/app/components/Button";
 import {createProduction} from "@/app/actions/production";
 
 import {useRouter} from "next/navigation";
-import {Production} from "@/app/types";
 
 export interface ModalOnAction {
     onClose?: () => void;
@@ -13,7 +12,7 @@ export interface ModalOnAction {
 }
 
 export const CreateProduction = ({ onClose, isOpen }: ModalOnAction) => {
-    const [newProduction, setNewProduction] = useState<Production>({
+    const [newProduction, setNewProduction] = useState<{name:string,startDate:string,endDate:string}>({
         name: "",
         startDate: "",
         endDate: ""

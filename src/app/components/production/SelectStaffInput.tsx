@@ -1,9 +1,10 @@
+import { fetchStaffs } from "@/app/actions/staff";
 import React, {useEffect, useState} from "react";
-import {StaffResponse} from "@/app/data_types";
-import {fetchStaffs} from "@/app/actions/production";
+import {Staff} from "@/app/types";
+
 
 export const SelectStaffInput = () => {
-    const [staffs, setStaffs] = useState<StaffResponse[]>([]);
+    const [staffs, setStaffs] = useState<Staff[]>([]);
     const [selectedStaff, setSelectedStaff] = useState<string>(""); // Track selected staff
     const [error, setError] = useState({ state: false, message: "" });
     const [loading, setLoading] = useState(false);

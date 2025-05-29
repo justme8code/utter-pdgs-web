@@ -3,11 +3,11 @@ import {Trash, UserPen} from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {CreateUserModal} from "@/app/components/user/CreateUserModal";
 import {fetchUsers} from "@/app/actions/inventory";
-import {UserResponse} from "@/app/data_types";
+import {User} from "@/app/types";
 
 export const UsersList = () => {
-    const [users, setUsers] = useState<UserResponse[]>([]);
-    const [selectedUser, setSelectedUser] = useState<UserResponse| undefined>();
+    const [users, setUsers] = useState<User[]>([]);
+    const [selectedUser, setSelectedUser] = useState<User| undefined>();
     const [isOpen,setIsOpen] = useState(false);
     useEffect(() => {
 

@@ -4,10 +4,10 @@ import {Button} from "@/app/components/Button";
 import React, {useActionState, useEffect, useState} from "react";
 import useAuthStore from "@/app/store/useAuthStore";
 import {createUser, fetchRoles} from "@/app/actions/inventory";
-import {Role, UserResponse} from "@/app/data_types";
+import {Role, User} from "@/app/types";
 
 interface CreateUserModalProps {
-    user?: UserResponse;
+    user?: User;
     isOpen: boolean;
     onClose: () => void;
 }

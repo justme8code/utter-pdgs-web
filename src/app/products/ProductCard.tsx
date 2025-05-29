@@ -1,5 +1,6 @@
-import {Product} from "@/app/product";
+
 import {Milk} from "lucide-react";
+import {Product} from "@/app/types";
 
 export const ProductCard = ({ product }: { product: Product }) => {
     return (

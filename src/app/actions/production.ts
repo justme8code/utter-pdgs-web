@@ -15,9 +15,9 @@ export async function fetchProductions(page: number, size: number) {
 }
 
 
-export async function createProduction(production: Production) {
+export async function createProduction(production:{name:string,startDate:string,endDate:string}) {
     const token = await verifySession();
-    const data = await myRequest<Production, Production>({
+    const data = await myRequest<{name:string,startDate:string,endDate:string}, Production>({
         url: `/productions`,
         method: "POST",
         data: production,

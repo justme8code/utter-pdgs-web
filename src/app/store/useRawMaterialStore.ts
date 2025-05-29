@@ -1,6 +1,6 @@
 import {create} from "zustand";
 import {addNewMaterial, getAllRawMaterials} from "@/app/actions/inventory";
-import {RawMaterial} from "@/app/components/inventory/RawMaterials";
+import {RawMaterial} from "@/app/types";
 
 
 type RawMaterialStore = {

@@ -1,9 +1,6 @@
 import {useState} from "react";
+import {Ingredient} from "@/app/types";
 
-type Ingredient = {
-    id: number;
-    name: string;
-};
 
 type Inventory = {
     id: number;
@@ -83,7 +80,11 @@ export const InventoryList = ({ inventory, allIngredients }: InventoryListProps)
                                 <div key={ingredient.id} className="flex items-center bg-gray-200 rounded-full px-2 py-1">
                                     <span>{ingredient.name}</span>
                                     <button
-                                        onClick={() => removeIngredient(material.id, ingredient.id)}
+                                        onClick={() =>  {
+                                            if(ingredient.id) {
+                                                removeIngredient(material.id, ingredient.id);
+                                            }
+                                        }}
                                         className="ml-2 text-gray-500"
                                     >
                                         &times;

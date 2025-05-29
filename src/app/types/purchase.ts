@@ -17,7 +17,7 @@ export interface Purchase {
     avgCost?: number
     avgWeightPerUOM?: number
     rawMaterial?: RawMaterial;
-    transferred:boolean;
+    transferred?:boolean;
     supplier?: Supplier;
     purchaseUsage?: PurchaseUsage;
 }

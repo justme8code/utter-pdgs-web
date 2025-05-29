@@ -9,7 +9,7 @@ import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Button} from "@/app/components/Button";
 import {useIngredientStore} from "@/app/store/ingredientStore";
-import {Ingredient} from "@/app/components/inventory/RawMaterials";
+import {Ingredient} from "@/app/types";
 
 // Define Zod schema
 const productSchema = z.object({

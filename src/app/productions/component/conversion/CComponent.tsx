@@ -17,10 +17,10 @@ export const CComponent = ({conversion}:{conversion:Conversion}) => {
             <div className={"flex justify-start text-sm font-medium text-gray-600 gap-4"}>
                 <div>
 
-                    Date : {beautifyDate(conversion.createdAt).formatted}
+                    Date : {beautifyDate(conversion.createdAt??"").formatted}
                 </div>
                  <div>
-                     {beautifyDate(conversion.createdAt).relative}
+                     {beautifyDate(conversion.createdAt??"").relative}
                  </div>
             </div>
             {purchase && purchase.id && <div className={"flex  gap-4 "}>
@@ -31,7 +31,7 @@ export const CComponent = ({conversion}:{conversion:Conversion}) => {
                         </label>
                         <input
                             readOnly={true}
-                            value={purchase.rawMaterial.name}
+                            value={purchase.rawMaterial?.name??""}
                             className="border-none bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none w-full p-2 rounded   max-w-24"
                         />
                     </div>
@@ -72,7 +72,7 @@ export const CComponent = ({conversion}:{conversion:Conversion}) => {
 
                 <div className="flex flex-wrap gap-2">
                     {conversion.fields.map((field, index) => (
-                         !isNaN(field.kgUsed) && field.kgUsed !== 0.0 ? <ReadonlyConversion key={index} field={field} showLabel={index==0} />:null
+                         !isNaN(parseFloat(String(field.kgUsed))) && field.kgUsed !== 0.0 ? <ReadonlyConversion key={index} field={field} showLabel={index==0} />:null
                     ))}
                 </div>
             </div>}

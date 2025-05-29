@@ -137,7 +137,7 @@ export const FormPurchase = () => {
                                 >
                                     <option value="0">Select Raw Material</option>
                                     {rawMaterials.map(rm => (
-                                        <option key={rm.id} value={rm.id}>
+                                        <option key={rm.id} value={rm.id??0}>
                                             {rm.name} ({rm.uom})
                                         </option>
                                     ))}
