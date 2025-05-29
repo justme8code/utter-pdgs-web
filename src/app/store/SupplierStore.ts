@@ -1,6 +1,6 @@
 import {create} from "zustand";
-import {Supplier} from "../data_types";
 import {createSuppliers, getAllSuppliers} from "@/app/actions/inventory";
+import {Supplier} from "@/app/types";
 
 
 
