@@ -82,7 +82,7 @@ export function PurchaseTable() {
 
     const conditionalRowStyles: ConditionalStyles<Purchase>[] = [
         {
-            when: (row: Purchase) => row.transferred,
+            when: (row: Purchase):boolean => row.transferred??false,
             style: {
                 backgroundColor: '#D1FAE5',
                 color: 'rgba(6,95,70,0.58)'
