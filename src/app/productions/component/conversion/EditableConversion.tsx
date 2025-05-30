@@ -38,9 +38,9 @@ export const EditableConversion = ({
         kgUsed: undefined,
         usableLitres: undefined,
         outPutLitres: undefined,
-        productionLitresLost: undefined,
+        productionLitresLost: 0,
         costPerLitre: undefined,
-        rawBrix: undefined,
+        rawBrix:0,
         litresPerKg: undefined,
         ingredient:ingredient,
     };

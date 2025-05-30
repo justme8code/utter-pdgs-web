@@ -15,6 +15,25 @@ import {useLoadingUI} from "@/app/store/useLoadingUI";
 type ConversionButtonProps = {
     row: Purchase;
 };
+function assignDefaultsToNumberFields(obj: ConversionField, excludeKeys: (keyof ConversionField)[] = []) {
+    for (const key of Object.keys(obj) as (keyof ConversionField)[]) {
+        if (excludeKeys.includes(key)) continue;
+
+        if (key === "ingredient") continue;
+
+        const value = obj[key];
+
+        // Skip if it's already a valid number (either actual number or numeric string)
+        const numericValue = typeof value === "string" ? parseFloat(value) : value;
+
+        const isValidNumber = typeof numericValue === "number" && !isNaN(numericValue);
+
+        if (!isValidNumber) {
+            obj[key] = 0 as never;
+        }
+    }
+}
+
 
 export const ConversionModal: React.FC<ConversionButtonProps> = ({ row }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -64,28 +83,44 @@ export const ConversionModal: React.FC<ConversionButtonProps> = ({ row }) => {
 
 
     const handleSave = async () => {
-        if(!invalidMessage){
-            setLoading(true);
-            console.log('Conversion Data:', conversion);
-            if(selectedProduction && selectedProduction.id && row.id){
-                const {data,status,message} = await createConversion(selectedProduction?.id,row.id,conversion);
-                if(status){
-                    setSuccessMessage("Conversion created",status)
-                    const production = selectedProduction;
-                    production.productionStore = data.productionStore;
-                    setSelectedProduction(production);
-                    addConversion(data.conversion);
-                    updatePurchase(data.purchase);
+        let isInvalid = false;
 
-                }else{
-                    setSuccessMessage(message);
-                }
+        for (const field of conversion.fields) {
+            if (field.kgUsed === undefined || field.kgUsed === 0) {
+                setInvalidMessage("Kg used cannot be empty");
+                isInvalid = true;
+                break;
+            }
+
+            // Sanitize other undefined fields (except kgUsed)
+            for (const field of conversion.fields) {
+                assignDefaultsToNumberFields(field, ["kgUsed", "ingredient"]);
             }
 
         }
+
+        if (isInvalid) return;
+
+        setLoading(true);
+        console.log('Conversion Data:', conversion);
+
+        if (selectedProduction && selectedProduction.id && row.id) {
+            const { data, status, message } = await createConversion(selectedProduction.id, row.id, conversion);
+            if (status) {
+                setSuccessMessage("Conversion created", status);
+                const production = { ...selectedProduction, productionStore: data.productionStore };
+                setSelectedProduction(production);
+                addConversion(data.conversion);
+                updatePurchase(data.purchase);
+            } else {
+                setSuccessMessage(message);
+            }
+        }
+
         setLoading(false);
         close();
     };
+
 
     const open = async () => {
         handleResetConversionField() // Clear it *before* loading fresh data
