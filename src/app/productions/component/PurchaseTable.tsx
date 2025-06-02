@@ -93,8 +93,8 @@ export function PurchaseTable() {
 
     return (
         <div className={"space-y-5"}>
-            <div>
-                <h1 className={"text-xl font-medium"}>Purchases</h1>
+            <div className={"space-y-5"}>
+                <h1 className={"text-2xl font-bold"}>Purchases</h1>
                 <div className={"flex justify-between items-center w-full"}>
                     <div>
                         <ShowFormPurchase/>

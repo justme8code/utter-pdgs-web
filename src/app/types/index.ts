@@ -10,3 +10,4 @@ export * from "./conversion";
 export * from "./productMix";
 export * from "./pageable";
 export * from "./product";
+export * from "./dashboard";

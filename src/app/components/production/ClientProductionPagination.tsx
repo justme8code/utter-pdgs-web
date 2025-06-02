@@ -46,7 +46,7 @@ export const ClientProductionPagination = ({ productions }: { productions: Produ
         <>
             <LoadData/>
             <nav className="flex justify-between items-center mb-4 bg-white w-full p-5">
-                <h1 className="text-xl font-medium">Productions</h1>
+                <h1 className="text-2xl font-bold ">Productions</h1>
                 <div className="flex items-center gap-3">
                     <TextField
                         value={searchValue}

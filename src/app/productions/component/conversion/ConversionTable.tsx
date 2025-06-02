@@ -12,7 +12,7 @@ export function ConversionTable() {
         <div className={"space-y-5 bg-gray-50"}>
             {conversions.length > 0 &&
                 <div className={"space-y-5"}>
-                    <h1 className={"text-xl font-medium"}>Conversions</h1>
+                    <h1 className={"text-2xl font-bold"}>Conversions</h1>
                     {selectedProduction && selectedProduction.id && !selectedProduction.finalized && (
                             <ProductMixPage/>
                         )}

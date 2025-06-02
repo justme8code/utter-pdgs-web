@@ -16,7 +16,7 @@ export default function ProductsPage() {
         <>
             <div className="flex flex-col min-h-screen bg-gray-50 text-gray-900 w-full">
                 <nav className="bg-white  shadow px-6 py-4 flex justify-between items-center">
-                    <div className="text-2xl font-bold ">
+                    <div className="text-3xl font-bold ">
                         Products
                     </div>
                     <CreateAProductButton/>

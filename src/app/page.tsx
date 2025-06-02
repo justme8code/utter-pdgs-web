@@ -1,10 +1,10 @@
-import {FormPurchase} from "@/app/ui/form/purchaseForm/FormPurchase";
+import {Dashboard} from "@/components/dashboard/Dashboard";
 
 export default function Home() {
 
     return (
         <>
-            <FormPurchase/>
+            <Dashboard />
         </>
     )
 }

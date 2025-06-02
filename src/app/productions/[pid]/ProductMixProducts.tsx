@@ -50,7 +50,7 @@ export const ProductMixProducts = () => {
                     <p className="text-center mt-10 text-gray-500">No ProductMix output found.</p>
                 ) : (
                     <div className={"space-y-5"}>
-                        <h1 className={"text-xl font-medium"}>Product Mix Output</h1>
+                        <h1 className={"text-2xl font-bold"}>Product Mix Output</h1>
                         <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
                             {productMixOutput.map((output) => (
