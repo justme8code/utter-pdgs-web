@@ -17,6 +17,9 @@ export const purchaseStyle = {
             },
 
         },
+        highlightOnHoverStyle: {
+            backgroundColor: '#E2E8F0',
+        }
     },
     headCells: {
         style: {
@@ -33,4 +36,5 @@ export const purchaseStyle = {
 
         },
     },
+    highlightOnHoverStyle: true,
 };

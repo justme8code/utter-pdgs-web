@@ -1,109 +1,137 @@
+
 'use client'
 
-import {useProductMixOutputStoreStore} from "@/app/store/productMixOutputStore";
-import {useCallback, useEffect, useState} from "react";
-import {getProductMixOutputs} from "@/app/actions/productMix";
-import {useProductionStore} from "@/app/store/productionStore";
-import {usePurchaseStore} from "@/app/store/purchaseStore";
+import { useProductMixOutputStoreStore } from "@/app/store/productMixOutputStore";
+import { useCallback, useEffect, useState } from "react";
+import { getProductMixOutputs } from "@/app/actions/productMix";
+import { useProductionStore } from "@/app/store/productionStore";
+import { usePurchaseStore } from "@/app/store/purchaseStore";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {Loader2, Info, Beaker, Citrus} from 'lucide-react'; // Icons
+import { Separator } from "@/components/ui/separator";
 
 export const ProductMixProducts = () => {
-    const {productMixOutput, setProductMixOutputs} = useProductMixOutputStoreStore();
-    const {selectedProduction} = useProductionStore();
-    const {purchases} = usePurchaseStore();
+    const { productMixOutput, setProductMixOutputs } = useProductMixOutputStoreStore();
+    const { selectedProduction } = useProductionStore();
+    const { purchases } = usePurchaseStore(); // Only used to trigger fetch
 
     const [loading, setLoading] = useState(false);
 
     const handleFetchProductMixOutputs = useCallback(async () => {
+        if (!selectedProduction?.id) {
+            setProductMixOutputs([]);
+            return;
+        }
         setLoading(true);
-        if (selectedProduction?.id != null) {
-            try {
-                const {data, status} = await getProductMixOutputs(selectedProduction.id);
-                if (status) {
-                    setProductMixOutputs(data);
-                } else {
-                    setProductMixOutputs([]);
-                }
-            } catch (error) {
-                console.error("Error fetching product mix outputs:", error);
+        try {
+            const { data, status } = await getProductMixOutputs(selectedProduction.id);
+            if (status && data) {
+                setProductMixOutputs(data);
+            } else {
                 setProductMixOutputs([]);
             }
-        } else {
+        } catch (error) {
+            console.error("Error fetching product mix outputs:", error);
             setProductMixOutputs([]);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, [selectedProduction?.id, setProductMixOutputs]);
 
     useEffect(() => {
-        if (purchases.length > 0) {
+        // Fetch if there are purchases OR if selectedProduction.id changes
+        // This ensures re-fetch if production context changes even if purchases are empty initially
+        if (selectedProduction?.id) {
             handleFetchProductMixOutputs();
+        } else {
+            setProductMixOutputs([]); // Clear if no production selected
         }
-    }, [handleFetchProductMixOutputs, purchases.length]);
+    }, [handleFetchProductMixOutputs, selectedProduction?.id, setProductMixOutputs]); // Removed purchases.length as direct trigger
+
+
+    // Conditionally render the whole card if there are no purchases (or relevant trigger)
+    if (purchases.length === 0) { // Or a more relevant condition for when this section should appear
+        return null; // Or a placeholder message if appropriate
+    }
 
     return (
-        <>
-            {purchases.length > 0 && <div className="relative">
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Citrus className="h-6 w-6" />
+                    Product Mix Output
+                </CardTitle>
+                <CardDescription>
+                    Final products created from the mixed ingredients.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
                 {loading ? (
-                    <div className="flex justify-center items-center h-40 text-gray-500 text-lg font-medium">
-                        Loading product mix outputs...
+                    <div className="flex flex-col items-center justify-center h-60 text-muted-foreground">
+                        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+                        <p className="text-lg font-medium">Loading Product Mix Outputs...</p>
                     </div>
                 ) : (!productMixOutput || productMixOutput.length === 0) ? (
-                    <p className="text-center mt-10 text-gray-500">No ProductMix output found.</p>
+                    <div className="flex flex-col items-center justify-center h-40 text-center border-2 border-dashed rounded-lg">
+                        <Info className="h-10 w-10 text-muted-foreground mb-3" />
+                        <p className="text-lg font-medium text-muted-foreground">No Product Mix Output Found</p>
+                        <p className="text-sm text-muted-foreground">Outputs will appear here once product mixes are defined and processed.</p>
+                    </div>
                 ) : (
-                    <div className={"space-y-5"}>
-                        <h1 className={"text-2xl font-bold"}>Product Mix Output</h1>
-                        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-
-                            {productMixOutput.map((output) => (
-                                <div key={output.id} className="
-                            border border-gray-200
-                            rounded-xl
-                            shadow-lg
-                            p-6
-                            bg-white
-                            hover:shadow-2xl
-                            max-w-sm
-                            transition-shadow
-                            duration-300
-                            flex
-                            flex-col
-                            justify-between
-                            group">
-                                    <div>
-                                        <h2 className="text-2xl font-extrabold text-indigo-600 group-hover:text-indigo-800 transition-colors duration-300">
-                                            {output.product.name}
-                                        </h2>
-                                        <p className="text-gray-600  min-h-[48px]">{output.product.description}</p>
-                                        <div className="text-sm text-gray-500 mb-4 flex flex-wrap gap-4">
-                                            <span><strong>Unit:</strong> {output.product.unitOfMeasure}</span>
-                                            <span><strong>Count:</strong> {output.productCount}</span>
-                                            <span><strong>Total Liters:</strong> {output.totalLitersUsed ?? 'N/A'}</span>
-                                        </div>
-                                        <div
-                                            className="grid grid-cols-2 gap-3 text-sm text-gray-700 border-t border-gray-100 pt-4">
-                                            <div><strong>Initial Brix:</strong> {output.initialBrix ?? '-'}</div>
-                                            <div><strong>Final Brix:</strong> {output.finalBrix ?? '-'}</div>
-                                            <div><strong>Initial pH:</strong> {output.initialPH ?? '-'}</div>
-                                            <div><strong>Final pH:</strong> {output.finalPH ?? '-'}</div>
-                                            <div><strong>Brix on Diluent:</strong> {output.brixOnDiluent ?? '-'}</div>
-                                        </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {productMixOutput.map((output) => (
+                            <div key={output.id} className="
+                                border border-border bg-card rounded-lg shadow-sm p-5
+                                hover:shadow-lg transition-shadow duration-200 ease-in-out
+                                flex flex-col group space-y-4
+                            ">
+                                <div className="flex-grow">
+                                    <h2 className="text-xl font-semibold text-primary group-hover:text-primary/80 transition-colors">
+                                        {output.product.name}
+                                    </h2>
+                                    {output.product.description && (
+                                        <p className="text-xs text-muted-foreground mt-1 mb-3 min-h-[30px]">
+                                            {output.product.description}
+                                        </p>
+                                    )}
+                                    <div className="text-xs text-muted-foreground space-y-1 mb-3">
+                                        <p><strong>Unit:</strong> {output.product.unitOfMeasure}</p>
+                                        <p><strong>Target Count:</strong> {output.productCount}</p>
+                                        <p><strong>Total Liters Used:</strong> {output.totalLitersUsed ?? 'N/A'}</p>
                                     </div>
-                                    <div className="mt-6">
-                                        <h3 className="font-semibold mb-2 text-indigo-700">Ingredients</h3>
-                                        <ul className="list-disc list-inside text-gray-700 max-h-36 overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-300 scrollbar-track-indigo-100">
+
+                                    <Separator className="my-3"/>
+
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                                        <p><strong>Initial Brix:</strong> {output.initialBrix ?? '-'}</p>
+                                        <p><strong>Final Brix:</strong> {output.finalBrix ?? '-'}</p>
+                                        <p><strong>Initial pH:</strong> {output.initialPH ?? '-'}</p>
+                                        <p><strong>Final pH:</strong> {output.finalPH ?? '-'}</p>
+                                        <p className="col-span-2"><strong>Brix on Diluent:</strong> {output.brixOnDiluent ?? '-'}</p>
+                                    </div>
+                                </div>
+
+                                {output.productMixIngredients && output.productMixIngredients.length > 0 && (
+                                    <div className="mt-4 pt-3 border-t">
+                                        <h3 className="text-sm font-semibold mb-1.5 text-foreground flex items-center gap-1.5">
+                                            <Beaker className="h-4 w-4 text-primary"/>
+                                            Ingredients Used
+                                        </h3>
+                                        <ul className="text-xs text-muted-foreground space-y-0.5 max-h-28 overflow-y-auto custom-scrollbar pr-1">
                                             {output.productMixIngredients.map((ing) => (
-                                                <li key={ing.id ?? ing.ingredientId}>
-                                                    {ing.ingredient?.name ?? 'Unknown Ingredient'}: {ing.litresUsed} L
+                                                <li key={ing.id ?? ing.ingredientId} className="flex justify-between">
+                                                    <span>{ing.ingredient?.name ?? 'Unknown Ingredient'}</span>
+                                                    <span className="font-medium">{ing.litresUsed} L</span>
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
-                                </div>
-
-                            ))}
-                        </div>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 )}
-            </div>}
-        </>
+            </CardContent>
+        </Card>
     );
 };

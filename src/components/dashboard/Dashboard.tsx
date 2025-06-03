@@ -1,7 +1,8 @@
 // src/app/dashboard/page.tsx (if using App Router and this is the page)
 // or src/components/dashboard/Dashboard.tsx (if it's a component used elsewhere)
 
-import { ProductionOverView } from "@/components/dashboard/ProductionOverView"; // Adjust path as needed
+import { ProductionOverView } from "@/components/dashboard/ProductionOverView";
+import InventoryDashboard from "@/components/dashboard/InventoryDashboard"; // Adjust path as needed
 
 export const Dashboard = () => { // Or export default function DashboardPage() if it's a page
     return (
@@ -15,15 +16,9 @@ export const Dashboard = () => { // Or export default function DashboardPage() i
                 <div className="mb-8">
                     <ProductionOverView />
                 </div>
-
-                {/* Other dashboard components can be added here */}
-                {/* Example:
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <SomeOtherWidget />
-                    <AnotherWidget />
+                <div>
+                    <InventoryDashboard/>
                 </div>
-                <YetAnotherFullWidthWidget />
-                */}
             </main>
 
             <footer className="mt-12 text-center text-gray-500 text-sm">

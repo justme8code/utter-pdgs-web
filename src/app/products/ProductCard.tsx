@@ -4,7 +4,7 @@ import {Product} from "@/app/types";
 
 export const ProductCard = ({ product }: { product: Product }) => {
     return (
-        <div className="border rounded-lg shadow-md p-4 w-50 flex flex-col justify-between">
+        <div className="border rounded-lg shadow-md p-4 max-w-56 flex flex-col justify-between">
 
             <div className={"flex w-full justify-center"}>
                 <Milk className="w-20 h-60 text-gray-500"/>
