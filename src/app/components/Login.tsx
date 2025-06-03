@@ -39,7 +39,7 @@ const Login: React.FC = () => {
 
             console.log("Processed Data:", updatedAuth);
             setAuth(updatedAuth); // Save auth state
-            router.push("/productions"); // Redirect after login
+            router.push("/"); // Redirect after login
         } else {
             console.error("Login failed:",error);
         }
