@@ -31,7 +31,7 @@ import {
     CalendarClock // <-- Icon for Calendar Card
 } from "lucide-react";
 
-// Helper component to display a single production item (No changes here)
+// Helper prod_components to display a single production item (No changes here)
 const ProductionItemCard = ({ production }: { production: Production }) => {
     // ... (previous ProductionItemCard code remains the same)
     return (

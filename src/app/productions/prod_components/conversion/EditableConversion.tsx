@@ -19,7 +19,7 @@ type NumericFieldKey =
     | 'litresPerKg';
 
 
-//  Simplified EditableConversion component
+//  Simplified EditableConversion prod_components
 export const EditableConversion = ({
                                 ingredient,
                                 showLabel = true,

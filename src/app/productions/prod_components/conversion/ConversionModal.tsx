@@ -2,7 +2,7 @@
 import React, {useState} from 'react'; // Import useState!
 import {Conversion, ConversionField, Ingredient, Purchase} from '@/app/types';
 import {Button, Dialog, DialogPanel, DialogTitle} from '@headlessui/react';
-import {EditableConversion} from '@/app/productions/component/conversion/EditableConversion';
+import {EditableConversion} from '@/app/productions/prod_components/conversion/EditableConversion';
 import {getIngredientsByRawmaterialId} from '@/app/actions/inventory';
 import {X} from 'lucide-react';
 import LoadingWrapper from "@/app/my_components/LoadingWrapper";

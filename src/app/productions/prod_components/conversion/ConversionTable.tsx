@@ -1,4 +1,4 @@
-// app/productions/component/conversion/ConversionTable.tsx
+// app/productions/prod_components/conversion/ConversionTable.tsx
 'use client';
 import { useConversionStore } from "@/app/store/conversionStore";
 import { CComponent } from "./CComponent"; // Adjusted path

@@ -3,7 +3,7 @@ import {useProductionStore} from "@/app/store/productionStore";
 import {Conversion, Production, Purchase} from "@/app/types";
 import {useEffect} from "react";
 import {ProductionInfo} from "@/app/my_components/production/ProductionInfo";
-import {ProductionStore} from "@/app/productions/component/ProductionStore";
+import {ProductionStore} from "@/app/productions/prod_components/ProductionStore";
 import {usePurchaseStore} from "@/app/store/purchaseStore";
 import {useConversionStore} from "@/app/store/conversionStore";
 import {BalanceSidebar} from "@/app/ui/dailog/BalanceSidebar";

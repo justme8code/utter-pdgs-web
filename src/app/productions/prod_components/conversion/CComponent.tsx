@@ -1,4 +1,4 @@
-// app/productions/component/conversion/CComponent.tsx
+// app/productions/prod_components/conversion/CComponent.tsx
 import { Conversion, Purchase } from "@/app/types";
 import React, { useEffect, useState } from "react";
 import { ReadonlyConversion } from "./ReadOnlyConversion"; // Adjusted path

@@ -61,7 +61,7 @@ export const TasteBudInfo = () => {
         console.log(data);
     };
 
-    // Typed CircleBox component
+    // Typed CircleBox prod_components
     const CircleBox: React.FC<CircleBoxProps> = ({ value, onClick }) => {
         // Updated colors type annotation to avoid TS7053
         const colors: Record<number, string> = {

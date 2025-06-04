@@ -76,7 +76,7 @@ export const ClientProductionPagination = ({ productions: initialProductions }: 
                             className="pl-8 w-full" // Padding for icon
                         />
                     </div>
-                    {/* Assuming CreateAProductionButton is already a styled component or Shadcn Button */}
+                    {/* Assuming CreateAProductionButton is already a styled prod_components or Shadcn Button */}
                     {/* If not, you can replace it with: */}
                     {/* <Button onClick={() => router.push('/productions/create')}> // Or your modal logic
                         <PlusCircle className="mr-2 h-4 w-4" /> Create Production

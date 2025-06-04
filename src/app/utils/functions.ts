@@ -21,4 +21,4 @@ export const beautifyDate = (raw: string) => {
     };
 };
 
-/*react-data-table-component*/
+/*react-data-table-prod_components*/

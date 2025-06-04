@@ -2,8 +2,8 @@
 "use client";
 
 import ProductionOverView from "./ProductionOverView"; // Assuming this is already styled
-import { PurchaseTable } from "../component/PurchaseTable"; // Adjusted path
-import { ConversionTable } from "../component/conversion/ConversionTable"; // Adjusted path
+import { PurchaseTable } from "@/app/productions/prod_components/PurchaseTable"; // Adjusted path
+import { ConversionTable } from "@/app/productions/prod_components/conversion/ConversionTable"; // Adjusted path
 import { ProductMixProducts } from "./ProductMixProducts";
 import { FinishProduction } from "./FinishProduction";
 import {Conversion, Production, Purchase} from "@/app/types";
@@ -15,7 +15,7 @@ interface ProductionPageClientProps {
 export default function ProductionPageClient({ productionData }: ProductionPageClientProps) {
     return (
         <div className="container mx-auto py-6 px-4 md:px-6 space-y-8">
-            {/* Overview Section - Assuming this is already a well-styled Card or component */}
+            {/* Overview Section - Assuming this is already a well-styled Card or prod_components */}
             <ProductionOverView data={productionData} /> {/* Adjust if 'data' prop expects a different structure */}
 
             {/* Main Content Sections */}
