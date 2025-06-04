@@ -1,6 +1,6 @@
 'use client';
-import ProtectedRoute from "@/app/components/ProtectedRoute";
-import {UsersList} from "@/app/components/user/UsersList";
+import ProtectedRoute from "@/app/my_components/ProtectedRoute";
+import {UsersList} from "@/app/my_components/user/UsersList";
 import React from "react";
 
 export default function UserManagement() {

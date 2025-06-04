@@ -2,7 +2,7 @@
 import {useProductionStore} from "@/app/store/productionStore";
 import {Conversion, Production, Purchase} from "@/app/types";
 import {useEffect} from "react";
-import {ProductionInfo} from "@/app/components/production/ProductionInfo";
+import {ProductionInfo} from "@/app/my_components/production/ProductionInfo";
 import {ProductionStore} from "@/app/productions/component/ProductionStore";
 import {usePurchaseStore} from "@/app/store/purchaseStore";
 import {useConversionStore} from "@/app/store/conversionStore";
@@ -29,7 +29,7 @@ export default function ProductionOverView({data}:{data: Prop}) {
 
     return (
         <div className="w-full">
-            {/* Wrap all production-related components in WithRole */}
+            {/* Wrap all production-related my_components in WithRole */}
             <ProductionInfo />
             <div className={"flex w-full p-4 items-start justify-between"}>
                 <ProductionStore/>

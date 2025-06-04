@@ -1,5 +1,5 @@
 'use client';
-import {SuppliersList} from "@/app/components/inventory/SuppliersList";
+import {SuppliersList} from "@/app/my_components/inventory/SuppliersList";
 
 export default function SuppliersPage() {
     return (

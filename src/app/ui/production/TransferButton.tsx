@@ -1,7 +1,7 @@
 import {useProductionStore} from "@/app/store/productionStore";
 import {usePurchaseStore} from "@/app/store/purchaseStore";
 import {useLoadingUI} from "@/app/store/useLoadingUI";
-import LoadingWrapper from "@/app/components/LoadingWrapper";
+import LoadingWrapper from "@/app/my_components/LoadingWrapper";
 import {createPurchaseTransfer} from "@/app/actions/purchaseTransfer";
 import {usePurchaseTransferStore} from "@/app/store/PurchaseTransferStore";
 

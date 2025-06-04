@@ -1,5 +1,5 @@
 'use client';
-import {RawMaterials} from "@/app/components/inventory/RawMaterials";
+import {RawMaterials} from "@/app/my_components/inventory/RawMaterials";
 
 export default function RawMaterialInventoryPage() {
 

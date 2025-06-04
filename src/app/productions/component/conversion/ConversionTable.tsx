@@ -2,7 +2,7 @@
 'use client';
 import { useConversionStore } from "@/app/store/conversionStore";
 import { CComponent } from "./CComponent"; // Adjusted path
-import { ProductMixPage } from "@/app/components/production/productMix/ProductMixPage"; // Assuming path is correct
+import { ProductMixPage } from "@/app/my_components/production/productMix/ProductMixPage"; // Assuming path is correct
 import { useProductionStore } from "@/app/store/productionStore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Zap, Layers, Info } from 'lucide-react'; // Icons

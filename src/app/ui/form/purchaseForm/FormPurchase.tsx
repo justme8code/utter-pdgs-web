@@ -11,7 +11,7 @@ import useSupplierStore from "@/app/store/SupplierStore";
 import {convertToPurchaseEntity} from "@/app/ui/form/purchaseForm/actions";
 import {useProductionStore} from "@/app/store/productionStore";
 import {usePurchaseStore} from "@/app/store/purchaseStore";
-import LoadingWrapper from "@/app/components/LoadingWrapper";
+import LoadingWrapper from "@/app/my_components/LoadingWrapper";
 import {useLoadingUI} from "@/app/store/useLoadingUI";
 import {
     calAverageCostPerKgBasedOnTotalWeight,

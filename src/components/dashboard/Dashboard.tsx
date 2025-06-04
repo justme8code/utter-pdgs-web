@@ -1,5 +1,5 @@
 // src/app/dashboard/page.tsx (if using App Router and this is the page)
-// or src/components/dashboard/Dashboard.tsx (if it's a component used elsewhere)
+// or src/my_components/dashboard/Dashboard.tsx (if it's a component used elsewhere)
 
 import { ProductionOverView } from "@/components/dashboard/ProductionOverView";
 import InventoryDashboard from "@/components/dashboard/InventoryDashboard"; // Adjust path as needed

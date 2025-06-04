@@ -1,6 +1,6 @@
 import type {Metadata} from "next";
 import "./globals.css";
-import Sidebar from "@/app/components/SideBar";
+import Sidebar from "@/app/my_components/SideBar";
 import {Toaster} from "react-hot-toast";
 import localFont from "next/font/local";
 

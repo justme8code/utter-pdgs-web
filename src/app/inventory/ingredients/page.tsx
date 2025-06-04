@@ -1,5 +1,5 @@
 'use client';
-import {Ingredients} from "@/app/components/inventory/Ingredients";
+import {Ingredients} from "@/app/my_components/inventory/Ingredients";
 
 export default function IngredientInventoryPage() {
 

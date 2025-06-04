@@ -1,6 +1,6 @@
 'use client';
 import {ProductCard} from "./ProductCard";
-import {CreateAProductButton} from "@/app/components/production/CreateAProductButton";
+import {CreateAProductButton} from "@/app/my_components/production/CreateAProductButton";
 import {useProductStore} from "@/app/store/productStore";
 import {useEffect} from "react";
 

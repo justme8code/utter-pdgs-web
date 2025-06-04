@@ -5,7 +5,7 @@ import {Button, Dialog, DialogPanel, DialogTitle} from '@headlessui/react';
 import {EditableConversion} from '@/app/productions/component/conversion/EditableConversion';
 import {getIngredientsByRawmaterialId} from '@/app/actions/inventory';
 import {X} from 'lucide-react';
-import LoadingWrapper from "@/app/components/LoadingWrapper";
+import LoadingWrapper from "@/app/my_components/LoadingWrapper";
 import {createConversion} from "@/app/actions/conversion";
 import {useProductionStore} from "@/app/store/productionStore";
 import {useConversionStore} from "@/app/store/conversionStore";

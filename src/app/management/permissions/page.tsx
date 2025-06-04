@@ -1,5 +1,5 @@
 'use client';
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+import ProtectedRoute from "@/app/my_components/ProtectedRoute";
 import React from "react";
 
 export default function PermissionsManagement() {
