@@ -5,8 +5,8 @@ const config: Config = {
 	darkMode: ["class"],
 	content: [
 		"./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-		"./src/my_components/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
 	],
 	theme: {
     	extend: {
@@ -17,22 +17,18 @@ const config: Config = {
     				DEFAULT: 'hsl(var(--card))',
     				foreground: 'hsl(var(--card-foreground))'
     			},
-				sky: { // Example for sky color palette
-					50: '#f0f9ff',
-					100: '#e0f2fe',
-					// ... up to 900
-					500: '#0ea5e9',
-					600: '#0284c7',
-					// ...
-				},
-				amber: { // Example for amber color palette
-					50: '#fffbeb',
-					100: '#fef3c7',
-					// ... up to 900
-					500: '#f59e0b',
-					600: '#d97706',
-					// ...
-				},
+    			sky: {
+    				'50': '#f0f9ff',
+    				'100': '#e0f2fe',
+    				'500': '#0ea5e9',
+    				'600': '#0284c7'
+    			},
+    			amber: {
+    				'50': '#fffbeb',
+    				'100': '#fef3c7',
+    				'500': '#f59e0b',
+    				'600': '#d97706'
+    			},
     			popover: {
     				DEFAULT: 'hsl(var(--popover))',
     				foreground: 'hsl(var(--popover-foreground))'
