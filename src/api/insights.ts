@@ -31,5 +31,5 @@ export async function fetchDataGrowthInsight(startDate: string, endDate: string)
         url: `/insights/data-growth?startDate=${startDate}&endDate=${endDate}`,
         method: "GET",
     });
-    return {data: data, status: status === 200};
+    return {data: data??[], status: status === 200};
 }
