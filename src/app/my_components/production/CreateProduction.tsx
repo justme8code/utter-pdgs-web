@@ -106,8 +106,8 @@ export const CreateProduction = ({onClose, isOpen}: ModalOnAction) => {
         try {
             const response = await createProduction(newProduction);
 
-            if (response.error && response.error.state) { // Check if response.error itself exists
-                setApiError(response.error.message);
+            if (response.error && response.error) { // Check if response.error itself exists
+                setApiError(response.error);
                 // toast.error(response.error.message);
             } else if (response.data && response.data.id) { // Ensure data and id exist for success
                 setSuccessMessage("Production created successfully! Redirecting...");
@@ -116,7 +116,9 @@ export const CreateProduction = ({onClose, isOpen}: ModalOnAction) => {
                 // Wait a bit for the user to see the success message before redirecting
                 setTimeout(() => {
                     if (onClose) onClose(); // Close modal before redirect
-                    router.push(`/productions/${response.data.id}`);
+                    if(response.data){
+                        router.push(`/productions/${response.data.id}`);
+                    }
                 }, 1500);
             } else {
                 // Handle unexpected success response structure
