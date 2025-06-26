@@ -27,7 +27,7 @@ export const useProductStore = create<ProductState>((set) => ({
         set({isLoading: true, error: null});
         try {
             const {data, status} = await getProducts();
-            if (status) {
+            if (status && data) {
                 set({products: data, isLoading: false});
             } else {
                 set({error: "Failed to fetch products", isLoading: false});
@@ -41,7 +41,7 @@ export const useProductStore = create<ProductState>((set) => ({
         set({isLoading: true, error: null});
         try {
             const {data, status} = await createProduct(payload);
-            if (status) {
+            if (status && data) {
                 set((state) => ({
                     products: [...state.products, data],
                     isLoading: false,
