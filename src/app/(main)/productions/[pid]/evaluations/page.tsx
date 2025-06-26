@@ -44,7 +44,7 @@ export default async function ProductionEvaluationsPage({params}: ProductionEval
     // If we have data, we pass it to a client component for rendering
     return (
         <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-8">
-            {evaluations.length > 0 && (
+            {evaluations && evaluations.length > 0 && production && (
                 <EvaluationsListClient initialEvaluations={evaluations} production={production}/>
             )}
         </div>
