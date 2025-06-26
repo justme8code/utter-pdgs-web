@@ -1,5 +1,5 @@
-import { RawMaterial } from "./rawMaterial";
-import { Supplier } from "./supplier";
+import {RawMaterial} from "./rawMaterial";
+import {Supplier} from "./supplier";
 
 export interface PurchaseUsage {
     id?: number | null;
@@ -17,24 +17,24 @@ export interface Purchase {
     avgCost?: number
     avgWeightPerUOM?: number
     rawMaterial?: RawMaterial;
-    transferred?:boolean;
+    transferred?: boolean;
     supplier?: Supplier;
     purchaseUsage?: PurchaseUsage;
 }
 
-export interface PurchaseTransfer{
-    id:number;
-    purchase:{
+export interface PurchaseTransfer {
+    id: number;
+    purchase: {
         rawMaterialName: string;
         rawMaterialUom: string;
         cost: number;
-        purchaseUsageUsableWeightLeft:number;
-        purchaseUsageTotalKgUsed:number;
+        purchaseUsageUsableWeightLeft: number;
+        purchaseUsageTotalKgUsed: number;
     }
-    fromProductionId:number;
-    fromProductionName:string;
-    transferred:boolean;
-    transferNotes:boolean;
+    fromProductionId: number;
+    fromProductionName: string;
+    transferred: boolean;
+    transferNotes: boolean;
 }
 
 

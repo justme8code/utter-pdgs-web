@@ -1,12 +1,14 @@
 'use client';
 import {useProductionStore} from "@/app/store/productionStore";
+
 export const ProductionInfo = () => {
     const {selectedProduction} = useProductionStore();
 
 
     return (
         <>
-            {selectedProduction &&  <div className={"flex sticky top-0 items-center gap-x-2 bg-white  justify-between p-5 z-10"}>
+            {selectedProduction && <div
+                className={"flex sticky top-0 items-center gap-x-2 bg-white  shadow-md rounded-md justify-between p-5 z-10"}>
                 {/*<h1 className={"text-xl"}>{prod.status === "RUNNING" || prod.status === "STOPPED" ? " On Going Production : ": "Production Completed" }</h1>*/}
                 <div className={"flex items-center gap-x-2 font-bold"}>
                     <h1 className={"text-2xl"}>{selectedProduction.name}</h1>
@@ -21,7 +23,7 @@ export const ProductionInfo = () => {
 
                     <div className={"flex gap-5 items-center"}>
                         <p className={"font-bold"}>
-                            {selectedProduction.finalized ? "Completed":"Ongoing"}
+                            {selectedProduction.finalized ? "Completed" : "Ongoing"}
                         </p>
                         <div className={"flex"}>
                             <h1 className={"text-sm"}>Start date : </h1>

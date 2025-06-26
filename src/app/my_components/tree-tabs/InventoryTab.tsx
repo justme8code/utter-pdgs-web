@@ -1,25 +1,42 @@
-import {TreeNav} from "@/app/my_components/tree-tabs/TreeNav";
-import {useRouter} from "next/navigation";
+// app/my_components/tree-tabs/InventoryTab.tsx
+import {TreeNav} from "./TreeNav";
+import {TreeViewTabProps} from "./OverViewTab"; // Assuming this is the correct path for the interface
+// import { useRouter } from "next/navigation";
+import {Archive, Boxes, FlaskConical as IngredientIcon, Scale} from "lucide-react"; // Icons for inventory
 
-export interface TreeViewTabProps {
-    activePath: string;
-    onActiveChange: (path: string) => void;
-}
-
-export const InventoryTab = ({activePath,onActiveChange}:TreeViewTabProps) => {
-    const router = useRouter();
+export const InventoryTab = ({activePath, onActiveChange}: TreeViewTabProps) => {
+    // const router = useRouter();
     return (
+        <TreeNav
+            title="Inventory"
+            icon={Archive}
+            pathSegment="inventory" // Changed from "Inventory" to lowercase for consistency
+            activePath={activePath}
+            onActiveChange={onActiveChange}
+            initialExpanded={activePath === "inventory"}
+        >
+            <TreeNav
+                title="Ingredients"
+                icon={IngredientIcon}
+                href="/inventory/ingredients"
+                pathSegment="ingredients"
+                activePath={activePath}
+            />
+            <TreeNav
+                title="Raw Materials"
+                icon={Boxes}
+                href="/inventory/raw-materials"
+                pathSegment="raw-materials"
+                activePath={activePath}
+            />
 
-        <TreeNav title="Inventory" path="Inventory" activePath={activePath} onActiveChange={onActiveChange}>
-            <TreeNav title="Ingredients" path="/inventory/ingredients" onToggle={() => {
-                router.push("/inventory/ingredients");
-            }}>
-            </TreeNav>
-            <TreeNav title="Raw materials" path="/inventory/raw-materials" onToggle={() => {
-                router.push("/inventory/raw-materials");
-            }}>
-            </TreeNav>
+            <TreeNav
+                title="Uoms"
+                icon={Scale}
+                href="/inventory/uom"
+                pathSegment="raw-materials"
+                activePath={activePath}
+            />
         </TreeNav>
-
     );
 };

@@ -1,223 +1,333 @@
+// app/your-path/Ingredients.tsx
 'use client';
-import React, {useEffect, useState} from "react";
-import {TextField} from "@/app/my_components/TextField";
-import {addNewIngredient, deleteIngredient, getAllIngredients, updateIngredient,} from "@/app/actions/inventory";
-import {RefreshCcw, Trash} from "lucide-react";
-import {SelectableRawMaterials} from "@/app/my_components/inventory/SelectableRawMaterials";
-import Loading from "@/app/loading";
+import React, {useCallback, useEffect, useState} from "react";
+import {addNewIngredient, deleteIngredient, getAllIngredients, updateIngredient,} from "@/api/inventory"; // Assuming correct path
+import {AlertTriangle, CheckCircle2, FlaskConical, ListPlus, Loader2, Save, Scale, Trash2} from "lucide-react";
+import {SelectableRawMaterials} from "@/app/my_components/inventory/SelectableRawMaterials"; // Keep your component
 import {Ingredient, RawMaterial} from "@/app/types";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {useUomStore} from "@/app/store/uomStore";
+
+
+interface EditableIngredient extends Ingredient {
+    isNew?: boolean; // Flag for newly added unsaved items
+    isLoading?: boolean; // For individual item loading state
+}
 
 export const Ingredients: React.FC = () => {
-    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
+    const [ingredients, setIngredients] = useState<EditableIngredient[]>([]);
+    const [pageLoading, setPageLoading] = useState(true); // For initial page load
+    const [globalError, setGlobalError] = useState<string | null>(null);
+    const [globalSuccess, setGlobalSuccess] = useState<string | null>(null);
+    const [isSavingAll, setIsSavingAll] = useState(false);
+    const {fetchUoms, uoms} = useUomStore();
 
-    useEffect(() => {
-        const fetchIngredients = async () => {
-            setLoading(true);
-            try {
-                const { data, status } = await getAllIngredients();
-                if (status) {
-                    setIngredients(data || []);
-                }
-            } catch (error) {
-                console.error("Failed to load ingredients:", error);
-                setError("Failed to load ingredients. Please try again.");
-            } finally {
-                setLoading(false);
+    const fetchIngredients = useCallback(async () => {
+        setPageLoading(true);
+        setGlobalError(null);
+        try {
+            const {data, status} = await getAllIngredients();
+            if (status && data) {
+                setIngredients(data.map(ing => ({...ing, isNew: false, isLoading: false})));
+            } else {
+                setIngredients([]);
+                setGlobalError("Failed to load ingredients. The server might be down or returned no data.");
             }
-        };
-        fetchIngredients();
+        } catch (error) {
+            console.error("Failed to load ingredients:", error);
+            setIngredients([]);
+            setGlobalError("An unexpected error occurred while loading ingredients. Please try again.");
+        } finally {
+            setPageLoading(false);
+        }
     }, []);
 
-    const addIngredient = () => {
-        setIngredients([...ingredients, { name: "" }]);
+
+    useEffect(() => {
+        fetchIngredients();
+        fetchUoms();
+    }, [fetchIngredients, fetchUoms]);
+
+    const displayTemporaryMessage = (setter: React.Dispatch<React.SetStateAction<string | null>>, message: string) => {
+        setter(message);
+        setTimeout(() => setter(null), 3000);
+        // Or use toast: toast.success(message) or toast.error(message)
     };
 
-    const updateTextField = (index: number, value: string) => {
-        setIngredients(ingredients.map((i, idx) => (idx === index ? { ...i, name: value } : i)));
+    const addIngredientRow = () => {
+        setIngredients(prev => [...prev, {name: "", rawMaterials: [], uom: "", isNew: true, isLoading: false}]);
     };
 
-    const addSelectedRawMaterials = (index: number, rawMaterials: RawMaterial[]) => {
-        setIngredients(ingredients.map((i, idx) => (idx === index ? { ...i, rawMaterials } : i)));
+    const updateIngredientName = (index: number, name: string) => {
+        setIngredients(prev => prev.map((ing, idx) => (idx === index ? {...ing, name} : ing)));
     };
 
-    const updateIng = async (index: number, rawMaterials: RawMaterial[]) => {
-        const ing = { ...ingredients[index], rawMaterials };
-        if (ing.id) {
-            try {
-                const { data, status } = await updateIngredient(ing);
-                if (status) {
-                    const updatedIngredients = [...ingredients];
-                    updatedIngredients[index] = data;
-                    setIngredients(updatedIngredients);
-                    setSuccess("Ingredient updated successfully!");
-                    setTimeout(()=>{
-                        setSuccess(null);
-                    },1000)
-                } else {
-                    setError("Unable to update ingredient. Please try again.");
-                    setTimeout(()=>{
-                        setError(null);
-                    },1000)
-                }
-            } catch (error:unknown) {
-                console.log(error);
-                setError("Unable to update ingredient. Please try again.");
-                setTimeout(()=>{
-                    setError(null);
-                },1000)
-            }
-        }
-    };
-
-    const handleDelete = async (id:number|undefined)=>{
-        if(id && id>0){
-            const {status} = await deleteIngredient(id);
-            if(status) {
-
-                setSuccess("Ingredient deleted successfully!");
-                setIngredients(prevState => prevState.filter(i => i.id !== id));
-                setTimeout(()=>{
-                    setSuccess(null);
-                },1000);
-
-            }else{
-                setError("Ingredient could not be deleted!");
-                setTimeout(()=>{
-                    setError(null);
-                },1000);
-            }
-        }else{
-            setError("Ingredient could not be deleted!");
-            setTimeout(()=>{
-                setError(null);
-            },1000)
-        }
+    const updateIngredientUom = (index: number, uom: string) => {
+        setIngredients(prev => prev.map((ing, idx) => (idx === index ? {...ing, uom} : ing)));
     }
-    const saveMaterials = async () => {
-        const newIngredients = ingredients.filter(m => !m.id);
-        if (newIngredients.length === 0) return;
 
-        setLoading(true);
+    const updateIngredientRawMaterials = (index: number, rawMaterials: RawMaterial[]) => {
+        setIngredients(prev => prev.map((ing, idx) => (idx === index ? {...ing, rawMaterials} : ing)));
+    };
+
+    const handleSaveOrUpdateIngredient = async (index: number) => {
+        const ingredientToSave = ingredients[index];
+        if (!ingredientToSave.name.trim()) {
+            displayTemporaryMessage(setGlobalError, "Ingredient name cannot be empty.");
+            return;
+        }
+
+        setIngredients(prev => prev.map((ing, idx) => idx === index ? {...ing, isLoading: true} : ing));
+        setGlobalError(null);
+        setGlobalSuccess(null);
+
         try {
-            const { data, status } = await addNewIngredient(newIngredients);
-            if (status) {
-                setIngredients(data);
-                setSuccess("New ingredient saved successfully!");
-                setTimeout(()=>{
-                    setSuccess(null);
-                },1000);
-            } else {
-                setError("Oops! The new ingredient wasn't added. Please try again.");
+            if (ingredientToSave.id) { // Update existing
+                const {data, status} = await updateIngredient(ingredientToSave);
+                if (status && data) {
+                    setIngredients(prev => prev.map((ing, idx) => idx === index ? {
+                        ...data,
+                        isNew: false,
+                        isLoading: false
+                    } : ing));
+                    displayTemporaryMessage(setGlobalSuccess, "Ingredient updated successfully!");
+                } else {
+                    displayTemporaryMessage(setGlobalError, "Failed to update ingredient.");
+                }
+            } else { // Save new
+                const {data, status} = await addNewIngredient([ingredientToSave]); // Assuming addNewIngredient can take a single new item in an array
+                if (status && data) {
+                    await fetchIngredients();
+                    displayTemporaryMessage(setGlobalSuccess, "Ingredient saved successfully!");
+                } else {
+                    displayTemporaryMessage(setGlobalError, "Failed to save new ingredient.");
+                }
             }
-        } catch (error:unknown) {
-            console.log(error);
-            setError("Oops! The new ingredient wasn't added. Please try again.");
-            setTimeout(()=>{
-                setError(null);
-            },1000)
+        } catch (error) {
+            console.error("Error saving/updating ingredient:", error);
+            displayTemporaryMessage(setGlobalError, "An error occurred.");
         } finally {
-            setLoading(false);
+            setIngredients(prev => prev.map((ing, idx) => idx === index ? {...ing, isLoading: false} : ing));
         }
     };
+
+
+    const handleDeleteIngredient = async (index: number) => {
+        const ingredientToDelete = ingredients[index];
+        setGlobalError(null);
+        setGlobalSuccess(null);
+
+        if (ingredientToDelete.isNew || !ingredientToDelete.id) { // If it's a new, unsaved row
+            setIngredients(prev => prev.filter((_, idx) => idx !== index));
+            displayTemporaryMessage(setGlobalSuccess, "Unsaved ingredient row removed.");
+            return;
+        }
+
+        setIngredients(prev => prev.map((ing, idx) => idx === index ? {...ing, isLoading: true} : ing));
+        try {
+            const {status} = await deleteIngredient(ingredientToDelete.id);
+            if (status) {
+                setIngredients(prev => prev.filter((_, idx) => idx !== index));
+                displayTemporaryMessage(setGlobalSuccess, "Ingredient deleted successfully!");
+            } else {
+                displayTemporaryMessage(setGlobalError, "Failed to delete ingredient.");
+            }
+        } catch (error) {
+            console.error("Error deleting ingredient:", error);
+            displayTemporaryMessage(setGlobalError, "An error occurred while deleting.");
+        } finally {
+            setIngredients(prev => prev.map((ing, idx) => {
+                if (idx === index && ing) { // Check if 'ing' still exists (it shouldn't if successfully deleted)
+                    return {...ing, isLoading: false};
+                }
+                return ing;
+            }).filter(Boolean) as EditableIngredient[]); // Filter out undefined if item was removed
+        }
+    };
+
+    const handleSaveAllNewIngredients = async () => {
+        const newIngredientsToSave = ingredients.filter(ing => ing.isNew && ing.name.trim());
+        if (newIngredientsToSave.length === 0) {
+            displayTemporaryMessage(setGlobalSuccess, "No new ingredients to save.");
+            return;
+        }
+        setIsSavingAll(true);
+        setGlobalError(null);
+        setGlobalSuccess(null);
+        try {
+            const {data, status} = await addNewIngredient(newIngredientsToSave);
+            if (status && data) {
+                // Refresh all ingredients from backend or smartly merge
+                await fetchIngredients(); // Simplest way to get all IDs and sync state
+                displayTemporaryMessage(setGlobalSuccess, `${data.length} new ingredient(s) saved successfully!`);
+            } else {
+                displayTemporaryMessage(setGlobalError, "Failed to save new ingredients.");
+            }
+        } catch (error) {
+            console.error("Error saving all new ingredients:", error);
+            displayTemporaryMessage(setGlobalError, "An error occurred while saving new ingredients.");
+        } finally {
+            setIsSavingAll(false);
+        }
+    };
+
 
     return (
-        <div className={"w-full"}>
-            {loading ? <Loading/> :(
-                <div className="w-full shadow-xs p-5 hover:shadow-sm">
-                    <div className="flex w-full gap-10 mb-5 justify-end">
-
-                        <div className="flex gap-5">
-                            <button
-                                onClick={addIngredient}
-                                className="bg-gray-200 ring-1 ring-gray-300 flex items-center text-sm gap-2 p-1 rounded-sm"
+        <div className="container mx-auto py-6 px-4 md:px-6 space-y-6">
+            <Card>
+                <CardHeader>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <CardTitle className="text-2xl flex items-center gap-2">
+                                <FlaskConical className="h-6 w-6 text-primary"/>
+                                Manage Ingredients
+                            </CardTitle>
+                            <CardDescription>Add, edit, and manage product ingredients and their raw
+                                materials.</CardDescription>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button variant="outline" onClick={addIngredientRow}>
+                                <ListPlus className="mr-2 h-4 w-4"/> Add Ingredient Row
+                            </Button>
+                            <Button
+                                onClick={handleSaveAllNewIngredients}
+                                disabled={isSavingAll || !ingredients.some(ing => ing.isNew && ing.name.trim())}
                             >
-                                <p>Add New Ingredient</p>
-                            </button>
-                            <button
-                                onClick={saveMaterials}
-                                className="bg-green-500 text-white px-4 py-1 rounded-sm disabled:bg-gray-400"
-                                disabled={loading}
-                            >
-                                {loading ? "Saving..." : "Save Ingredient"}
-                            </button>
+                                {isSavingAll ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> :
+                                    <Save className="mr-2 h-4 w-4"/>}
+                                Save All New
+                            </Button>
                         </div>
                     </div>
-                    {error && <p className="text-red-500 font-bold">{error}</p>}
-                    {success && <p className="text-green-500 font-bold">{success}</p>}
-                    <table className="w-full border-collapse border border-gray-300 relative">
-                        <thead>
-                        <tr className="bg-gray-200 text-left">
-                            <th className="p-2 border-b border-l w-1/4 border-gray-300">Name</th>
-                            <th className="p-2 border-b border-l w-full border-gray-300">Raw Materials Used</th>
-                            <th className="p-2 border-b border-l w-full border-gray-300">Unit</th>
-                            <th className="p-2 border-b border-l text-center border-gray-300">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {ingredients.map((ingredient, index) => (
-                            <tr key={index} className="border-b border-gray-300">
-                                <td className="p-2 border border-gray-300">
-                                    <TextField
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {globalError && (
+                        <Alert variant="destructive">
+                            <AlertTriangle className="h-4 w-4"/>
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>{globalError}</AlertDescription>
+                        </Alert>
+                    )}
+                    {globalSuccess && (
+                        <Alert variant="default"
+                               className="bg-green-50 border-green-300 text-green-700 dark:bg-green-900/30 dark:border-green-700 dark:text-green-400">
+                            <CheckCircle2 className="h-4 w-4"/>
+                            <AlertTitle>Success</AlertTitle>
+                            <AlertDescription>{globalSuccess}</AlertDescription>
+                        </Alert>
+                    )}
+
+                    {ingredients.length === 0 && !pageLoading && (
+                        <div className="text-center py-10 border-2 border-dashed rounded-lg">
+                            <FlaskConical className="mx-auto h-12 w-12 text-muted-foreground"/>
+                            <h3 className="mt-2 text-lg font-medium text-muted-foreground">No Ingredients Found</h3>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Get started by adding a new ingredient.
+                            </p>
+                        </div>
+                    )}
+
+                    {ingredients.map((ingredient, index) => (
+                        <Card key={ingredient.id || `new-${index}`} className={`
+                            ${ingredient.isNew ? 'border-blue-500 border-2' : 'border'}
+                            ${ingredient.isLoading ? 'opacity-70 pointer-events-none' : ''}
+                        `}>
+                            <CardHeader className="pb-3 pt-4">
+                                <div className="flex justify-between items-center">
+                                    <Input
+                                        placeholder="Enter ingredient name"
                                         value={ingredient.name}
-                                        onChange={value => updateTextField(index, value)}
-                                        props={{ placeholder: "Enter ingredient name" }}
+                                        onChange={(e) => updateIngredientName(index, e.target.value)}
+                                        className="text-lg font-semibold flex-grow mr-4 !border-0 !shadow-none !ring-0 p-0 focus-visible:!ring-0 focus-visible:!border-b"
                                     />
-                                </td>
-                                <td className="p-2 border border-gray-300 overflow-x-auto ">
-                                    <div className="flex ">
-                                        {ingredient.rawMaterials && ingredient.rawMaterials.length > 0 ? (
-                                            <div className="flex gap-2 w-full scrollbar-thin scrollbar-thumb-gray-300">
-                                                {ingredient.rawMaterials.map(rawMaterial => (
-                                                    <span key={rawMaterial.id} className="bg-gray-200 px-2 py-1 rounded text-sm">
-                                                    {rawMaterial.name}
-                                                </span>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <span className="text-gray-500">No Raw Material Used</span>
+                                    <div className="flex gap-2">
+                                        {(ingredient.isNew || ingredient.id) && ( // Show save/update only if it's new or has an ID
+                                            <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                onClick={() => handleSaveOrUpdateIngredient(index)}
+                                                disabled={ingredient.isLoading || !ingredient.name.trim()}
+                                                title={ingredient.id ? "Update Ingredient" : "Save New Ingredient"}
+                                            >
+                                                {ingredient.isLoading ? <Loader2 className="h-4 w-4 animate-spin"/> :
+                                                    <Save className="h-4 w-4 text-blue-600"/>}
+                                            </Button>
                                         )}
-                                        <SelectableRawMaterials
-                                            onSelectedRawMaterials={rawMaterials => addSelectedRawMaterials(index, rawMaterials)}
+                                        <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            onClick={() => handleDeleteIngredient(index)}
+                                            disabled={ingredient.isLoading}
+                                            title="Delete Ingredient"
+                                        >
+                                            {ingredient.isLoading && ingredient.id ?
+                                                <Loader2 className="h-4 w-4 animate-spin"/> :
+                                                <Trash2 className="h-4 w-4 text-destructive"/>}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                <div>
+                                    <label className="text-xs font-medium text-muted-foreground">Raw Materials
+                                        Used</label>
+                                    <div
+                                        className="flex items-center gap-2 mt-1 flex-wrap p-2 border rounded-md min-h-[40px]">
+                                        {ingredient.rawMaterials && ingredient.rawMaterials.length > 0 ? (
+                                            ingredient.rawMaterials.map(rm => (
+                                                <Badge key={rm.id} variant="secondary">{rm.name}</Badge>
+                                            ))
+                                        ) : (
+                                            <span className="text-xs text-muted-foreground italic">None selected</span>
+                                        )}
+                                        <SelectableRawMaterials // Your existing component
+                                            onSelectedRawMaterials={rms => updateIngredientRawMaterials(index, rms)}
                                             alreadySelectedRawMaterials={ingredient.rawMaterials ?? []}
+                                            // Consider adding a trigger prop for custom styling if needed:
+                                            // trigger={<Button variant="outline" size="xs"><PlusCircle className="h-3 w-3"/> Add</Button>}
                                         />
                                     </div>
-                                </td>
+                                </div>
 
-                                <td className="p-2 border border-gray-300 overflow-x-auto max-w-lg whitespace-nowrap">
+                                <div>
+                                    <label className="text-xs font-medium text-muted-foreground">Unit of
+                                        measurement</label>
+                                    <Select onValueChange={value => updateIngredientUom(index, value)}
+                                            defaultValue={ingredient.uom}>
+                                        <SelectTrigger
+                                            className="h-8 w-[140px] px-2 py-1 text-xs font-medium text-black tracking-tight">
+                                            <Scale className="h-5 w-5 mr-1 text-black"/>
+                                            <SelectValue placeholder="UOM"/>
+                                        </SelectTrigger>
+                                        <SelectContent className="text-sm">
+                                            {uoms.map((uom) => (
+                                                <SelectItem
+                                                    value={uom.abbrev}
+                                                    key={uom.id}
+                                                    className="text-center text-sm text-muted-foreground py-1"
+                                                >
+                                                    {uom.abbrev}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
 
-                                </td>
-
-                                <td className="p-2">
-                                    <div className="flex gap-2">
-                                        <button
-                                            title="Update"
-                                            className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
-                                            onClick={() => updateIng(index, ingredient.rawMaterials || [])}
-                                        >
-                                            <RefreshCcw/>
-                                        </button>
-                                        <button
-                                            title="Delete"
-                                            className="bg-gray-200 hover:text-white hover:bg-gray-500 px-2 py-1 rounded-full hover:cursor-pointer"
-                                            onClick={() => {
-                                                 if(ingredient.id) {
-                                                     handleDelete(ingredient.id)
-                                                 }
-                                            }}
-                                        >
-                                            <Trash />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                                {/* Add UoM field if needed */}
+                                {/* <div>
+                                    <label className="text-xs font-medium text-muted-foreground">Unit of Measure</label>
+                                    <Input placeholder="e.g., Litres, Kg" value={ingredient.uom || ""} onChange={(e) => updateIngredientUoM(index, e.target.value)} />
+                                </div> */}
+                            </CardContent>
+                        </Card>
+                    ))}
+                </CardContent>
+            </Card>
         </div>
     );
 };

@@ -1,5 +1,4 @@
-
-import { ProductMixOutput} from "@/app/types";
+import {ProductMixOutput} from "@/app/types";
 import {create} from "zustand";
 
 
@@ -15,7 +14,7 @@ interface ProductMixOutputStore {
 export const useProductMixOutputStoreStore = create<ProductMixOutputStore>((set) => ({
     productMixOutput: [],
 
-    setProductMixOutputs: (productMixes) => set({ productMixOutput: [...productMixes] }),
+    setProductMixOutputs: (productMixes) => set({productMixOutput: [...productMixes]}),
 
     addProductMixOutput: (mix) =>
         set((state) => ({
@@ -26,7 +25,7 @@ export const useProductMixOutputStoreStore = create<ProductMixOutputStore>((set)
         set((state) => ({
             productMixOutput: state.productMixOutput.map((mix) =>
                 (mix.id !== undefined && id !== undefined ? mix.id === id : false)
-                    ? { ...mix, ...updatedFields }
+                    ? {...mix, ...updatedFields}
                     : mix
             ),
         })),
@@ -38,5 +37,5 @@ export const useProductMixOutputStoreStore = create<ProductMixOutputStore>((set)
             ),
         })),
 
-    reset: () => set(() => ({ productMixOutput: [] })),
+    reset: () => set(() => ({productMixOutput: []})),
 }));

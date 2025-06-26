@@ -1,4 +1,4 @@
-import { Staff } from "./staff";
+import {Staff} from "./staff";
 import {Ingredient} from "@/app/types/ingredient";
 
 export type Production = {
@@ -6,11 +6,12 @@ export type Production = {
     id?: number;
     productionNumber?: string;
     name: string;
+    lastBatch: number;
     startDate: string;
     endDate: string;
     staff?: Staff;
-    finalized:boolean;
-    productionStore?:ProductionStore;
+    finalized: boolean;
+    productionStore?: ProductionStore;
 };
 
 export type ProductionStore = {

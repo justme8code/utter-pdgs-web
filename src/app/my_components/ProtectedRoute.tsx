@@ -3,10 +3,10 @@ import {useRouter} from 'next/navigation';
 import {ReactNode, useEffect, useState} from 'react';
 import {hasRole} from '../utils/auth';
 import useAuthStore from '@/app/store/useAuthStore';
-import Loading from "@/app/management/loading";
+import Loading from "@/app/(main)/management/loading";
 import Unauthorized from "@/app/my_components/Unauthorized";
 
-const ProtectedRoute = ({ children, requiredRole }: { children: ReactNode; requiredRole: string }) => {
+const ProtectedRoute = ({children, requiredRole}: { children: ReactNode; requiredRole: string }) => {
     const router = useRouter();
     const auth = useAuthStore((state) => state.auth);
     const isAuthenticated = !!auth?.jwtToken;
@@ -24,7 +24,10 @@ const ProtectedRoute = ({ children, requiredRole }: { children: ReactNode; requi
 
             if (!isAuthenticated) {
                 router.push('/login');
-            } else if (requiredRole && !hasRole({ userRoles: auth?.user?.roles?.map((role) => role.userRole), requiredRole })) {
+            } else if (requiredRole && !hasRole({
+                userRoles: auth?.user?.roles?.map((role) => role.userRole),
+                requiredRole
+            })) {
                 setIsUnauthorized(true);
                 // Optionally, you can still implement a delayed redirect back here if needed
                 // setTimeout(() => {
@@ -37,11 +40,11 @@ const ProtectedRoute = ({ children, requiredRole }: { children: ReactNode; requi
     }, [auth, isAuthenticated, requiredRole, router]);
 
     if (isCheckingAuth) {
-        return <Loading />; // Show a loading indicator while checking authentication
+        return <Loading/>; // Show a loading indicator while checking authentication
     }
 
     if (isUnauthorized) {
-        return <Unauthorized />;
+        return <Unauthorized/>;
     }
 
     return <>{children}</>;

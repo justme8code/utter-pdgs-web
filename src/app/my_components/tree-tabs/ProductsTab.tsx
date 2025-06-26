@@ -1,17 +1,27 @@
-import {TreeViewTabProps} from "@/app/my_components/tree-tabs/OverViewTab";
-import {useRouter} from "next/navigation";
-import {TreeNav} from "@/app/my_components/tree-tabs/TreeNav";
+// app/my_components/tree-tabs/ProductTab.tsx
+import {TreeViewTabProps} from "./OverViewTab";
+// import { useRouter } from "next/navigation";
+import {TreeNav} from "./TreeNav";
+import {List, Package} from "lucide-react"; // Icons for products
 
-export const ProductTab = ({activePath,onActiveChange}:TreeViewTabProps) => {
-    const router = useRouter();
+export const ProductTab = ({activePath, onActiveChange}: TreeViewTabProps) => {
+    // const router = useRouter();
     return (
-
-        <TreeNav title="Product" path="product" activePath={activePath} onActiveChange={onActiveChange}>
-            <TreeNav title="Products" path="/products" activePath={activePath} onActiveChange={onActiveChange}
-                     onToggle={() => {
-                         router.push("/products");
-                     }}/>
+        <TreeNav
+            title="Product Templates" // Changed title to be more descriptive
+            icon={Package}
+            pathSegment="products"
+            activePath={activePath}
+            onActiveChange={onActiveChange}
+            initialExpanded={activePath === "products"}
+        >
+            <TreeNav
+                title="View Products"
+                icon={List}
+                href="/products"
+                pathSegment="view" // or just "products"
+                activePath={activePath}
+            />
         </TreeNav>
-
     );
 };

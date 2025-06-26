@@ -1,7 +1,7 @@
 // src/store/productStore.ts
 import {create} from "zustand";
 import {Product} from "@/app/types";
-import {createProduct, getProducts} from "@/app/actions/product";
+import {createProduct, getProducts} from "@/api/product";
 
 interface ProductState {
     products: Product[];
@@ -24,33 +24,33 @@ export const useProductStore = create<ProductState>((set) => ({
     error: null,
 
     fetchProducts: async () => {
-        set({ isLoading: true, error: null });
+        set({isLoading: true, error: null});
         try {
-            const { data, status } = await getProducts();
+            const {data, status} = await getProducts();
             if (status) {
-                set({ products: data, isLoading: false });
+                set({products: data, isLoading: false});
             } else {
-                set({ error: "Failed to fetch products", isLoading: false });
+                set({error: "Failed to fetch products", isLoading: false});
             }
         } catch (err: unknown) {
-            set({ error: extractErrorMessage(err), isLoading: false });
+            set({error: extractErrorMessage(err), isLoading: false});
         }
     },
 
     addProduct: async (payload) => {
-        set({ isLoading: true, error: null });
+        set({isLoading: true, error: null});
         try {
-            const { data, status } = await createProduct(payload);
+            const {data, status} = await createProduct(payload);
             if (status) {
                 set((state) => ({
                     products: [...state.products, data],
                     isLoading: false,
                 }));
             } else {
-                set({ error: "Failed to add product", isLoading: false });
+                set({error: "Failed to add product", isLoading: false});
             }
         } catch (err: unknown) {
-            set({ error: extractErrorMessage(err), isLoading: false });
+            set({error: extractErrorMessage(err), isLoading: false});
         }
     },
 }));

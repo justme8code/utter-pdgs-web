@@ -1,68 +1,74 @@
-import React, {useEffect, useRef, useState} from "react";
+// app/my_components/inventory/SelectableRawMaterials.tsx
+'use client'; // Ensure client component directive
 
-import {getAllRawMaterials} from "@/app/actions/inventory";
-import {Plus} from "lucide-react";
-import { RawMaterial } from "@/app/types";
+import React, {useEffect, useMemo, useState} from "react";
+import {getAllRawMaterials} from "@/api/inventory";
+import {AlertTriangle, Check, Loader2, PlusCircle, X} from "lucide-react"; // Added icons
+import {RawMaterial} from "@/app/types";
+import {Button} from "@/components/ui/button";
+import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover";
+import {Checkbox} from "@/components/ui/checkbox"; // Shadcn Checkbox
+import {ScrollArea} from "@/components/ui/scroll-area"; // For long lists
+import {Input} from "@/components/ui/input"; // For optional search within popover
+import {Separator} from "@/components/ui/separator";
+
+interface SelectableRawMaterialsProps {
+    onSelectedRawMaterials: (rawMaterials: RawMaterial[]) => void;
+    alreadySelectedRawMaterials: RawMaterial[];
+    trigger?: React.ReactNode; // Optional custom trigger
+    align?: "start" | "center" | "end"; // Popover alignment
+    side?: "top" | "right" | "bottom" | "left"; // Popover side
+}
 
 export const SelectableRawMaterials = ({
-                                           alreadySelectedRawMaterials,
                                            onSelectedRawMaterials,
-                                       }: {
-    onSelectedRawMaterials: (rawMaterials: RawMaterial[]) => void,
-    alreadySelectedRawMaterials: RawMaterial[]
-}) => {
-    const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>([]);
-    const [selectedRawMaterials, setSelectedRawMaterials] = useState<RawMaterial[]>(alreadySelectedRawMaterials);
-    const [loading, setLoading] = useState(false);
+                                           alreadySelectedRawMaterials,
+                                           trigger,
+                                           align = "center",
+                                           side = "bottom"
+                                       }: SelectableRawMaterialsProps) => {
+    const [allRawMaterials, setAllRawMaterials] = useState<RawMaterial[]>([]);
+    // Internal state for managing selection within the popover before confirming
+    const [currentSelection, setCurrentSelection] = useState<RawMaterial[]>(alreadySelectedRawMaterials);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
-    const popoverRef = useRef<HTMLDivElement | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    // Fetch raw materials on mount
+    // Fetch raw materials on component mount or when popover is about to open
     useEffect(() => {
-        const fetchRawMaterials = async () => {
-            setLoading(true);
-            try {
-                const { data, status } = await getAllRawMaterials();
-                if (status) {
-                    setRawMaterials(data || []);
+        if (isOpen && allRawMaterials.length === 0 && !isLoading) { // Fetch only if needed and not already loading
+            const fetchRawMaterials = async () => {
+                setIsLoading(true);
+                setError(null);
+                try {
+                    const {data, status} = await getAllRawMaterials();
+                    if (status && data) {
+                        setAllRawMaterials(data);
+                    } else {
+                        setError("Failed to load raw materials list.");
+                    }
+                } catch (err) {
+                    console.error("Failed to load raw materials:", err);
+                    setError("An error occurred while fetching raw materials.");
+                } finally {
+                    setIsLoading(false);
                 }
-            } catch (error) {
-                console.error("Failed to load raw materials:", error);
-                setError("Failed to load raw materials.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchRawMaterials();
-    }, []);
-
-    // Sync selection changes
-    useEffect(() => {
-        if (JSON.stringify(selectedRawMaterials) !== JSON.stringify(alreadySelectedRawMaterials)) {
-            onSelectedRawMaterials(selectedRawMaterials);
+            };
+            fetchRawMaterials();
         }
-    }, [alreadySelectedRawMaterials, onSelectedRawMaterials, selectedRawMaterials]);
+    }, [isOpen, allRawMaterials.length, isLoading]);
 
-    // Close popover when clicking outside
+    // Sync internal `currentSelection` when `alreadySelectedRawMaterials` prop changes (e.g., from parent state)
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-        if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [isOpen]);
+        setCurrentSelection(alreadySelectedRawMaterials);
+    }, [alreadySelectedRawMaterials]);
 
-    // Toggle raw material selection
-    const toggleSelection = (rawMaterial: RawMaterial) => {
-        setSelectedRawMaterials((prevSelected) => {
-            if (prevSelected.some((rm) => rm.id === rawMaterial.id)) {
+
+    const handleToggleSelection = (rawMaterial: RawMaterial) => {
+        setCurrentSelection((prevSelected) => {
+            const isCurrentlySelected = prevSelected.some((rm) => rm.id === rawMaterial.id);
+            if (isCurrentlySelected) {
                 return prevSelected.filter((rm) => rm.id !== rawMaterial.id);
             } else {
                 return [...prevSelected, rawMaterial];
@@ -70,46 +76,118 @@ export const SelectableRawMaterials = ({
         });
     };
 
-    return (
-        <div className="w-full space-y-3 ">
-            <div className="flex w-full justify-end">
-                <button
-                    className="text-sm flex text-gray-500 hover:text-gray-600 items-center transition-all"
-                    onClick={() => setIsOpen(!isOpen)}
-                >
-                    <Plus/> <p>Raw Materials</p>
-                </button>
-            </div>
+    const handleApplySelection = () => {
+        onSelectedRawMaterials(currentSelection);
+        setIsOpen(false); // Close popover on apply
+    };
 
-            {isOpen && (
-                <div ref={popoverRef} className="absolute right-0 mt-2 bg-white p-5 rounded-lg shadow-lg w-64 border border-gray-300 z-50">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-semibold">Add Raw Materials</h2>
-                        <button onClick={() => setIsOpen(false)} className="text-gray-500 hover:text-gray-700">✕</button>
+    const handleCancel = () => {
+        setCurrentSelection(alreadySelectedRawMaterials); // Reset to original selection
+        setIsOpen(false);
+    }
+
+    const filteredRawMaterials = useMemo(() => {
+        if (!searchTerm.trim()) {
+            return allRawMaterials;
+        }
+        return allRawMaterials.filter(rm =>
+            rm.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [allRawMaterials, searchTerm]);
+
+    const defaultTrigger = (
+        <Button variant="outline" size="sm" className="text-xs h-7">
+            <PlusCircle className="mr-1.5 h-3.5 w-3.5"/>
+            Manage Raw Materials
+        </Button>
+    );
+
+    return (
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+            <PopoverTrigger asChild>
+                {trigger || defaultTrigger}
+            </PopoverTrigger>
+            <PopoverContent
+                className="w-80 p-0" // Adjust width as needed, remove default padding
+                align={align}
+                side={side}
+            >
+                <div className="flex flex-col space-y-2">
+                    <div className="p-4 pb-0">
+                        <div className="flex justify-between items-center mb-3">
+                            <h3 className="text-sm font-semibold tracking-tight">Select Raw Materials</h3>
+                            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setIsOpen(false)}>
+                                <X className="h-4 w-4"/>
+                                <span className="sr-only">Close</span>
+                            </Button>
+                        </div>
+                        <Input
+                            type="search"
+                            placeholder="Search materials..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="h-8 text-xs"
+                        />
                     </div>
-                    {error && <p className="text-red-500">{error}</p>}
-                    {loading ? (
-                        <p>Loading raw materials...</p>
-                    ) : (
-                        <div className="flex gap-2 flex-wrap">
-                            {rawMaterials.map((rawMaterial) => {
-                                const isSelected = selectedRawMaterials.some((rm) => rm.id === rawMaterial.id);
-                                return (
-                                    <label key={rawMaterial.id} className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={isSelected}
-                                            onChange={() => toggleSelection(rawMaterial)}
-                                            className="cursor-pointer"
-                                        />
-                                        {rawMaterial.name}
-                                    </label>
-                                );
-                            })}
+
+                    <Separator/>
+
+                    {isLoading && (
+                        <div className="flex items-center justify-center h-32 p-4">
+                            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground"/>
+                            <p className="ml-2 text-sm text-muted-foreground">Loading...</p>
                         </div>
                     )}
+                    {error && !isLoading && (
+                        <div className="p-4 text-center">
+                            <AlertTriangle className="mx-auto h-8 w-8 text-destructive mb-2"/>
+                            <p className="text-sm font-medium text-destructive">Error Loading</p>
+                            <p className="text-xs text-muted-foreground">{error}</p>
+                            {/* Optionally add a retry button */}
+                        </div>
+                    )}
+                    {!isLoading && !error && filteredRawMaterials.length === 0 && (
+                        <p className="p-4 text-center text-sm text-muted-foreground">
+                            {allRawMaterials.length === 0 ? "No raw materials available." : "No materials match your search."}
+                        </p>
+                    )}
+                    {!isLoading && !error && filteredRawMaterials.length > 0 && (
+                        <ScrollArea className="h-60 p-4 pt-0"> {/* Max height for scroll */}
+                            <div className="space-y-2 py-2">
+                                {filteredRawMaterials.map((rawMaterial) => {
+                                    const isSelected = currentSelection.some((rm) => rm.id === rawMaterial.id);
+                                    return (
+                                        <label
+                                            key={rawMaterial.id}
+                                            htmlFor={`rm-${rawMaterial.id}`}
+                                            className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent hover:text-accent-foreground cursor-pointer text-sm"
+                                        >
+                                            <Checkbox
+                                                id={`rm-${rawMaterial.id}`}
+                                                checked={isSelected}
+                                                onCheckedChange={() => handleToggleSelection(rawMaterial)}
+                                            />
+                                            <span>{rawMaterial.name}</span>
+                                        </label>
+                                    );
+                                })}
+                            </div>
+                        </ScrollArea>
+                    )}
+
+                    {!isLoading && !error && allRawMaterials.length > 0 && (
+                        <>
+                            <Separator/>
+                            <div className="flex justify-end gap-2 p-3 border-t">
+                                <Button variant="ghost" size="sm" onClick={handleCancel}>Cancel</Button>
+                                <Button size="sm" onClick={handleApplySelection}>
+                                    <Check className="mr-1.5 h-4 w-4"/> Apply
+                                </Button>
+                            </div>
+                        </>
+                    )}
                 </div>
-            )}
-        </div>
+            </PopoverContent>
+        </Popover>
     );
 };

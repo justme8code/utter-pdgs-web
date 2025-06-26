@@ -1,8 +1,9 @@
-interface HasRoleProps{
+interface HasRoleProps {
     userRoles: string[] | null;
     requiredRole: string;
 }
-export const hasRole = ({userRoles,requiredRole}:HasRoleProps) => {
+
+export const hasRole = ({userRoles, requiredRole}: HasRoleProps) => {
     if (!userRoles || !Array.isArray(userRoles)) {
         return false;
     }

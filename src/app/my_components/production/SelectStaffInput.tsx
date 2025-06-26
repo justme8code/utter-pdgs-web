@@ -1,4 +1,4 @@
-import { fetchStaffs } from "@/app/actions/staff";
+import {fetchStaffs} from "@/api/staff";
 import React, {useEffect, useState} from "react";
 import {Staff} from "@/app/types";
 
@@ -6,7 +6,7 @@ import {Staff} from "@/app/types";
 export const SelectStaffInput = () => {
     const [staffs, setStaffs] = useState<Staff[]>([]);
     const [selectedStaff, setSelectedStaff] = useState<string>(""); // Track selected staff
-    const [error, setError] = useState({ state: false, message: "" });
+    const [error, setError] = useState({state: false, message: ""});
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ export const SelectStaffInput = () => {
                 setError(response.error);
                 setStaffs([]);
             } else {
-                setError({ state: false, message: "" });
+                setError({state: false, message: ""});
                 setStaffs(response.data);
             }
 

@@ -3,7 +3,7 @@ import {CreateProduction} from "@/app/my_components/production/CreateProduction"
 import React, {useState} from "react";
 import {Plus} from "lucide-react";
 
-export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void }) => {
+export const CreateAProductionButton = ({onCreated}: { onCreated?: () => void }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleCreateProduction = async () => {
@@ -23,7 +23,7 @@ export const CreateAProductionButton = ({ onCreated }: { onCreated?: () => void 
             {
                 isModalOpen && <CreateProduction isOpen={isModalOpen} onClose={async () => {
                     await handleCreateProduction();
-                }}   />
+                }}/>
             }
 
         </>

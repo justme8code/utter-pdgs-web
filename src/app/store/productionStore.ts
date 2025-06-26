@@ -14,8 +14,8 @@ type ProductionStore = {
 export const useProductionStore = create<ProductionStore>((set) => ({
     selectedProduction: null,
     loading: false,
-    setSelectedProduction: (production) => set({ selectedProduction: production }),
-    setLoading: (loading) => set({ loading }),
-    resetSelectedProduction: () => set({ selectedProduction: null }),
+    setSelectedProduction: (production) => set({selectedProduction: production}),
+    setLoading: (loading) => set({loading}),
+    resetSelectedProduction: () => set({selectedProduction: null}),
 }));
 

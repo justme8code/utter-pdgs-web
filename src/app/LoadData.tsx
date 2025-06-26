@@ -12,7 +12,7 @@ export const LoadData = () => {
         fetchIngredients();
         fetchRawMaterials();
         fetchSuppliers();
-    },[fetchIngredients, fetchRawMaterials, fetchSuppliers]);
+    }, [fetchIngredients, fetchRawMaterials, fetchSuppliers]);
     return (
         <>
         </>

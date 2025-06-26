@@ -31,7 +31,7 @@ type ConversionParams = {
 }
 
 type CostParam2 = {
-    totalCost:string | number,
+    totalCost: string | number,
     usableLitres: string | number;
 }
 
@@ -46,13 +46,13 @@ function formatNumber(value: number): number {
 }
 
 // Function to calculate usable weight
-export function calculateUsableWeight({ weight, productionLostWeight }: WeightLossParams): number {
+export function calculateUsableWeight({weight, productionLostWeight}: WeightLossParams): number {
     const val = toNumber(weight) - toNumber(productionLostWeight);
     return formatNumber(val);
 }
 
 // Function to calculate average cost per kg based on total weight
-export function calAverageCostPerKgBasedOnTotalWeight({ cost, weight }: CostParams): number {
+export function calAverageCostPerKgBasedOnTotalWeight({cost, weight}: CostParams): number {
     const weightNum = toNumber(weight);
     if (weightNum === 0) return 0; // Prevent division by zero
 
@@ -61,7 +61,7 @@ export function calAverageCostPerKgBasedOnTotalWeight({ cost, weight }: CostPara
 }
 
 // Function to calculate average weight per UoM based on total weight
-export function calAverageWeightPerUOMBasedOnTotalWeight({ weight, qty }: UOMParams): number {
+export function calAverageWeightPerUOMBasedOnTotalWeight({weight, qty}: UOMParams): number {
     const qtyNum = toNumber(qty);
     if (qtyNum === 0) return 0; // Prevent division by zero
 
@@ -70,7 +70,7 @@ export function calAverageWeightPerUOMBasedOnTotalWeight({ weight, qty }: UOMPar
 }
 
 // Function to calculate Litres per Kg
-export function calculateLitresPerKg({ usableLitres, totalUsable }: ConversionParams): number {
+export function calculateLitresPerKg({usableLitres, totalUsable}: ConversionParams): number {
     const usableLitresNum = toNumber(usableLitres);
     const totalUsableNum = toNumber(totalUsable);
     if (totalUsableNum === 0) return 0;
@@ -79,7 +79,7 @@ export function calculateLitresPerKg({ usableLitres, totalUsable }: ConversionPa
 }
 
 // Function to calculate Cost per Litre
-export function calculateCostPerLitre({ totalCost, usableLitres }: CostParam2): number {
+export function calculateCostPerLitre({totalCost, usableLitres}: CostParam2): number {
     const totalCostNum = toNumber(totalCost);
     const usableLitresNum = toNumber(usableLitres);
     if (usableLitresNum === 0) return 0;

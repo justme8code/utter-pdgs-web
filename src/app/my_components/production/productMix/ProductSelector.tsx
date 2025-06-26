@@ -1,8 +1,7 @@
-
 // ProductSelector.tsx
 import {Product} from "@/app/types";
 
-export const ProductSelector = ({ products, selectedProductId,onSelect }: {
+export const ProductSelector = ({products, selectedProductId, onSelect}: {
     products: Product[];
     selectedProductId?: number;
     onSelect: (productId: number) => void;

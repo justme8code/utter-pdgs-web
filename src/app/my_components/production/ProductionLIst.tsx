@@ -1,34 +1,26 @@
-
 "use client";
 
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 import React from "react";
-import { Production } from "@/app/types";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"; // Shadcn Table
-import { Badge } from "@/components/ui/badge";   // Shadcn Badge
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // Shadcn Alert
-import { AlertTriangle, CalendarDays, UserCircle, Briefcase, } from "lucide-react";
-import { format } from "date-fns/format"; // For date formatting
+import {Production} from "@/app/types";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"; // Shadcn Table
+import {Badge} from "@/components/ui/badge"; // Shadcn Badge
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert"; // Shadcn Alert
+import {AlertTriangle, Briefcase, CalendarDays, UserCircle,} from "lucide-react";
+import {format} from "date-fns/format"; // For date formatting
 
 interface ProductionListProps {
     productions: Production[];
     error: { state: boolean; message: string };
 }
 
-export default function ProductionList({ productions, error }: ProductionListProps) {
+export default function ProductionList({productions, error}: ProductionListProps) {
     const router = useRouter();
 
     if (error.state) {
         return (
             <Alert variant="destructive" className="m-4">
-                <AlertTriangle className="h-4 w-4" />
+                <AlertTriangle className="h-4 w-4"/>
                 <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{error.message}</AlertDescription>
             </Alert>
@@ -73,7 +65,7 @@ export default function ProductionList({ productions, error }: ProductionListPro
                                     <TableCell>
                                         {production.staff ? (
                                             <div className="flex items-center gap-2">
-                                                <UserCircle className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                                <UserCircle className="h-4 w-4 text-muted-foreground flex-shrink-0"/>
                                                 {production.staff.userFullName}
                                             </div>
                                         ) : (
@@ -82,13 +74,13 @@ export default function ProductionList({ productions, error }: ProductionListPro
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-1">
-                                            <CalendarDays className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                                            <CalendarDays className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0"/>
                                             {formatDate(production.startDate)}
                                         </div>
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-1">
-                                            <CalendarDays className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                                            <CalendarDays className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0"/>
                                             {formatDate(production.endDate)}
                                         </div>
                                     </TableCell>
@@ -108,10 +100,12 @@ export default function ProductionList({ productions, error }: ProductionListPro
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={7} className="h-24 text-center">
-                                    <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-                                        <Briefcase className="h-10 w-10" />
+                                    <div
+                                        className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
+                                        <Briefcase className="h-10 w-10"/>
                                         <p className="font-medium">No productions found.</p>
-                                        <p className="text-sm">Try adjusting your search or creating a new production.</p>
+                                        <p className="text-sm">Try adjusting your search or creating a new
+                                            production.</p>
                                     </div>
                                 </TableCell>
                             </TableRow>

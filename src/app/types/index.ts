@@ -11,3 +11,5 @@ export * from "./productMix";
 export * from "./pageable";
 export * from "./product";
 export * from "./dashboard";
+export * from "./unitofmeasurement";
+export * from "./evaluation";

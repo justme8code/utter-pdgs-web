@@ -1,21 +1,21 @@
-import { TextField } from "@/app/my_components/TextField";
-import { RotateCw } from "lucide-react";
-import React, { useMemo, useState } from "react";
-import { useProductStore } from "@/app/store/productStore";
-import { useProductionStore } from "@/app/store/productionStore";
-import { ProductSelector } from "@/app/my_components/production/productMix/ProductSelector";
-import { createProductMix } from "@/app/actions/productMix";
-import { ProductMix } from "@/app/types";
-import { useLoadingUI } from "@/app/store/useLoadingUI";
-import { disabled, ProductMixComponentProps } from "@/app/my_components/production/productMix/ProductMixPage";
+import {TextField} from "@/app/my_components/TextField";
+import {RotateCw} from "lucide-react";
+import React, {useMemo, useState} from "react";
+import {useProductStore} from "@/app/store/productStore";
+import {useProductionStore} from "@/app/store/productionStore";
+import {ProductSelector} from "@/app/my_components/production/productMix/ProductSelector";
+import {createProductMix} from "@/api/productMix";
+import {ProductMix} from "@/app/types";
+import {useLoadingUI} from "@/app/store/useLoadingUI";
+import {disabled, ProductMixComponentProps} from "@/app/my_components/production/productMix/ProductMixPage";
 
-export const ProductMixComponent = ({ onSaveProductMix }: ProductMixComponentProps) => {
+export const ProductMixComponent = ({onSaveProductMix}: ProductMixComponentProps) => {
     const [productMix, setProductMix] = useState<ProductMix>({} as ProductMix);
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
-    const { selectedProduction } = useProductionStore();
-    const { products } = useProductStore();
+    const {selectedProduction} = useProductionStore();
+    const {products} = useProductStore();
     const [message, setMessage] = useState<string | null>(null);
-    const { setLoading, loading, setSuccessMessage } = useLoadingUI();
+    const {setLoading, loading, setSuccessMessage} = useLoadingUI();
 
     const selectedProduct = useMemo(() => products.find(p => p.id === selectedProductId), [products, selectedProductId]);
     const ingredients = selectedProduct?.ingredients || [];
@@ -34,7 +34,7 @@ export const ProductMixComponent = ({ onSaveProductMix }: ProductMixComponentPro
             finalBrix: productMix.finalBrix,
             initialPH: productMix.initialPH,
             finalPH: productMix.finalPH,
-            productCount:productMix.productCount
+            productCount: productMix.productCount
         };
 
         if (!productMix.productMixIngredients || productMix.productMixIngredients.length === 0) {
@@ -48,7 +48,7 @@ export const ProductMixComponent = ({ onSaveProductMix }: ProductMixComponentPro
 
                 if (store && (ingU.litresUsed > store.usableLitresLeft || !ingU.litresUsed)) {
                     issues.push(
-                        `"${store.ingredient.name}" usage (${isNaN(ingU.litresUsed)?0:ingU.litresUsed}L) must be or within (${store.usableLitresLeft}L)`
+                        `"${store.ingredient.name}" usage (${isNaN(ingU.litresUsed) ? 0 : ingU.litresUsed}L) must be or within (${store.usableLitresLeft}L)`
                     );
                     isValid = false;
                 }
@@ -83,7 +83,7 @@ export const ProductMixComponent = ({ onSaveProductMix }: ProductMixComponentPro
                 totalLitersUsed: calculatedTotalIngredientUsage()
             };
 
-            const { data, status, message } = await createProductMix(selectedProduction.id, payload);
+            const {data, status, message} = await createProductMix(selectedProduction.id, payload);
             setSuccessMessage(message, status);
 
             setProductMix({
@@ -108,10 +108,10 @@ export const ProductMixComponent = ({ onSaveProductMix }: ProductMixComponentPro
             if (index !== -1) {
                 ingredients[index].litresUsed = litres;
             } else {
-                ingredients.push({ ingredientId, litresUsed: litres, ingredient: { id: ingredientId, name: "" } });
+                ingredients.push({ingredientId, litresUsed: litres, ingredient: {id: ingredientId, name: ""}});
             }
 
-            return { ...prev, productMixIngredients: ingredients };
+            return {...prev, productMixIngredients: ingredients};
         });
     };
 
@@ -137,26 +137,26 @@ export const ProductMixComponent = ({ onSaveProductMix }: ProductMixComponentPro
                             </div>
 
                             {ingredients.map((ing, idx) => {
-                                const val:number = selectedProduction?.productionStore?.ingredientStores.find(s => s.ingredient.id === ing.id)?.usableLitresLeft??0
+                                const val: number = selectedProduction?.productionStore?.ingredientStores.find(s => s.ingredient.id === ing.id)?.usableLitresLeft ?? 0
                                 const litersUsed = productMix.productMixIngredients?.find(i => i.ingredientId === ing.id)?.litresUsed;
-                               return  <div key={idx} className="grid grid-cols-3 items-center gap-5 mb-2 text-center">
-                                    <TextField className="max-w-40 mx-auto" value={ing.name ?? ""} props={disabled} />
+                                return <div key={idx} className="grid grid-cols-3 items-center gap-5 mb-2 text-center">
+                                    <TextField className="max-w-40 mx-auto" value={ing.name ?? ""} props={disabled}/>
                                     <div className="w-full border py-1 border-gray-300 rounded-xs px-2">
                                         {val}
                                     </div>
-                                   {val > 0  && <TextField
-                                       className="max-w-40 mx-auto"
-                                       type="number"
-                                       placeholder={`Litres Used ${idx + 1}`}
-                                       value={litersUsed}
-                                       onChange={(val) =>{
-                                           if(ing.id) {
-                                               updateIngredientLitres(ing.id, parseFloat(val))
-                                           }
-                                       }}
-                                   />}
+                                    {val > 0 && <TextField
+                                        className="max-w-40 mx-auto"
+                                        type="number"
+                                        placeholder={`Litres Used ${idx + 1}`}
+                                        value={litersUsed}
+                                        onChange={(val) => {
+                                            if (ing.id) {
+                                                updateIngredientLitres(ing.id, parseFloat(val))
+                                            }
+                                        }}
+                                    />}
                                 </div>
-                        })}
+                            })}
                         </div>
 
 
@@ -168,7 +168,7 @@ export const ProductMixComponent = ({ onSaveProductMix }: ProductMixComponentPro
                                     value={(productMix as never)[field]}
                                     className="max-w-40 text-center"
                                     placeholder={field}
-                                    onChange={val => setProductMix({ ...productMix, [field]: parseFloat(val) })}
+                                    onChange={val => setProductMix({...productMix, [field]: parseFloat(val)})}
                                 />
                             </div>
                         ))}
@@ -177,7 +177,7 @@ export const ProductMixComponent = ({ onSaveProductMix }: ProductMixComponentPro
                     {message && <p className="text-red-500 mt-4 font-bold">{message}</p>}
 
                     <button onClick={handleCreate} className="mt-6 bg-sky-700 p-2 rounded-sm text-white">
-                        {loading ? <RotateCw className="animate-spin" /> : "Save Product Mix"}
+                        {loading ? <RotateCw className="animate-spin"/> : "Save Product Mix"}
                     </button>
                 </>
             )}

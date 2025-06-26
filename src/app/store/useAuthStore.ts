@@ -30,8 +30,8 @@ const useAuthStore = create<AuthState>()(
     persist(
         (set) => ({
             auth: null,
-            setAuth: (auth) => set({ auth }),
-            clearAuth: () => set({ auth: null }),
+            setAuth: (auth) => set({auth}),
+            clearAuth: () => set({auth: null}),
         }),
         {
             name: 'auth-storage', // Storage key,

@@ -11,7 +11,7 @@ import {
     Title,
     Tooltip
 } from 'chart.js';
-import {InsightDataType} from "@/app/actions/insights";
+import {InsightDataType} from "@/api/insights";
 
 ChartJS.register(
     CategoryScale,
@@ -23,7 +23,7 @@ ChartJS.register(
     Legend
 );
 
-const Level1DataInsightChart = ({ data }:{data:InsightDataType}) => {
+const Level1DataInsightChart = ({data}: { data: InsightDataType }) => {
     // Prepare the chart data based on the Level1DataInsightDto
     const chartData = {
         labels: ['Total Qty', 'Total Cost', 'Avg Cost', 'Total Lost'],
@@ -66,7 +66,7 @@ const Level1DataInsightChart = ({ data }:{data:InsightDataType}) => {
                             }
                         }
                     }
-                }} />
+                }}/>
             </div>
 
             {/* Top 3 Purchased Raw Materials */}

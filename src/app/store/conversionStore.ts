@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { Conversion } from "@/app/types"
+import {create} from 'zustand'
+import {Conversion} from "@/app/types"
 
 // Zustand store for managing conversions
 type ConversionStore = {
@@ -13,7 +13,7 @@ type ConversionStore = {
 export const useConversionStore = create<ConversionStore>((set) => ({
     conversions: [],
 
-    setConversions: (conversions) => set({ conversions }),
+    setConversions: (conversions) => set({conversions}),
 
     addConversion: (conversion) =>
         set((state) => ({

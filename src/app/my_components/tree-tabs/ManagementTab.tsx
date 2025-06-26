@@ -1,22 +1,34 @@
-import {TreeViewTabProps} from "@/app/my_components/tree-tabs/OverViewTab";
-import {useRouter} from "next/navigation";
-import {TreeNav} from "@/app/my_components/tree-tabs/TreeNav";
+// app/my_components/tree-tabs/ManagementTab.tsx
+import {TreeViewTabProps} from "./OverViewTab";
+// import { useRouter } from "next/navigation";
+import {TreeNav} from "./TreeNav";
+import {Settings, ShieldCheck, Users} from "lucide-react"; // Icons for management
 
-export const ManagementTab = ({activePath,onActiveChange}:TreeViewTabProps) => {
-    const router = useRouter();
+export const ManagementTab = ({activePath, onActiveChange}: TreeViewTabProps) => {
+    // const router = useRouter();
     return (
-
-        <TreeNav  title="Management" path="management" activePath={activePath} onActiveChange={onActiveChange}>
-            <TreeNav title="Users" path="users" activePath={activePath} onActiveChange={onActiveChange}
-                     onToggle={() => {
-                         router.push("/management/users");
-                     }}>
-            </TreeNav>
-            <TreeNav title="Permissions" path="permissions" activePath={activePath} onActiveChange={onActiveChange}
-                     onToggle={() => {
-                         router.push("/management/permissions");
-                     }}>
-            </TreeNav>
+        <TreeNav
+            title="Management"
+            icon={Settings}
+            pathSegment="management"
+            activePath={activePath}
+            onActiveChange={onActiveChange}
+            initialExpanded={activePath === "management"}
+        >
+            <TreeNav
+                title="Users"
+                icon={Users}
+                href="/management/users"
+                pathSegment="users"
+                activePath={activePath}
+            />
+            <TreeNav
+                title="Permissions"
+                icon={ShieldCheck}
+                href="/management/permissions"
+                pathSegment="permissions"
+                activePath={activePath}
+            />
         </TreeNav>
     );
 };

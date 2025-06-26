@@ -7,7 +7,7 @@ interface ErrorFallbackProps {
     message?: string;
 }
 
-const ErrorFallback = ({ error, resetErrorBoundary, message }: ErrorFallbackProps) => {
+const ErrorFallback = ({error, resetErrorBoundary, message}: ErrorFallbackProps) => {
     return (
         <div className="p-4 border border-red-500 bg-red-100 text-red-700 rounded">
             <h2 className="text-lg font-bold">{message || "Something went wrong"}</h2>
@@ -27,9 +27,9 @@ interface FunctionalErrorBoundaryProps {
     message?: string;
 }
 
-const FunctionalErrorBoundary = ({ children, message }: FunctionalErrorBoundaryProps) => {
+const FunctionalErrorBoundary = ({children, message}: FunctionalErrorBoundaryProps) => {
     return (
-        <ErrorBoundary FallbackComponent={(props) => <ErrorFallback {...props} message={message} />}>
+        <ErrorBoundary FallbackComponent={(props) => <ErrorFallback {...props} message={message}/>}>
             {children}
         </ErrorBoundary>
     );

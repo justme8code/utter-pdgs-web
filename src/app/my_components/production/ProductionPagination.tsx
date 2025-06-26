@@ -1,14 +1,14 @@
-import {fetchProductions} from "@/app/actions/production";
+import {fetchProductions} from "@/api/production";
 import {Suspense} from "react";
 import {ClientProductionPagination} from "./ClientProductionPagination";
 
-export const ProductionPagination = async ({ page = 0, size = 100 }) => {
+export const ProductionPagination = async ({page = 0, size = 100}) => {
     const response = await fetchProductions(page, size);
     const productions = response.error.state ? [] : response.data;
 
     return (
         <Suspense fallback={<p>Loading...</p>}>
-            <ClientProductionPagination productions={productions} />
+            <ClientProductionPagination productions={productions}/>
         </Suspense>
     );
 };

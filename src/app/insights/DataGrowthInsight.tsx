@@ -2,21 +2,21 @@
 import DataGrowthChart from "@/app/insights/DataGrowthChart";
 
 import React, {useEffect, useState} from "react";
-import {DataGrowthDto, fetchDataGrowthInsight} from "@/app/actions/insights";
+import {DataGrowthDto, fetchDataGrowthInsight} from "@/api/insights";
 
-export const DataGrowthInsight = ()=>  {
+export const DataGrowthInsight = () => {
     const now = new Date();
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(now.getDate() - 7);
-    const formatDate = (date:Date) => date.toISOString().split('T')[0];
+    const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
     const [startDate, setStartDate] = useState(formatDate(oneWeekAgo));
     const [endDate, setEndDate] = useState(formatDate(now));
 
     const [data, setData] = useState<DataGrowthDto[]>([]);
 
-    const handleDateChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
         if (name === 'startDate') {
             setStartDate(value);
         } else if (name === 'endDate') {
@@ -27,14 +27,14 @@ export const DataGrowthInsight = ()=>  {
     useEffect(() => {
         const fetchData = async () => {
             if (startDate && endDate) {
-                const {data,status} = await fetchDataGrowthInsight(startDate,endDate);
+                const {data, status} = await fetchDataGrowthInsight(startDate, endDate);
                 if (status) {
                     setData(data);
                 }
             }
         };
         fetchData();
-    },[endDate, startDate])
+    }, [endDate, startDate])
 
 
     return (
@@ -64,7 +64,7 @@ export const DataGrowthInsight = ()=>  {
                 </label>
             </div>
             <h2>Production and Product Mix Insights</h2>
-            <DataGrowthChart data={data} startDate={startDate} endDate={endDate} />
+            <DataGrowthChart data={data} startDate={startDate} endDate={endDate}/>
         </div>
     );
 };

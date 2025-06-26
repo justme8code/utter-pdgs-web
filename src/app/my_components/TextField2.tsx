@@ -1,5 +1,5 @@
 import React from "react";
-import { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
+import {ControllerRenderProps, FieldValues, Path} from "react-hook-form";
 
 type TextFieldProps<T extends FieldValues = FieldValues, N extends Path<T> = Path<T>> = {
     value?: string | number;

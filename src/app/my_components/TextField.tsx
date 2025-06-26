@@ -1,7 +1,7 @@
 import React from "react";
 
 interface TextFieldProps {
-    value?: string|number;
+    value?: string | number;
     name?: string;
     label?: string;
     placeholder?: string;
@@ -13,9 +13,20 @@ interface TextFieldProps {
     className?: string;
 }
 
-export const TextField: React.FC<TextFieldProps> = ({ value, name,label, placeholder, required,type = "text", onChange, props,defaultValue,className }) => {
+export const TextField: React.FC<TextFieldProps> = ({
+                                                        value,
+                                                        name,
+                                                        label,
+                                                        placeholder,
+                                                        required,
+                                                        type = "text",
+                                                        onChange,
+                                                        props,
+                                                        defaultValue,
+                                                        className
+                                                    }) => {
     return (
-        <div className={`${ label ? "flex w-full flex-col gap-2" :"w-full"}  ${className}`}>
+        <div className={`${label ? "flex w-full flex-col gap-2" : "w-full"}  ${className}`}>
             {label && <label className={"font-bold"} htmlFor={label}>{label}:</label>}
             <input
                 name={name}
@@ -25,7 +36,7 @@ export const TextField: React.FC<TextFieldProps> = ({ value, name,label, placeho
                 required={required}
                 id={label}
                 value={typeof value === "number" && isNaN(value) ? "" : value ?? ""}
-                onChange={(e) => onChange ? onChange(e.target.value) :undefined}
+                onChange={(e) => onChange ? onChange(e.target.value) : undefined}
                 {...props}
                 defaultValue={defaultValue}
             />

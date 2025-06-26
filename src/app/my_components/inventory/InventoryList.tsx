@@ -13,7 +13,7 @@ type InventoryListProps = {
     allIngredients: string[]; // Predefined list of possible ingredients
 };
 
-export const InventoryList = ({ inventory, allIngredients }: InventoryListProps) => {
+export const InventoryList = ({inventory, allIngredients}: InventoryListProps) => {
     const [newMaterial, setNewMaterial] = useState("");
     const [ingredientInput, setIngredientInput] = useState("");
     const [inv, setInv] = useState<Inventory[]>(inventory);
@@ -21,17 +21,17 @@ export const InventoryList = ({ inventory, allIngredients }: InventoryListProps)
 
     const addRawMaterial = () => {
         if (!newMaterial.trim()) return;
-        const newEntry = { id: inv.length + 1, name: newMaterial, ingredients: [] };
+        const newEntry = {id: inv.length + 1, name: newMaterial, ingredients: []};
         setInv([...inv, newEntry]);
         setNewMaterial("");
     };
 
     const addIngredient = (materialId: number, ingredientName: string) => {
         if (!ingredientName.trim()) return;
-        const newIngredient = { id: Date.now(), name: ingredientName };
+        const newIngredient = {id: Date.now(), name: ingredientName};
         const updatedInventory = inv.map((material) =>
             material.id === materialId
-                ? { ...material, ingredients: [...material.ingredients, newIngredient] }
+                ? {...material, ingredients: [...material.ingredients, newIngredient]}
                 : material
         );
         setInv(updatedInventory);
@@ -42,7 +42,7 @@ export const InventoryList = ({ inventory, allIngredients }: InventoryListProps)
     const removeIngredient = (materialId: number, ingredientId: number) => {
         const updatedInventory = inv.map((material) =>
             material.id === materialId
-                ? { ...material, ingredients: material.ingredients.filter(ing => ing.id !== ingredientId) }
+                ? {...material, ingredients: material.ingredients.filter(ing => ing.id !== ingredientId)}
                 : material
         );
         setInv(updatedInventory);
@@ -77,11 +77,12 @@ export const InventoryList = ({ inventory, allIngredients }: InventoryListProps)
                         <div className="flex flex-wrap gap-2 mb-4">
                             {/* Render selected ingredients as chips */}
                             {material.ingredients.map((ingredient) => (
-                                <div key={ingredient.id} className="flex items-center bg-gray-200 rounded-full px-2 py-1">
+                                <div key={ingredient.id}
+                                     className="flex items-center bg-gray-200 rounded-full px-2 py-1">
                                     <span>{ingredient.name}</span>
                                     <button
-                                        onClick={() =>  {
-                                            if(ingredient.id) {
+                                        onClick={() => {
+                                            if (ingredient.id) {
                                                 removeIngredient(material.id, ingredient.id);
                                             }
                                         }}

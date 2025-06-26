@@ -17,16 +17,16 @@ export interface ProductMix {
     productCount: number;
 }
 
-export interface ProductMixIngredient{
-    id?:number;
-    ingredientId:number;
-    litresUsed:number;
-    ingredient?:Ingredient;
+export interface ProductMixIngredient {
+    id?: number;
+    ingredientId: number;
+    litresUsed: number;
+    ingredient?: Ingredient;
 }
 
 export interface ProductMixOutput {
     id?: number;
-    product:Product;
+    product: Product;
     productMixIngredients: ProductMixIngredient[];
     totalLitersUsed?: number;
     brixOnDiluent?: number;

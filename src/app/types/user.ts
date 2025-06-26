@@ -1,5 +1,5 @@
-import { Role } from "./role";
-import { Staff } from "./staff";
+import {Role} from "./role";
+import {Staff} from "./staff";
 
 export type User = {
     id?: number;

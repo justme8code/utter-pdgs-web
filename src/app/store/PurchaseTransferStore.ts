@@ -1,6 +1,6 @@
 // src/app/store/usePurchaseTransferStore.ts
-import { create } from 'zustand';
-import { PurchaseTransfer } from '@/app/types';
+import {create} from 'zustand';
+import {PurchaseTransfer} from '@/app/types';
 
 type PurchaseTransferStore = {
     setPurchaseTransfers: (purchases: PurchaseTransfer[]) => void;
@@ -27,10 +27,10 @@ export const usePurchaseTransferStore = create<PurchaseTransferStore>((set) => (
     updatePurchaseTransfer: (id, updated) =>
         set((state) => ({
             purchaseTransfers: state.purchaseTransfers.map((p) =>
-                p.id === id ? { ...p, ...updated } : p
+                p.id === id ? {...p, ...updated} : p
             ),
         })),
 
-    clearPurchaseTransfers: () => set({ purchaseTransfers: [] }),
-    setPurchaseTransfers: (purchaseTransfers) => set({ purchaseTransfers }),
+    clearPurchaseTransfers: () => set({purchaseTransfers: []}),
+    setPurchaseTransfers: (purchaseTransfers) => set({purchaseTransfers}),
 }));

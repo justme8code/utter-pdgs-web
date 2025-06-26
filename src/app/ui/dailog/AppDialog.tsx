@@ -9,9 +9,11 @@ type MyDialogProps = {
     description?: string;
     className?: string;
 }
-export const AppDialog = ({className,title,description,children, isOpen=false, onClose}:MyDialogProps) => {
+export const AppDialog = ({className, title, description, children, isOpen = false, onClose}: MyDialogProps) => {
     return (
-        <Dialog open={isOpen} onClose={()=>{onClose()}} className={"z-50"}>
+        <Dialog open={isOpen} onClose={() => {
+            onClose()
+        }} className={"z-50"}>
             <div className={`fixed inset-0 flex w-screen items-center justify-center p-4`}>
                 <DialogPanel
                     transition

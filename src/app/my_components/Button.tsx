@@ -6,7 +6,7 @@ interface ButtonProps {
     label: string;
     onClick?: () => void;
     type?: "button" | "submit" | "reset";
-    variant?: "primary" | "secondary" | "danger"|"none";
+    variant?: "primary" | "secondary" | "danger" | "none";
     disabled?: boolean;
     href?: string; // If provided, renders as a link instead of a button
     external?: boolean; // Determines if it's an external link

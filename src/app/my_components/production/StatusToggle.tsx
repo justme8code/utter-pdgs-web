@@ -11,7 +11,7 @@ interface StatusToggleProps {
 
 const states: Status[] = ["RUNNING", "COMPLETED", "PAUSED"];
 
-const StatusToggle: React.FC<StatusToggleProps> = ({ onStatusChange, initialStatus = "RUNNING" }) => {
+const StatusToggle: React.FC<StatusToggleProps> = ({onStatusChange, initialStatus = "RUNNING"}) => {
     const initialIndex = states.indexOf(initialStatus); // Find the index based on the initial status
     const [statusIndex, setStatusIndex] = useState<number>(initialIndex);
 
@@ -22,9 +22,9 @@ const StatusToggle: React.FC<StatusToggleProps> = ({ onStatusChange, initialStat
     };
 
     const IconStyles = {
-        RUNNING: <Clock2 className={"text-green-500"} />,
-        COMPLETED: <CheckCheck className={"text-blue-500"} />,
-        PAUSED: <OctagonPause className={"text-yellow-500"} />,
+        RUNNING: <Clock2 className={"text-green-500"}/>,
+        COMPLETED: <CheckCheck className={"text-blue-500"}/>,
+        PAUSED: <OctagonPause className={"text-yellow-500"}/>,
     };
 
     const currentStatus = states[statusIndex];

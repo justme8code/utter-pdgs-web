@@ -1,9 +1,9 @@
 'use client';
 import React, {useState} from "react";
 import {Plus} from "lucide-react";
-import {CreateProduct} from "@/app/my_components/production/CreateProduct";
+import {CreateProductModal} from "@/app/my_components/production/CreateProductModal";
 
-export const CreateAProductButton = ({ onCreated,className }: { onCreated?: () => void ,className?:string}) => {
+export const CreateAProductButton = ({onCreated, className}: { onCreated?: () => void, className?: string }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleCreateProduct = async () => {
@@ -21,9 +21,9 @@ export const CreateAProductButton = ({ onCreated,className }: { onCreated?: () =
                 <p>Add product</p>
             </button>
             {
-                isModalOpen && <CreateProduct isOpen={isModalOpen} onClose={async () => {
+                isModalOpen && <CreateProductModal isOpen={isModalOpen} onClose={async () => {
                     await handleCreateProduct();
-                }}   />
+                }}/>
             }
 
         </>

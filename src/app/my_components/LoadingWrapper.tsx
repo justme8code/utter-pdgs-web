@@ -6,7 +6,7 @@ interface LoadingProps {
     className?: string;
 }
 
-export default function LoadingWrapper({ isLoading, children, className }: LoadingProps) {
+export default function LoadingWrapper({isLoading, children, className}: LoadingProps) {
     // Check if className includes "relative"
     const isRelative = className?.includes("relative");
 
@@ -20,7 +20,7 @@ export default function LoadingWrapper({ isLoading, children, className }: Loadi
           `}
                 >
                     <div className="flex flex-col items-center justify-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500" />
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"/>
                         <h1>please wait...</h1>
                     </div>
                 </div>

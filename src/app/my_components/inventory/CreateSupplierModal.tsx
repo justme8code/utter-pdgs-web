@@ -1,12 +1,29 @@
-import { Modal } from "@/app/my_components/Modal";
-import { TextField2 } from "@/app/my_components/TextField2";
-import { Button } from "@/app/my_components/Button";
-import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {createSuppliers, updateSupplier} from "@/app/actions/inventory";
-import {SupplierFormData, supplierSchema} from "@/app/suppliers/supplierform";
+// app/your-path/CreateSupplierModal.tsx
+'use client';
+
+import React, {useEffect} from "react";
+import {Controller, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {updateSupplier} from "@/api/inventory"; // Assuming correct path
+import {SupplierFormData, supplierSchema} from "@/app/(main)/suppliers/supplierform"; // Assuming correct path
 import {Supplier} from "@/app/types";
+
+import {Button as ShadcnButton} from "@/components/ui/button"; // Shadcn Button
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import {Input as ShadcnInput} from "@/components/ui/input"; // Shadcn Input
+import {Label as ShadcnLabel} from "@/components/ui/label"; // Shadcn Label
+import {Loader2} from "lucide-react";
+// Optional: for toasts
+// import { toast } from "sonner";
+import useSupplierStore from "@/app/store/SupplierStore"; // Import store to call fetchSuppliers
 
 interface CreateSupplierModalProps {
     supplier?: Supplier;
@@ -15,13 +32,22 @@ interface CreateSupplierModalProps {
     isEdit?: boolean;
 }
 
-export const CreateSupplierModal: React.FC<CreateSupplierModalProps> = ({isEdit, supplier, isOpen, onClose }) => {
+export const CreateSupplierModal: React.FC<CreateSupplierModalProps> = ({
+                                                                            isEdit,
+                                                                            supplier,
+                                                                            isOpen,
+                                                                            onClose,
+                                                                        }) => {
+    const {
+        fetchSuppliers,
+        createSupplier: createSupplierAction, /* updateSupplier: updateSupplierAction - if you add it to store */
+    } = useSupplierStore();
 
     const {
         control,
         handleSubmit,
         reset,
-        formState: { errors, isSubmitting },
+        formState: {errors, isSubmitting},
     } = useForm<SupplierFormData>({
         resolver: zodResolver(supplierSchema),
         defaultValues: {
@@ -33,115 +59,170 @@ export const CreateSupplierModal: React.FC<CreateSupplierModalProps> = ({isEdit,
     });
 
     useEffect(() => {
-        if (supplier && isEdit) {
-            reset({
-                fullName: supplier.fullName ?? "",
-                address: supplier.address ?? "",
-                phoneNumber: supplier.phoneNumber ?? "",
-                emailAddress: supplier.emailAddress ?? "",
-            });
+        if (isOpen) { // Reset form when modal opens
+            if (isEdit && supplier) {
+                reset({
+                    fullName: supplier.fullName ?? "",
+                    address: supplier.address ?? "",
+                    phoneNumber: supplier.phoneNumber ?? "",
+                    emailAddress: supplier.emailAddress ?? "",
+                });
+            } else {
+                reset({ // Reset to default for new supplier
+                    fullName: "",
+                    address: "",
+                    phoneNumber: "",
+                    emailAddress: "",
+                });
+            }
         }
-    }, [supplier, reset, isEdit]);
+    }, [supplier, isEdit, isOpen, reset]);
+
 
     const onSubmit = async (data: SupplierFormData) => {
+        let result;
         if (!isEdit) {
-            const { status } = await createSuppliers({
-                id: null,
-                ...data
-            });
-            if (status) {
-                alert("Supplier created!");
-                setTimeout(() => window.location.reload(), 1500);
-                onClose();
-            }
+            // Use the store's createSupplier action
+            result = await createSupplierAction(data); // createSupplierAction expects Omit<Supplier, 'id'>
+            // Ensure data matches this or adjust data sent
         } else {
-           if(supplier && supplier.id && supplier.id > 0){
-                const { status } = await updateSupplier(supplier.id,{
-                    id:supplier.id,
-                    ...data
+            if (supplier && supplier.id) {
+                // You'll need an updateSupplier action in your store for consistency
+                // For now, directly calling the server action
+                const {status, data: updatedData, error: apiError} = await updateSupplier(supplier.id, {
+                    id: supplier.id, // server action might need id in payload
+                    ...data,
                 });
-                if (status) {
-                    alert("Supplier updated!");
-                    setTimeout(() => window.location.reload(), 1500);
-                    onClose();
-                }
+                result = {success: status, data: updatedData, error: apiError?.message};
+            } else {
+                // Handle case where supplier or supplier.id is missing in edit mode
+                console.error("Supplier ID is missing in edit mode.");
+                // toast.error("Cannot update supplier: ID is missing.");
+                alert("Cannot update supplier: ID is missing."); // Simple alert
+                return;
             }
+        }
+
+        if (result?.success) {
+            // toast.success(`Supplier ${isEdit ? "updated" : "created"} successfully!`);
+            alert(`Supplier ${isEdit ? "updated" : "created"} successfully!`); // Simple alert
+            fetchSuppliers(); // Re-fetch suppliers to update the list
+            onClose();
+        } else {
+            // toast.error(result?.error || `Failed to ${isEdit ? "update" : "create"} supplier.`);
+            alert(result?.error || `Failed to ${isEdit ? "update" : "create"} supplier.`); // Simple alert
         }
     };
 
+    // Prevent closing modal on overlay click if submitting
+    const handleOpenChange = () => {
+        if (!isSubmitting) {
+            onClose(); // Call original onClose
+        }
+    };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} className="w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">{isEdit ? "Edit Supplier" : "Add Supplier"}</h2>
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+            <DialogContent className="sm:max-w-[480px]"> {/* Adjust width as needed */}
+                <DialogHeader>
+                    <DialogTitle className="text-xl">{isEdit ? "Edit Supplier" : "Add New Supplier"}</DialogTitle>
+                    <DialogDescription>
+                        {isEdit ? "Update the details for this supplier." : "Enter the details for the new supplier."}
+                    </DialogDescription>
+                </DialogHeader>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 w-full">
-                <div>
-                    <Controller
-                        name="fullName"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField2
-                                label="Full Name"
-                                placeholder="Enter Full Name"
-                                field={field}
-                            />
-                        )}
-                    />
-                    {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName.message}</p>}
-                </div>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-2">
+                    {/* Full Name */}
+                    <div className="space-y-1">
+                        <ShadcnLabel htmlFor="fullName">Full Name</ShadcnLabel>
+                        <Controller
+                            name="fullName"
+                            control={control}
+                            render={({field}) => (
+                                <ShadcnInput
+                                    id="fullName"
+                                    placeholder="e.g., John Doe Supplies"
+                                    {...field}
+                                    aria-invalid={errors.fullName ? "true" : "false"}
+                                />
+                            )}
+                        />
+                        {errors.fullName &&
+                            <p className="text-sm font-medium text-destructive">{errors.fullName.message}</p>}
+                    </div>
 
-                <div>
-                    <Controller
-                        name="address"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField2
-                                label="Address"
-                                placeholder="Enter Address"
-                                field={field}
-                            />
-                        )}
-                    />
-                    {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
-                </div>
+                    {/* Address */}
+                    <div className="space-y-1">
+                        <ShadcnLabel htmlFor="address">Address</ShadcnLabel>
+                        <Controller
+                            name="address"
+                            control={control}
+                            render={({field}) => (
+                                <ShadcnInput
+                                    id="address"
+                                    placeholder="e.g., 123 Main St, Anytown"
+                                    {...field}
+                                    aria-invalid={errors.address ? "true" : "false"}
+                                />
+                            )}
+                        />
+                        {errors.address &&
+                            <p className="text-sm font-medium text-destructive">{errors.address.message}</p>}
+                    </div>
 
-                <div>
-                    <Controller
-                        name="phoneNumber"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField2
-                                label="Phone Number"
-                                placeholder="Enter Phone Number"
-                                field={field}
-                            />
-                        )}
-                    />
-                    {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
-                </div>
+                    {/* Phone Number */}
+                    <div className="space-y-1">
+                        <ShadcnLabel htmlFor="phoneNumber">Phone Number</ShadcnLabel>
+                        <Controller
+                            name="phoneNumber"
+                            control={control}
+                            render={({field}) => (
+                                <ShadcnInput
+                                    id="phoneNumber"
+                                    type="tel"
+                                    placeholder="e.g., +1-555-123-4567"
+                                    {...field}
+                                    aria-invalid={errors.phoneNumber ? "true" : "false"}
+                                />
+                            )}
+                        />
+                        {errors.phoneNumber &&
+                            <p className="text-sm font-medium text-destructive">{errors.phoneNumber.message}</p>}
+                    </div>
 
-                <div>
-                    <Controller
-                        name="emailAddress"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField2
-                                label="Email Address"
-                                placeholder="Enter Email"
-                                field={field}
-                            />
-                        )}
-                    />
-                    {errors.emailAddress && <p className="text-red-500 text-sm">{errors.emailAddress.message}</p>}
-                </div>
+                    {/* Email Address */}
+                    <div className="space-y-1">
+                        <ShadcnLabel htmlFor="emailAddress">Email Address</ShadcnLabel>
+                        <Controller
+                            name="emailAddress"
+                            control={control}
+                            render={({field}) => (
+                                <ShadcnInput
+                                    id="emailAddress"
+                                    type="email"
+                                    placeholder="e.g., contact@johndoesupplies.com"
+                                    {...field}
+                                    aria-invalid={errors.emailAddress ? "true" : "false"}
+                                />
+                            )}
+                        />
+                        {errors.emailAddress &&
+                            <p className="text-sm font-medium text-destructive">{errors.emailAddress.message}</p>}
+                    </div>
 
-                <Button
-                    type="submit"
-                    label={isSubmitting ? "Processing..." : isEdit ? "Update Supplier" : "Add Supplier"}
-                    disabled={isSubmitting}
-                    className="bg-green-500 text-white px-4 py-2 rounded"
-                />
-            </form>
-        </Modal>
+                    <DialogFooter className="pt-4">
+                        <DialogClose asChild>
+                            <ShadcnButton type="button" variant="outline" disabled={isSubmitting}>
+                                Cancel
+                            </ShadcnButton>
+                        </DialogClose>
+                        <ShadcnButton type="submit" disabled={isSubmitting}>
+                            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                            {isSubmitting ? "Processing..." : isEdit ? "Update Supplier" : "Add Supplier"}
+                        </ShadcnButton>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
     );
 };

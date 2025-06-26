@@ -1,8 +1,9 @@
-import { RawMaterial } from "./rawMaterial";
+import {RawMaterial} from "./rawMaterial";
 
 export interface Ingredient {
     id?: number | null;
     name: string;
+    uom: string;
     rawMaterials?: RawMaterial[];
 }
 

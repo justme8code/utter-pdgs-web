@@ -1,13 +1,13 @@
-import { Field, Label, Input } from '@headlessui/react';
+import {Field, Input, Label} from '@headlessui/react';
 import React from 'react';
-import { UseFormRegister, FieldValues, Path } from 'react-hook-form';
+import {FieldValues, Path, UseFormRegister} from 'react-hook-form';
 
 type FormInputProps<TFormValues extends FieldValues> = {
     label: string;
     name: Path<TFormValues>;
     type?: string;
     register: UseFormRegister<TFormValues>;
-    asNumber?:boolean;
+    asNumber?: boolean;
     error?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
@@ -17,7 +17,7 @@ export const FormInput = <TFormValues extends FieldValues>({
                                                                type = 'text',
                                                                register,
                                                                error,
-                                                               asNumber=false,
+                                                               asNumber = false,
                                                                ...props
                                                            }: FormInputProps<TFormValues>) => {
     return (
@@ -25,7 +25,7 @@ export const FormInput = <TFormValues extends FieldValues>({
             <Field>
                 <Label className="text-sm/6 font-medium">{label}</Label>
                 <Input
-                    {...register(name,{
+                    {...register(name, {
                         valueAsNumber: asNumber
                     })}
                     type={type}

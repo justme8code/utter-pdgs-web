@@ -10,7 +10,7 @@ import {
     Title,
     Tooltip
 } from 'chart.js';
-import {DataGrowthDto} from "@/app/actions/insights";
+import {DataGrowthDto} from "@/api/insights";
 
 ChartJS.register(
     CategoryScale,
@@ -22,10 +22,8 @@ ChartJS.register(
     Legend
 );
 
-const DataGrowthChart = ({ data,startDate,endDate }:{data:DataGrowthDto[],startDate:string,endDate:string}) => {
+const DataGrowthChart = ({data, startDate, endDate}: { data: DataGrowthDto[], startDate: string, endDate: string }) => {
     // Setup state for the start and end date
-
-
 
 
     // Filter data based on selected date range
@@ -61,8 +59,8 @@ const DataGrowthChart = ({ data,startDate,endDate }:{data:DataGrowthDto[],startD
     return (
         <div className={"flex"}>
             {/* Chart */}
-            <div className={"w-full h-64 md:h-96 mb-4"} >
-                <Line data={chartData} />
+            <div className={"w-full h-64 md:h-96 mb-4"}>
+                <Line data={chartData}/>
             </div>
         </div>
     );

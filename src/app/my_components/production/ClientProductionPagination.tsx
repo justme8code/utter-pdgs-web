@@ -1,17 +1,17 @@
-
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, {useEffect, useMemo, useState} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
 
-import { Input } from "@/components/ui/input";   // Shadcn Input
-import { Button } from "@/components/ui/button"; // Shadcn Button
-import { Production } from "@/app/types";
-import {Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { CreateAProductionButton } from "@/app/my_components/production/CreateAProductionButton";
-import ProductionList from "@/app/my_components/production/ProductionLIst"; // Assuming this is already styled or a Shadcn button
+import {Input} from "@/components/ui/input"; // Shadcn Input
+import {Button} from "@/components/ui/button"; // Shadcn Button
+import {Production} from "@/app/types";
+import {ChevronLeft, ChevronRight, Search} from "lucide-react";
+import {CreateAProductionButton} from "@/app/my_components/production/CreateAProductionButton";
+import ProductionList from "@/app/my_components/production/ProductionLIst";
+import {Navbar} from "@/components/layout/Navbar"; // Assuming this is already styled or a Shadcn button
 
-export const ClientProductionPagination = ({ productions: initialProductions }: { productions: Production[] }) => {
+export const ClientProductionPagination = ({productions: initialProductions}: { productions: Production[] }) => {
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -48,7 +48,7 @@ export const ClientProductionPagination = ({ productions: initialProductions }: 
         params.set("size", pageSize.toString());
         // Only push if params actually changed to avoid unnecessary re-renders/history entries
         if (searchParams.get("page") !== currentPage.toString() || searchParams.get("size") !== pageSize.toString()) {
-            router.push(`?${params.toString()}`, { scroll: false });
+            router.push(`?${params.toString()}`, {scroll: false});
         }
     }, [currentPage, pageSize, router, searchParams]);
 
@@ -61,13 +61,11 @@ export const ClientProductionPagination = ({ productions: initialProductions }: 
     return (
         <div className="container mx-auto py-6 px-4 md:px-6 space-y-6">
             {/* Header and Actions */}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 p-4 bg-card border rounded-lg shadow-sm">
-                <h1 className="text-2xl font-semibold tracking-tight text-card-foreground">
-                    Productions Management
-                </h1>
+            <Navbar title={"Production Management"}>
+
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                     <div className="relative w-full sm:w-64">
-                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
                         <Input
                             type="search"
                             placeholder="Search by name, number, staff..."
@@ -81,15 +79,15 @@ export const ClientProductionPagination = ({ productions: initialProductions }: 
                     {/* <Button onClick={() => router.push('/productions/create')}> // Or your modal logic
                         <PlusCircle className="mr-2 h-4 w-4" /> Create Production
                     </Button> */}
-                    <CreateAProductionButton />
+                    <CreateAProductionButton/>
                 </div>
-            </div>
+            </Navbar>
 
             {/* Production List */}
             <div className="bg-card border rounded-lg shadow-sm">
                 <ProductionList
                     productions={paginatedProductions}
-                    error={{ state: false, message: "" }} // Pass any actual error if available
+                    error={{state: false, message: ""}} // Pass any actual error if available
                 />
             </div>
 
@@ -107,7 +105,7 @@ export const ClientProductionPagination = ({ productions: initialProductions }: 
                             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
                             disabled={currentPage === 0}
                         >
-                            <ChevronLeft className="h-4 w-4 mr-1" />
+                            <ChevronLeft className="h-4 w-4 mr-1"/>
                             Previous
                         </Button>
                         <Button
@@ -117,7 +115,7 @@ export const ClientProductionPagination = ({ productions: initialProductions }: 
                             disabled={currentPage >= totalPages - 1}
                         >
                             Next
-                            <ChevronRight className="h-4 w-4 ml-1" />
+                            <ChevronRight className="h-4 w-4 ml-1"/>
                         </Button>
                     </div>
                 </div>

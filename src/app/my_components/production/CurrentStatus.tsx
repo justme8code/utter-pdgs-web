@@ -7,12 +7,12 @@ interface CurrentStatusProps {
     initialStatus?: Status; // Added prop for initial state
 }
 
-const CurrentStatus: React.FC<CurrentStatusProps> = ({initialStatus = "RUNNING" }) => {
+const CurrentStatus: React.FC<CurrentStatusProps> = ({initialStatus = "RUNNING"}) => {
     const IconStyles = {
-        RUNNING: <Clock2 className={"text-green-500"} />,
-        COMPLETED: <CheckCheck className={"text-blue-500"} />,
-        PAUSED: <OctagonPause className={"text-yellow-500"} />,
-        STOPPED: <OctagonPause className={"text-red-500"} />,
+        RUNNING: <Clock2 className={"text-green-500"}/>,
+        COMPLETED: <CheckCheck className={"text-blue-500"}/>,
+        PAUSED: <OctagonPause className={"text-yellow-500"}/>,
+        STOPPED: <OctagonPause className={"text-red-500"}/>,
     };
 
     return (
