@@ -92,7 +92,7 @@ export const ProductMixComponent = ({onSaveProductMix}: ProductMixComponentProps
                 productMixIngredients: []
             });
 
-            if (status && onSaveProductMix) {
+            if (status && onSaveProductMix && data) {
                 console.log("executing this...")
                 onSaveProductMix(data.productMix, data.productionStore);
             }
