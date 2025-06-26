@@ -3,7 +3,7 @@ import {RawMaterial} from "./rawMaterial";
 export interface Ingredient {
     id?: number | null;
     name: string;
-    uom: string;
+    uom?: string;
     rawMaterials?: RawMaterial[];
 }
 

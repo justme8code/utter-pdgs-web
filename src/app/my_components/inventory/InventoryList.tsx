@@ -28,7 +28,7 @@ export const InventoryList = ({inventory, allIngredients}: InventoryListProps) =
 
     const addIngredient = (materialId: number, ingredientName: string) => {
         if (!ingredientName.trim()) return;
-        const newIngredient = {id: Date.now(), name: ingredientName};
+        const newIngredient: Ingredient = {id: Date.now(), name: ingredientName};
         const updatedInventory = inv.map((material) =>
             material.id === materialId
                 ? {...material, ingredients: [...material.ingredients, newIngredient]}
