@@ -8,7 +8,7 @@ export async function Level1DataInsightSection() {
     return (
         <div className="bg-white shadow-md rounded-lg p-6">
             <h2 className="text-2xl font-semibold mb-4">Production and Raw Material Insights</h2>
-            <Level1DataInsightChart data={data}/>
+            {data ? <Level1DataInsightChart data={data}/> : <p>Could not fetch data</p>}
         </div>
     );
 }
