@@ -3,11 +3,14 @@ import {makeAuthRequest} from "@/lib/session";
 import {Conversion, Production, ProductMix, Purchase} from "@/app/types";
 
 export async function fetchProductions(page: number, size: number) {
-    const {data} = await makeAuthRequest<null, Production[]>({
+    const {data,error} = await makeAuthRequest<null, Production[]>({
         url: `/productions?page=${page}&size=${size}`,
         method: "GET"
     });
-    return data??[]
+    return {
+        data:data??[],
+        error
+    }
 }
 
 
@@ -17,7 +20,7 @@ export async function createProduction(production: { name: string, startDate: st
         method: "POST",
         data:production
     })
-    return {data:data,status,error:error.message}
+    return {data:data,status,error}
 }
 
 export async function fetchProduction(id: number) {

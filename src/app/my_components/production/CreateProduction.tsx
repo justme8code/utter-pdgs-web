@@ -106,8 +106,8 @@ export const CreateProduction = ({onClose, isOpen}: ModalOnAction) => {
         try {
             const response = await createProduction(newProduction);
 
-            if (response.error && response.error) { // Check if response.error itself exists
-                setApiError(response.error);
+            if (response.error && response.error.state) { // Check if response.error itself exists
+                setApiError(response.error.message);
                 // toast.error(response.error.message);
             } else if (response.data && response.data.id) { // Ensure data and id exist for success
                 setSuccessMessage("Production created successfully! Redirecting...");
