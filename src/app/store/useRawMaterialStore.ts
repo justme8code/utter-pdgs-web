@@ -14,7 +14,7 @@ const useSupplierStore = create<RawMaterialStore>((set) => ({
     fetchRawMaterials: async () => {
         try {
             const {data, status} = await getAllRawMaterials();
-            if (status) {
+            if (status && data) {
                 set({rawMaterials: data});
             }
         } catch (error) {
@@ -24,7 +24,7 @@ const useSupplierStore = create<RawMaterialStore>((set) => ({
     createSupplier: async (rawMaterial) => {
         try {
             const {data, status} = await addNewMaterial([rawMaterial]);
-            if (status) {
+            if (status && data) {
                 set({rawMaterials: data});
             }
         } catch (error) {
