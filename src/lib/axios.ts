@@ -2,7 +2,7 @@
 
 import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
 
-const BASE_URL = process.env.LOCAL_NETWORK_PUBLIC_BACKEND_URL;
+const BASE_URL = process.env.NEXT_PRIVATE_BACKEND_URL;
 
 export const axiosInstance: AxiosInstance = axios.create({
     baseURL: BASE_URL,
