@@ -8,6 +8,7 @@ import {useConversionStore} from "@/app/store/conversionStore";
 import {BalanceSheet} from "@/app/ui/dailog/BalanceSheet";
 import {TransferList} from "@/app/ui/production/TransferList";
 import {ProductionStoreInfo} from "@/app/(main)/productions/prod_components/ProductionStoreInfo";
+import {DeleteProductionButton} from "@/components/production/DeleteProductionButton";
 
 interface Prop {
     production: Production;
@@ -34,7 +35,12 @@ export default function ProductionOverView({data}: { data: Prop }) {
             <ProductionInfo/>
             <div className={"flex w-full p-4 items-start justify-between"}>
                 <ProductionStoreInfo/>
-                {selectedProduction && !selectedProduction.finalized && <BalanceSheet><TransferList/></BalanceSheet>}
+                    {selectedProduction && (
+                        <div className={"flex gap-2 items-center"}>
+                            {!selectedProduction.finalized && <BalanceSheet><TransferList/></BalanceSheet>}
+                            {selectedProduction.id && (<DeleteProductionButton productionId={selectedProduction.id}/>)}
+                        </div>
+                    )}
             </div>
         </div>
     );

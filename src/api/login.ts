@@ -25,7 +25,7 @@ export async function login(previousState: unknown, formData: FormData) {
 
     if (data && data.jwtToken && status === 200) {
         await createSession(data.jwtToken);
-        console.log(data);
+        console.log(error);
         return {data, status}
     } else {
         return {error: error.message};

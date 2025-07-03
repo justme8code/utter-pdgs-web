@@ -57,7 +57,6 @@ export const UsersList = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setSelectedUser(undefined);
-        loadUsers(); // Re-fetch users after modal closes, in case of create/update
     };
 
     const filteredUsers = users.filter(user =>

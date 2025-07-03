@@ -3,6 +3,7 @@ import "./globals.css";
 import {Toaster as SonnerToaster} from "@/components/ui/sonner";
 import localFont from "next/font/local";
 import {cn} from "@/lib/utils";
+import {Provider} from "@/lib/provider";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -29,8 +30,10 @@ export default function RootLayout({
         <html lang="en">
         <body
             className={cn("min-h-screen bg-background font-sans antialiased", geistSans.variable, geistMono.variable)}>
-        <SonnerToaster richColors position="top-right"/>
-        {children} {/* This is now controlled by sub-layouts */}
+
+         <Provider>
+             {children}
+         </Provider>
         </body>
         </html>
     );

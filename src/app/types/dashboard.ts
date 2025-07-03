@@ -28,9 +28,7 @@ export interface LowStockRawMaterial {
     // If you're not sure what this looks like yet, you can update later.
     // Here's a safe base assuming it might mirror LowStockIngredient:
     id?: number;
-    rawMaterial?: {
-        name: string;
-    };
+    rawMaterialName: string;
     usableQtyLeft?: number;
 }
 

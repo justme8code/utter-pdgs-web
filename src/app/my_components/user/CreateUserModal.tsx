@@ -1,7 +1,7 @@
 // app/your-path/CreateUserModal.tsx
 'use client';
 
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import useAuthStore from "@/app/store/useAuthStore";
 import {createUser, fetchRoles} from "@/api/inventory"; // Assuming correct path
 import {Role, User} from "@/app/types";
@@ -43,16 +43,16 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({user, isOpen, o
     // Use a ref for the form to manually reset if needed, though not strictly necessary here
     const formRef = useRef<HTMLFormElement>(null);
 
-    const initializeFormState = () => {
+    const initializeFormState = useCallback(() => {
         if (isEditMode && user) {
             setSelectedRoles(user.roles ?? []);
-            // For FormData, defaultValues are set on the input elements directly
         } else {
             setSelectedRoles([]);
         }
         setFormError(undefined);
         setFormSuccess("");
-    };
+    }, [isEditMode, user]); // Memoize the function based on these dependencies
+
 
     useEffect(() => {
         if (isOpen) {

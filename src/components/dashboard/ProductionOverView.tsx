@@ -2,14 +2,13 @@
 
 import {useEffect, useState} from "react"; // Added useMemo
 import {Production, ProductionOverviewData} from "@/app/types";
-import {fetchProductionOverview} from "@/api/dashboardActions"; // Adjust path as needed
-// Shadcn UI Imports
+import {fetchProductionOverview} from "@/api/dashboardActions";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Separator} from "@/components/ui/separator";
-import {Calendar} from "@/components/ui/calendar"; // <-- Import Calendar
+import {Calendar} from "@/components/ui/calendar";
 import {
     AlertCircle,
     Archive,
@@ -23,9 +22,8 @@ import {
     UserCircle
 } from "lucide-react";
 
-// Helper prod_components to display a single production item (No changes here)
+
 const ProductionItemCard = ({production}: { production: Production }) => {
-    // ... (previous ProductionItemCard code remains the same)
     return (
         <Card className={`
             w-full hover:shadow-xl transition-shadow duration-300 ease-in-out
@@ -319,7 +317,7 @@ export const ProductionOverView = () => {
                         </CardHeader>
                         <CardContent className="pt-0">
                             <div className="text-3xl font-bold text-amber-600 dark:text-amber-400">
-                                {overviewData.recentProductions.length}
+                                {overviewData.productionsInProgress.filter(value => value.finalized).length}
                             </div>
                             <p className="text-xs text-muted-foreground pt-1">
                                 Productions completed recently

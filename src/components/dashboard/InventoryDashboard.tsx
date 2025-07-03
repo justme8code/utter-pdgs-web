@@ -100,12 +100,12 @@ const InventoryDashboard = () => {
                 setLoading(true);
                 setError(null);
                 // await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate delay
-                const {data: fetchedData, status, error: apiError} = await fetchInventoryDashboardData(); // Assuming this matches your API wrapper
+                const {data: fetchedData, status} = await fetchInventoryDashboardData(); // Assuming this matches your API wrapper
                 if (status && fetchedData) {
                     setData(fetchedData as InventoryDashboardData); // Added 'as' for clarity if fetch is generic
                 } else {
-                    setError(apiError.message || "Failed to fetch inventory data. Server might be busy or no data available.");
-                    console.error("API Error: Inventory fetch failed", apiError);
+                    setError("Failed to fetch inventory data. Server might be busy or no data available.");
+                    console.error("API Error: Inventory fetch failed");
                 }
             } catch (err) {
                 setError("An unexpected error occurred while loading inventory information.");
@@ -208,7 +208,8 @@ const InventoryDashboard = () => {
                     } else { // itemType === "rawMaterial"
                         const rmItem = item as LowStockRawMaterial;
                         stockLevel = rmItem.usableQtyLeft ?? 0;
-                        itemName = rmItem.rawMaterial?.name || "Unknown Item";
+                        console.log("loging rawmateria name that shows unknown item ", rmItem.rawMaterialName)
+                        itemName = rmItem.rawMaterialName || "Unknown Item";
                         currentItemId = rmItem.id;
                     }
                     const style = getStockLevelStyle(stockLevel);
@@ -295,7 +296,7 @@ const InventoryDashboard = () => {
                         </div>
                         {ingredientTotalLitres &&
                             <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                            {ingredientTotalLitres.toLocaleString() || 0} L
+                            {isNaN(ingredientTotalLitres)? 0: ingredientTotalLitres} L
                         </span>
                         }
                     </div>
@@ -306,7 +307,7 @@ const InventoryDashboard = () => {
                         </div>
                         {rawMaterialTotalLitres &&
                             <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                            {rawMaterialTotalLitres.toLocaleString()} L
+                            {isNaN(rawMaterialTotalLitres)? 0: rawMaterialTotalLitres} L
                         </span>
                         }
                     </div>

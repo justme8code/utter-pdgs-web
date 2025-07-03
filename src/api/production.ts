@@ -74,4 +74,14 @@ export async function nonFinalizedProductions() {
 }
 
 
+// Delete production
+export async function  deleteProduction(id: number) {
+    const {status} = await makeAuthRequest<null, null>({
+        url: `/productions/${id}`,
+        method: "DELETE",
+    })
+    return {status: status === 200};
+}
+
+
 
