@@ -1,6 +1,5 @@
 import type {Metadata} from "next";
 import "./globals.css";
-import {Toaster as SonnerToaster} from "@/components/ui/sonner";
 import localFont from "next/font/local";
 import {cn} from "@/lib/utils";
 import {Provider} from "@/lib/provider";
@@ -31,9 +30,9 @@ export default function RootLayout({
         <body
             className={cn("min-h-screen bg-background font-sans antialiased", geistSans.variable, geistMono.variable)}>
 
-         <Provider>
-             {children}
-         </Provider>
+        <Provider>
+            {children}
+        </Provider>
         </body>
         </html>
     );

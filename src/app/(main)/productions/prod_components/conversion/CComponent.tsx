@@ -48,8 +48,8 @@ export const CComponent = ({conversion}: { conversion: Conversion }) => {
                 </div>
                 <div className="flex items-center gap-1">
                     <Tag className="h-3.5 w-3.5"/>
-                    <span>Batch: <span
-                        className="font-semibold text-foreground">{`BN-${conversion.batch}`}</span></span>
+                    <span>id <span
+                        className="font-semibold text-foreground">{`${conversion.id}`}</span></span>
                 </div>
             </div>
 

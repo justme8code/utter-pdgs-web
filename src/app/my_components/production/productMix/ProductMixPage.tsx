@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import {Blend, ListOrdered, PlusCircle} from "lucide-react"; // Icons
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {useConversionStore} from "@/app/store/conversionStore"; // Optional for visual separation
+import {useConversionBatchStore} from "@/app/store/conversionBatchStore"; // Optional for visual separation
 
 // This 'disabled' object is not used in the provided ProductMixPage,
 // but I'll keep it here in case it was intended for CreateNewProductMix or ExistingProductMixes.
@@ -39,9 +39,20 @@ export const ProductMixPage = () => {
     const {fetchProducts} = useProductStore();
     const {fetchIngredients} = useIngredientStore();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const {conversions} = useConversionStore();
+    // const {conversions} = useConversionStore();
+    const {conversionBatches} = useConversionBatchStore();
     // productMixes state is managed locally here. If it needs to be global, consider a Zustand store.
     const [productMixes, setProductMixes] = useState<ProductMix[]>([]);
+
+    const conversions = (conversionBatches ?? []).flatMap((batch) =>
+        batch.conversions.map((conversion) => ({
+            ...conversion,
+            batchId: batch.id,
+            batchName: batch.name,
+            batchActive: batch.active,
+        }))
+    );
+
 
     useEffect(() => {
         // Fetch initial data needed for creating mixes (ingredients, product templates)
@@ -68,6 +79,7 @@ export const ProductMixPage = () => {
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
                 {/* ... (Trigger button code remains the same) ... */}
+
                 {conversions && conversions.length > 0 ? (
                     <Button variant="default" size="sm">
                         <PlusCircle className="mr-2 h-4 w-4"/>

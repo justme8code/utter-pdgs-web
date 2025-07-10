@@ -52,7 +52,7 @@ export const ProductionStoreInfo = () => { // Renamed component for clarity
                     gridCols="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" // Adjust based on expected number of items
                 >
                     {hasIngredients ? (
-                        ingredientStores.map((value, index) => (
+                        ingredientStores.filter(value => value.usableLitresLeft>0).map((value, index) => (
                             <DataItem
                                 key={value.ingredient.id || index}
                                 label={value.ingredient.name}
@@ -89,6 +89,7 @@ export const ProductionStoreInfo = () => { // Renamed component for clarity
                                 <Badge variant="secondary"
                                        className="font-mono text-green-600 dark:text-green-400 bg-green-500/10 dark:bg-green-500/20 border-green-500/30">
                                     <TrendingUp className="h-3 w-3 mr-1"/>
+
                                     {parseFloat(String(isNaN(value.purchaseUsage?.usableWeightLeft ?? 0.0) ? 0.0 : value.purchaseUsage?.usableWeightLeft)).toFixed(2) ?? 'N/A'}
                                 </Badge>
                             </div>
@@ -97,6 +98,7 @@ export const ProductionStoreInfo = () => { // Renamed component for clarity
                                 <Badge variant="outline"
                                        className="font-mono text-red-600 dark:text-red-400 bg-red-500/5 dark:bg-red-500/10 border-red-500/20">
                                     <TrendingDown className="h-3 w-3 mr-1"/>
+                                    
                                     {parseFloat(String(isNaN(value.purchaseUsage?.totalKgUsed ?? 0.0) ? 0.0 : value.purchaseUsage?.totalKgUsed)).toFixed(2) ?? 'N/A'}
                                 </Badge>
                             </div>

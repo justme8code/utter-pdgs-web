@@ -5,12 +5,13 @@ import {Purchase} from "@/app/types";
 import {purchaseStyle} from "./purchaseStyle"; // Adjusted path
 import {checkNan} from "@/app/utils/functions";
 import {usePurchaseStore} from "@/app/store/purchaseStore";
-import {ConversionModal} from "./conversion/ConversionModal"; // Adjusted path
+
 import {useInitializePurchaseData} from "./hooks/useInitializePurchaseData"; // Adjusted path
 import {ColorGuide} from "@/app/(main)/productions/[pid]/ColorGuide"; // Assuming path is correct
 import {ShowFormPurchase} from "@/app/(main)/productions/[pid]/ShowFormPurchase"; // Assuming path is correct
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'; // Shadcn Card
-import {Info, ShoppingCart} from 'lucide-react'; // Icons
+import {Info, ShoppingCart} from 'lucide-react';
+import {NewConversionModal} from "@/components/production/NewConversionModal"; // Icons
 
 export function PurchaseTable() {
     const {purchases} = usePurchaseStore();
@@ -33,7 +34,7 @@ export function PurchaseTable() {
         {
             name: "Conversion",
             cell: (row) => {
-                return <ConversionModal row={row}/> // Keep as is
+                return <NewConversionModal purchase={row}/>
             },
             width: '120px', // Adjust width as needed
             center: true,

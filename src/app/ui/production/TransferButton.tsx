@@ -75,7 +75,7 @@ export const TransferButton = ({purchaseToTransferId, onTransferSuccess, onTrans
                 if (onTransferError) onTransferError(errorMsg);
             }
         } catch (error: unknown) {
-            const errorMsg =  "An unexpected error occurred during transfer.";
+            const errorMsg = "An unexpected error occurred during transfer.";
             setSuccessMessage(errorMsg, false);
             if (onTransferError) onTransferError(errorMsg);
             console.error("Transfer error:", error);

@@ -14,7 +14,6 @@ export interface ConversionField {
 
 export interface Conversion {
     id: number | null;
-    batch: number;
     productionId: number;
     purchaseId: number;
     createdAt?: string;

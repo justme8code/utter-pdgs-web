@@ -1,5 +1,4 @@
-import 'server-only';
-
+'use server';
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 import {AxiosRequestConfig} from "axios";
@@ -55,11 +54,8 @@ export async function makeAuthRequest<T, R>(
     // Handle the 401 Unauthorized case
     // Your `myRequest` (axios instance) should be configured to NOT throw on 401.
     if (response.status === 401) {
-        // The backend told us the token is invalid or expired.
-        // Now is the time to act.
-        await deleteSession(); // This will clear the bad cookie and redirect.
-        // We need to stop execution here. We can throw an error that will be caught by a boundary.
-        throw new Error("Session expired or invalid.");
+        await deleteSession();
+
     }
 
     return response;

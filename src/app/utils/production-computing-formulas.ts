@@ -86,3 +86,13 @@ export function calculateCostPerLitre({totalCost, usableLitres}: CostParam2): nu
 
     return formatNumber(totalCostNum / usableLitresNum);
 }
+
+
+export function convertLitersToCentiliter(liters: number): number {
+    return liters * 100;
+}
+
+export function autoCalculateNumberOfBottles(bottleSizeCl: number, totalCl: number): number {
+    if (bottleSizeCl <= 0) return 0; // avoid divide-by-zero mess
+    return Math.floor(totalCl / bottleSizeCl); // use floor to get full bottles only
+}

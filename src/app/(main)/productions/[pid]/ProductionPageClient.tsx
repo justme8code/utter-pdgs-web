@@ -5,15 +5,12 @@ import {PurchaseTable} from "@/app/(main)/productions/prod_components/PurchaseTa
 import {ConversionTable} from "@/app/(main)/productions/prod_components/conversion/ConversionTable"; // Adjusted path
 import {ProductMixProducts} from "./ProductMixProducts";
 import {FinishProduction} from "./FinishProduction";
-import {Conversion, Production, Purchase} from "@/app/types";
+import {ProductionDetailsFull} from "@/app/types/new";
 
-interface ProductionPageClientProps {
-    productionData: { production: Production, purchases: Purchase[], conversions: Conversion[] }; // Use the specific type from your fetch function
-}
 
-export default function ProductionPageClient({productionData}: ProductionPageClientProps) {
+export default function ProductionPageClient({productionData}: { productionData: ProductionDetailsFull }) {
     return (
-        <div className="container mx-auto py-6 px-4 md:px-6 space-y-8">
+        <div className="container mx-auto py-6  space-y-8">
             {/* Overview Section - Assuming this is already a well-styled Card or prod_components */}
             <ProductionOverView data={productionData}/> {/* Adjust if 'data' prop expects a different structure */}
 

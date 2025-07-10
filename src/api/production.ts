@@ -1,6 +1,7 @@
 'use server';
 import {makeAuthRequest} from "@/lib/session";
-import {Conversion, Production, ProductMix, Purchase} from "@/app/types";
+import {Production, ProductMix} from "@/app/types";
+import {ConversionBatch, ProductionDetailsFull} from "@/app/types/new";
 
 export async function fetchProductions(page: number, size: number) {
     const {data,error} = await makeAuthRequest<null, Production[]>({
@@ -39,11 +40,7 @@ export async function fetchProductionMixes(productionId: number) {
 }
 
 export async function fetchProductionFullData(productionId: number) {
-    const {data, status} = await makeAuthRequest<number, {
-        production: Production,
-        purchases: Purchase[],
-        conversions: Conversion[]
-    }>({
+    const {data, status} = await makeAuthRequest<number, ProductionDetailsFull>({
         url: `/productions/${productionId}/complete`,
         method: "GET",
     });
@@ -83,5 +80,14 @@ export async function  deleteProduction(id: number) {
     return {status: status === 200};
 }
 
+export async function createProductionBatch(id: number) {
+    const {data,status} = await makeAuthRequest<null, ConversionBatch>({
+        url: `/productions/${id}/batches`,
+        method: "POST",
+    });
+    return {data: data,status: status === 201};
+}
 
+// download purchase csv
+ 
 

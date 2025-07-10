@@ -21,7 +21,7 @@ export async function login(previousState: unknown, formData: FormData) {
         headers: {"Content-Type": "multipart/form-data"},
         url: `/auth`,
         data: formData
-    })
+    });
 
     if (data && data.jwtToken && status === 200) {
         await createSession(data.jwtToken);

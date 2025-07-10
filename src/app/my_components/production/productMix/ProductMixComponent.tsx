@@ -1,6 +1,6 @@
 import {TextField} from "@/app/my_components/TextField";
 import {RotateCw} from "lucide-react";
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useProductStore} from "@/app/store/productStore";
 import {useProductionStore} from "@/app/store/productionStore";
 import {ProductSelector} from "@/app/my_components/production/productMix/ProductSelector";
@@ -8,6 +8,7 @@ import {createProductMix} from "@/api/productMix";
 import {ProductMix} from "@/app/types";
 import {useLoadingUI} from "@/app/store/useLoadingUI";
 import {disabled, ProductMixComponentProps} from "@/app/my_components/production/productMix/ProductMixPage";
+import {autoCalculateNumberOfBottles, convertLitersToCentiliter} from "@/app/utils/production-computing-formulas";
 
 export const ProductMixComponent = ({onSaveProductMix}: ProductMixComponentProps) => {
     const [productMix, setProductMix] = useState<ProductMix>({} as ProductMix);
@@ -22,6 +23,8 @@ export const ProductMixComponent = ({onSaveProductMix}: ProductMixComponentProps
 
     const calculatedTotalIngredientUsage = () =>
         productMix.productMixIngredients?.reduce((total, i) => total + (i.litresUsed || 0), 0) || 0;
+
+
 
 
     const validateInputs = (): boolean => {
@@ -115,6 +118,27 @@ export const ProductMixComponent = ({onSaveProductMix}: ProductMixComponentProps
         });
     };
 
+    useEffect(() => {
+        const totalLitresUsed = (productMix.productMixIngredients ?? []).reduce(
+            (sum, item) => sum + (item.litresUsed ?? 0),
+            0
+        );
+
+        const totalCL = convertLitersToCentiliter(totalLitresUsed);
+        const autoCount = autoCalculateNumberOfBottles(50, totalCL); // 50cl assumed
+
+        if (productMix.productCount !== autoCount) {
+            setProductMix(prev => ({
+                ...prev,
+                productCount: autoCount
+            }));
+
+
+        }
+    }, [productMix.productCount, productMix.productMixIngredients]);
+
+    console.log("console login product mix here ", selectedProduction?.productionStore);
+
     return (
         <div>
             {products && products.length > 0 && (
@@ -159,19 +183,51 @@ export const ProductMixComponent = ({onSaveProductMix}: ProductMixComponentProps
                             })}
                         </div>
 
+                        <div className={"space-y-5 font-medium "}>
+                            <h1>{"Total Liters"}</h1>
+                            <TextField
+                                className="max-w-40 mx-auto"
+                                value={
+                                    (productMix.productMixIngredients ?? [])
+                                        .reduce((sum, item) => sum + (item.litresUsed ?? 0), 0)
+                                        .toString()
+                                }
+                                props={disabled}
+                            />
+
+                        </div>
+
+                        {/*(productMix as never)[field]*/}
 
                         {["brixOnDiluent", "initialBrix", "finalBrix", "initialPH", "finalPH", "productCount"].map((field, i) => (
                             <div className="space-y-5 font-medium" key={i}>
-                                <h1>{field.replace(/([A-Z])/g, " $1").trim()}</h1>
-                                <TextField
-                                    type="number"
-                                    value={(productMix as never)[field]}
-                                    className="max-w-40 text-center"
-                                    placeholder={field}
-                                    onChange={val => setProductMix({...productMix, [field]: parseFloat(val)})}
-                                />
+                                <h1>{field.replace(/([A-Z])/g, " $1").trim() } {field === "productCount"?" (cl) ":""}</h1>
+
+                                {field === "productCount" ? (
+                                    <TextField
+                                        type="number"
+                                        value={(productMix as never)[field]}
+                                        className="max-w-40 text-center"
+                                        placeholder={field}
+                                        props={{readOnly: true}}
+                                        /*onChange={val =>
+                                            setProductMix({ ...productMix, [field]: parseFloat(val) })
+                                        }*/
+                                    />
+                                ) : (
+                                    <TextField
+                                        type="number"
+                                        value={(productMix as never)[field]}
+                                        className="max-w-40 text-center"
+                                        placeholder={field}
+                                        onChange={val =>
+                                            setProductMix({ ...productMix, [field]: parseFloat(val) })
+                                        }
+                                    />
+                                )}
                             </div>
                         ))}
+
                     </div>
 
                     {message && <p className="text-red-500 mt-4 font-bold">{message}</p>}
